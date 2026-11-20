@@ -18,6 +18,10 @@ The dataset is the `RAW` block in `index.html`, one food per line:
 
 Groups: V vegetables, F fruit, N nuts, G legumes, C meat, S cured meats, L dairy, Q cheese, P fish. Months are 1-12, with ranges and commas (`10-3` wraps over the new year). Regions use codes such as `EMR`, or `*` for widely grown. Tags: D DOP, I IGP, S Presìdio.
 
+## Photos
+
+Photos are linked live from Wikimedia Commons (the `PHOTOS` table in `index.html`, keyed by the Italian name; most are CC BY-SA). Each food's detail view credits the author, licence and source article. Foods without a photo show a colour tile.
+
 ## Sources
 
 Ministero delle Politiche Agricole seasonal calendar, Fondazione Slow Food Presìdi, Regione Emilia-Romagna and Regione Marche publications, plus editorial calendars used to cross-check. The full list is in the page footer. Months are a guide and shift with latitude, altitude and year.

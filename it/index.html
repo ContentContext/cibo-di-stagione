@@ -3,227 +3,295 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Mangia le stagioni</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600;700&family=Young+Serif&display=swap">
-<style>
-/* Layout concept: a market-stall ledger. Sticky filter column on the left, results as ledger rows,
-   each row carrying a 12-cell year strip coloured by season. */
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Vampiro+One&display=swap">
+<style>[hidden]{display:none!important}
+/* Layout concept: a white image-first archive. Slim top bar, one quiet filter block, a sort line, then a wall of
+   photo cards (colour tiles until photos are added) with a 12-month bar under each. Items open in a detail sheet. */
 :root{
-  --bg:#EFF2EC;
-  --surface:#F8FAF6;
-  --ink:#14231A;
-  --muted:#58685D;
-  --line:#D3DACF;
-  --accent:#1D5C3D;
-  --accent-fg:#F4F8F2;
-  --cell-off:#E3E8DF;
-  --winter:#3D5A99; --winter-fg:#FFFFFF;
-  --spring:#2F7A33; --spring-fg:#FFFFFF;
-  --summer:#E8A800; --summer-fg:#1D1500;
-  --autumn:#B4571B; --autumn-fg:#FFFFFF;
-  --f-display:"Young Serif",Georgia,"Times New Roman",serif;
-  --f-body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#0E1610; --surface:#152019; --ink:#E4ECE1; --muted:#9FB0A3; --line:#26362B;
-    --accent:#7ED3A1; --accent-fg:#08150D; --cell-off:#1C2A20;
-    --winter:#8FA8E8; --winter-fg:#0B1220;
-    --spring:#86CC7B; --spring-fg:#07200A;
-    --summer:#F2C14A; --summer-fg:#1D1500;
-    --autumn:#E9915A; --autumn-fg:#2A1004;
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0E1610; --surface:#152019; --ink:#E4ECE1; --muted:#9FB0A3; --line:#26362B;
-  --accent:#7ED3A1; --accent-fg:#08150D; --cell-off:#1C2A20;
-  --winter:#8FA8E8; --winter-fg:#0B1220;
-  --spring:#86CC7B; --spring-fg:#07200A;
-  --summer:#F2C14A; --summer-fg:#1D1500;
-  --autumn:#E9915A; --autumn-fg:#2A1004;
-  color-scheme:dark;
+  /* colours and buttons read from peoplesgdarchive.org */
+  --f:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --bg:#FFFFFF; --ink:#24045B; --navy:#24045B; --green:#74FF43; --accent:#24045B;
+  --muted:rgba(36,4,91,.5); --line:#BEBEBE; --chip:#FFFFFF; --chip-hover:#F3F0F9;
+  --on:#24045B; --on-fg:#FFFFFF; --cell-off:#E9E6F0;
+  --raise:0 4px 8px 0 rgba(0,0,0,.25); --sh:0 4px 8px 0 rgba(0,0,0,.25); --sh-hover:0 6px 14px 0 rgba(0,0,0,.30); --sh-sm:none;
+  --winter:#3F55B8; --winter-fg:#FFFFFF; --spring:#74FF43; --spring-fg:#24045B;
+  --summer:#F7C948; --summer-fg:#24045B; --autumn:#E4572E; --autumn-fg:#FFFFFF;
+  --t-V:#D8FFC9; --t-F:#FFD9CC; --t-N:#EADFC8; --t-G:#F2EDB8; --t-C:#F6CFD6; --t-S:#E3D6F5; --t-L:#F7F2DC; --t-Q:#FBE9A8; --t-P:#CFE4F5;
+  --t-ink:#24045B; --shadow:0 18px 50px rgba(36,4,91,.35);
+  color-scheme:light;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
-  background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;
+  background:var(--bg);color:var(--ink);font-family:var(--f);font-optical-sizing:auto;font-size:15px;line-height:1.45;font-variant-numeric:tabular-nums;
   padding-left:max(16px,env(safe-area-inset-left,0px));
   padding-right:max(16px,env(safe-area-inset-right,0px));
-  padding-block:28px 56px;
+  padding-block:18px 56px;
 }
-.wrap{max-width:1180px;margin-inline:auto}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+.wrap{max-width:1480px;margin-inline:auto}
 
-/* header */
-.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 32px;margin-bottom:22px}
-.top h1{font-family:var(--f-display);font-weight:400;font-size:clamp(2rem,5.5vw,3.4rem);line-height:1.02;margin:0;letter-spacing:-.01em;text-wrap:balance}
-.top p{margin:8px 0 0;color:var(--muted);max-width:52ch}
-.live{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-align:right}
-.live b{display:block;font-family:var(--f-display);font-weight:400;font-size:2.4rem;line-height:1;color:var(--ink)}
-
-.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:36px;align-items:start}
-.panel{position:sticky;top:16px;display:grid;gap:20px;max-height:calc(100vh - 32px);overflow:auto;padding-right:6px}
-.fgroup h2{font-family:var(--f-mono);font-weight:500;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-.search{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+/* top bar */
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding-bottom:16px}
+.brand{margin:0;font-size:1.5rem;font-weight:700;letter-spacing:-.035em;line-height:1}
+.brand span{display:block;margin-top:6px;font-size:13px;font-weight:400;letter-spacing:0;color:var(--muted)}
+.tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.search{width:min(280px,60vw);padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:var(--chip)}
 .search::placeholder{color:var(--muted)}
-.seasons{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.chip,.sbtn,.mbtn{border:1px solid var(--line);background:var(--surface);border-radius:8px;cursor:pointer;transition:background .12s,border-color .12s}
-.chip:hover,.sbtn:hover,.mbtn:hover{border-color:var(--ink)}
-.sbtn{display:flex;align-items:center;gap:8px;padding:8px 10px;text-align:left;font-weight:600}
-.sbtn small{display:block;font-weight:400;color:var(--muted);font-size:11px;font-family:var(--f-mono)}
-.sbtn i{width:10px;height:10px;border-radius:50%;flex:none}
-.months{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
-.mbtn{padding:7px 0 6px;font-family:var(--f-mono);font-size:12px;text-align:center;position:relative}
-.mbtn::after{content:"";position:absolute;left:6px;right:6px;bottom:2px;height:2px;border-radius:2px;background:var(--c)}
-.on-btn{background:var(--accent)!important;color:var(--accent-fg)!important;border-color:var(--accent)!important}
-.on-btn small{color:inherit!important;opacity:.8}
-.mbtn.now::before{content:"";position:absolute;top:3px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
-.mbtn.on-btn.now::before{background:var(--accent-fg)}
-.cats{display:flex;flex-wrap:wrap;gap:6px}
-.chip{padding:6px 10px;font-size:13px;display:inline-flex;gap:6px;align-items:baseline}
-.chip em{font-style:normal;font-family:var(--f-mono);font-size:11px;opacity:.7}
-select.reg{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
-.checks{display:grid;gap:8px;margin-top:10px;font-size:13.5px}
-.checks label{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
-.checks input{margin-top:3px;accent-color:var(--accent)}
-.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:8px;overflow:hidden}
-.seg button{padding:8px;border:0;background:var(--surface);cursor:pointer;font-weight:500}
-.seg button+button{border-left:1px solid var(--line)}
-.row-actions{display:flex;gap:8px}
-.ghost{padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:transparent;cursor:pointer;font-weight:500}
-.ghost:hover{border-color:var(--ink)}
+.pill{border:1px solid var(--line);background:transparent;border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:500;transition:background .12s}
+.pill:hover{background:var(--chip-hover)}
+
+/* filters */
+.filters{display:grid;gap:12px;border-top:1px solid var(--line);padding-top:14px}
+.row{display:grid;grid-template-columns:86px minmax(0,1fr);gap:8px 12px;align-items:start}
+.rl{font-size:12px;color:var(--muted);padding-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.chip{border:0;background:var(--chip);border-radius:999px;padding:7px 13px;cursor:pointer;font-weight:500;font-size:14px;display:inline-flex;gap:6px;align-items:baseline;transition:background .12s}
+.chip:hover{background:var(--chip-hover)}
+.chip em{font-style:normal;font-size:11px;opacity:.6}
+.chip.on{background:var(--on);color:var(--on-fg)}
+.chip .dot{width:8px;height:8px;border-radius:50%;align-self:center}
+.chip.mo{padding:7px 11px;min-width:46px;justify-content:center}
+.chip.mo.now{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.opts{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
+select.reg{padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--chip);min-width:190px}
+.opts label{display:inline-flex;gap:8px;align-items:center;font-size:14px;cursor:pointer}
+.opts input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px}
 .filter-toggle{display:none}
 
-/* results */
-.summary{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;justify-content:space-between;margin-bottom:6px;padding-bottom:12px;border-bottom:2px solid var(--ink)}
-.summary h2{margin:0;font-family:var(--f-display);font-weight:400;font-size:1.5rem}
-.summary span{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
-.group{margin-top:26px}
-.ghead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px}
-.ghead h3{font-family:var(--f-display);font-weight:400;font-size:1.25rem;margin:0}
-.ghead .en{color:var(--muted);font-size:13px}
-.ghead .n{margin-left:auto;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
-.item{display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,300px);gap:6px 28px;padding:13px 0;border-top:1px solid var(--line)}
-.item .name{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline}
-.item h4{margin:0;font-size:16px;font-weight:700}
-.item .en{color:var(--muted);font-size:13.5px}
-.badge{font-family:var(--f-mono);font-size:10px;letter-spacing:.04em;padding:1px 6px;border-radius:99px;border:1px solid var(--muted);color:var(--muted);white-space:nowrap}
-.badge.sf{border-color:var(--autumn);color:var(--autumn)}
-.note{margin:3px 0 0;font-size:13.5px;color:var(--muted);max-width:62ch}
-.where{margin:5px 0 0;font-size:12px;font-family:var(--f-mono);color:var(--muted)}
-.where mark{background:none;color:var(--accent);font-weight:500}
-.yr{opacity:.85}
-.strip{display:grid;grid-template-columns:repeat(12,1fr);gap:2px;margin-top:2px}
-.c{position:relative;display:block;height:24px;border-radius:3px;background:var(--cell-off);color:var(--muted);font-style:normal;font-family:var(--f-mono);font-size:10px;line-height:24px;text-align:center}
-.c.on{font-weight:500}
-.c.s-w.on{background:var(--winter);color:var(--winter-fg)}
-.c.s-sp.on{background:var(--spring);color:var(--spring-fg)}
-.c.s-su.on{background:var(--summer);color:var(--summer-fg)}
-.c.s-a.on{background:var(--autumn);color:var(--autumn-fg)}
-.c.sel::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:3px;border-radius:2px;background:var(--ink)}
-.range{margin-top:9px;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
-.empty{padding:48px 0;text-align:center;color:var(--muted)}
-.empty button{margin-top:10px}
+/* results header */
+.rbar{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;margin:24px 0 16px}
+.rbar h2{margin:0;font-size:1.15rem;font-weight:600;letter-spacing:-.01em}
+.sort{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;font-size:14px;color:var(--muted)}
+.sort button{border:0;background:none;padding:2px 0;cursor:pointer;color:var(--muted)}
+.sort button:hover{color:var(--ink)}
+.sort button.on{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px}
 
-.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted);margin:14px 0 0}
-.legend span{display:inline-flex;gap:6px;align-items:center}
-.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:28px 18px}
+.card{display:block;width:100%;padding:0;border:0;background:none;text-align:left;cursor:pointer;min-width:0}
+.ph{position:relative;display:block;aspect-ratio:4/5;border-radius:8px;overflow:hidden;background:var(--tile,var(--chip));color:var(--t-ink);transition:transform .18s}
+.card:hover .ph,.card:focus-visible .ph{transform:translateY(-3px)}
+.ph[data-c="V"]{--tile:var(--t-V)}.ph[data-c="F"]{--tile:var(--t-F)}.ph[data-c="N"]{--tile:var(--t-N)}.ph[data-c="G"]{--tile:var(--t-G)}
+.ph[data-c="C"]{--tile:var(--t-C)}.ph[data-c="S"]{--tile:var(--t-S)}.ph[data-c="L"]{--tile:var(--t-L)}.ph[data-c="Q"]{--tile:var(--t-Q)}.ph[data-c="P"]{--tile:var(--t-P)}
+.ph::before{content:"";position:absolute;width:62%;aspect-ratio:1;right:-14%;top:-8%;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.55) 0 55%,rgba(255,255,255,.22) 56% 100%)}
+.ph .l{position:absolute;left:12px;bottom:6px;font-size:4.4rem;font-weight:700;letter-spacing:-.05em;line-height:1;opacity:.85}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.meta{display:block;margin-top:9px}
+.meta .t{display:block;font-weight:600;font-size:15px;line-height:1.25;overflow-wrap:anywhere}
+.meta .s{display:flex;justify-content:space-between;gap:8px;margin-top:2px;font-size:12.5px;color:var(--muted)}
+.meta .s i{font-style:normal}
+.mini{display:grid;grid-template-columns:repeat(12,1fr);gap:2px;align-items:end;height:10px;margin-top:8px}
+.mini i{display:block;height:4px;border-radius:2px;background:var(--cell-off)}
+.mini i.on.s-w{background:var(--winter)}.mini i.on.s-sp{background:var(--spring)}.mini i.on.s-su{background:var(--summer)}.mini i.on.s-a{background:var(--autumn)}
+.mini i.sel{height:10px}
+.empty{padding:70px 0;text-align:center;color:var(--muted)}
+.empty button{margin-top:12px}
 
-footer{margin-top:56px;padding-top:24px;border-top:2px solid var(--ink);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:24px 48px}
-footer h2{font-family:var(--f-display);font-weight:400;font-size:1.25rem;margin:0 0 8px}
+/* detail sheet */
+dialog{padding:0;border:0;border-radius:16px;background:var(--bg);color:var(--ink);width:min(980px,calc(100vw - 20px));max-height:calc(100vh - 20px);box-shadow:var(--shadow);overflow:auto}
+dialog::backdrop{background:rgba(10,10,10,.55)}
+.sheet{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:0}
+.sheet .ph{aspect-ratio:4/5;border-radius:0;min-height:100%;height:100%}
+.sheet .ph .l{font-size:9rem;left:20px;bottom:10px}
+.sheet .ph:hover{transform:none}
+.info{padding:30px 30px 26px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.info h3{margin:0;font-size:clamp(1.7rem,4vw,2.5rem);font-weight:700;letter-spacing:-.035em;line-height:1.02}
+.info .alt{margin:-8px 0 0;color:var(--muted);font-size:1.05rem;font-style:italic}
+.tagrow{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--chip)}
+.tag.sf{background:var(--autumn);color:var(--autumn-fg)}
+.info p{margin:0;max-width:56ch}
+.kv{display:grid;gap:4px}
+.kv b{font-size:12px;font-weight:500;color:var(--muted)}
+.big{display:grid;grid-template-columns:repeat(12,1fr);gap:3px}
+.big i{display:block;text-align:center;font-style:normal;font-size:11px;font-weight:600;padding:9px 0;border-radius:4px;background:var(--cell-off);color:var(--muted)}
+.big i.on.s-w{background:var(--winter);color:var(--winter-fg)}.big i.on.s-sp{background:var(--spring);color:var(--spring-fg)}
+.big i.on.s-su{background:var(--summer);color:var(--summer-fg)}.big i.on.s-a{background:var(--autumn);color:var(--autumn-fg)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:6px}
+.xbtn{position:sticky;top:10px;float:right;margin:10px 10px -46px 0;z-index:3;width:38px;height:38px;border-radius:50%;border:0;background:var(--bg);color:var(--ink);cursor:pointer;font-size:20px;line-height:1;box-shadow:0 1px 8px rgba(0,0,0,.25)}
+
+footer{margin-top:72px;padding-top:24px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:24px 56px}
+footer h2{font-size:1.1rem;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
 footer p,footer li{font-size:13.5px;color:var(--muted);max-width:68ch}
 footer ul{margin:0 0 14px;padding-left:18px;display:grid;gap:4px}
-footer h5{margin:12px 0 6px;font-family:var(--f-mono);font-weight:500;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink)}
-a{color:var(--accent)}
+footer h5{margin:12px 0 6px;font-size:12px;font-weight:600;color:var(--ink)}
 
-@media (max-width:860px){
-  body{padding-block:20px 40px}
-  .layout{grid-template-columns:minmax(0,1fr);gap:18px}
-  .filter-toggle{display:flex;justify-content:space-between;align-items:center;width:100%;padding:12px 14px;border:1px solid var(--ink);border-radius:10px;background:var(--surface);font-weight:600;cursor:pointer}
-  .panel{position:static;max-height:none;overflow:visible;padding:0}
-  .panel[hidden]{display:none}
-  .live{text-align:left}
+@media (max-width:760px){
+  .filter-toggle{display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:4px;padding:11px 16px;border:1px solid var(--line);border-radius:999px;background:var(--chip);font-weight:600;cursor:pointer}
+  .filters[hidden]{display:none}
+  .row{grid-template-columns:minmax(0,1fr)}
+  .rl{padding-top:0}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 12px}
+  .sheet{grid-template-columns:minmax(0,1fr)}
+  .sheet .ph{aspect-ratio:4/3;min-height:0}
+  .sheet .ph .l{font-size:6rem}
+  .info{padding:22px 18px}
   footer{grid-template-columns:minmax(0,1fr)}
 }
-@media (max-width:640px){
-  .item{grid-template-columns:minmax(0,1fr)}
-  .months{grid-template-columns:repeat(6,1fr)}
-}
-.lang{display:inline-block;margin-top:8px;padding:4px 10px;border:1px solid var(--line);border-radius:99px;font-family:var(--f-mono);font-size:12px;color:var(--ink);text-decoration:none}
-.lang:hover{border-color:var(--ink)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
 
+/* sidebar layout */
+body{padding-block:0}
+.layout{display:grid;grid-template-columns:272px minmax(0,1fr);gap:0 40px;align-items:start}
+.side{position:sticky;top:0;align-self:start;max-height:100vh;overflow-y:auto;padding:22px 0 24px;display:flex;flex-direction:column;gap:16px;scrollbar-width:thin}
+.bar{padding:0}
+.brand{font-size:1.7rem}
+.filters{border-top:0;padding-top:0;display:flex;flex-direction:column;gap:12px}
+.search{width:100%}
+.f{display:grid;gap:5px;font-size:12px;color:var(--muted)}
+.f select{width:100%;padding:10px 36px 10px 14px;border:1px solid var(--line);border-radius:999px;background:var(--chip);color:var(--ink);font-size:14.5px;font-weight:500;appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%236A6A66' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.f select:hover{background-color:var(--chip-hover)}
+.ck{display:flex;gap:9px;align-items:flex-start;font-size:14px;cursor:pointer;line-height:1.3}
+.ck input{accent-color:var(--accent);width:16px;height:16px;margin-top:1px;flex:none}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.langlink{align-self:flex-start;text-decoration:none;color:inherit}
+.content{padding-top:26px;min-width:0}
+.rbar{margin:0 0 20px}
+.sheet{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
+footer{grid-template-columns:minmax(0,1fr)}
+@media (max-width:860px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;max-height:none;padding:18px 0 4px}
+  .content{padding-top:10px}
+}
+@media (max-width:760px){.filter-toggle{display:flex}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:861px){.filter-toggle{display:none!important}.filters[hidden]{display:flex!important}}
+
+/* navy + green + drop shadows */
+.brand{color:var(--navy)}
+.ph{box-shadow:var(--sh);transition:transform .18s,box-shadow .18s}
+.card:hover .ph,.card:focus-visible .ph{box-shadow:var(--sh-hover)}
+.sheet .ph{box-shadow:none}
+.f select,.search,.pill{box-shadow:var(--sh-sm)}
+.f select:focus,.search:focus{border-color:var(--green);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--green) 30%,transparent),var(--sh-sm)}
+.pill:hover{box-shadow:var(--sh)}
+.rbar h2,.content h3{color:var(--navy)}
+.content h3::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--green);margin-right:9px;vertical-align:1px}
+.tag{background:var(--chip);color:var(--navy)}
+.tag.sf{background:var(--green);color:#fff}
+dialog{box-shadow:0 24px 70px rgba(6,16,36,.45),0 4px 12px rgba(6,16,36,.25)}
+.xbtn{box-shadow:var(--sh)}
+.sort button.on{text-decoration-color:var(--green)}
+.mini i.sel{box-shadow:0 1px 3px rgba(14,37,71,.4)}
+footer{border-top-color:var(--navy)}
+footer h2{color:var(--navy)}
+.ck input{accent-color:var(--green)}
+.pill{background:var(--bg)}
+.pill:hover{background:var(--chip-hover)}
+.side{border-right:0}
+
+/* exact PGDA button + control styles */
+.pill,.chip{font-weight:500;font-size:16px;border:1px solid var(--navy);border-radius:6px;background:#fff;color:var(--navy);padding:0 16px;min-height:40px;display:inline-flex;align-items:center;box-shadow:none;cursor:pointer;text-decoration:none}
+.pill:hover{background:var(--chip-hover);box-shadow:none}
+#now{background:var(--navy);color:#fff;font-weight:700;box-shadow:var(--raise);border-color:var(--navy)}
+#now:hover{background:#34107A;box-shadow:var(--sh-hover)}
+#reset{background:#fff}
+.acts .pill,#more{background:var(--green);color:var(--navy);font-weight:700;font-size:18px;min-height:46px;padding:0 20px;border-color:var(--green);box-shadow:var(--raise)}
+.acts .pill:hover{background:#63F034;box-shadow:var(--sh-hover)}
+.f select,.search{border:1px solid var(--navy);border-radius:6px;background-color:#fff;color:var(--navy);box-shadow:none;font-weight:500;font-size:16px;min-height:42px}
+.f select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2324045B' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E")}
+.f select:hover{background-color:var(--chip-hover)}
+.f select:focus,.search:focus{border-color:var(--navy);outline:3px solid var(--green);outline-offset:1px;box-shadow:none}
+.search{font-weight:700;font-size:18px;padding:0 10px}
+.search::placeholder{color:var(--muted);font-weight:400}
+.f{color:var(--navy);font-size:12px}
+.filter-toggle{border:1px solid var(--navy);border-radius:6px;background:var(--navy);color:#fff;font-weight:700;box-shadow:var(--raise)}
+.ph{border-radius:0;box-shadow:none}
+.card:hover .ph,.card:focus-visible .ph{box-shadow:var(--sh-hover)}
+.ph::before{display:none}
+.ph .l{opacity:1;color:var(--navy)}
+.content h3::before{background:var(--green);border:1px solid var(--navy)}
+.tag{border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:6px;font-weight:500}
+.tag.sf{background:var(--green);color:var(--navy)}
+.ck input{accent-color:var(--navy)}
+.sort button.on{text-decoration-color:var(--green)}
+.xbtn{border:1px solid var(--navy);border-radius:6px;box-shadow:var(--raise);background:#fff;color:var(--navy)}
+dialog{border-radius:6px}
+.mini i.sel{box-shadow:none;outline:1px solid var(--navy)}
+a{color:var(--navy)}
+footer{border-top:1px solid var(--navy)}
+footer p,footer li{color:var(--navy);opacity:.75}
+/* multi-select + shadows */
+.ms{position:relative}
+.msbtn{width:100%;text-align:left;min-height:42px;padding:0 36px 0 12px;border:1px solid var(--navy);border-radius:6px;background-color:#fff;color:var(--navy);font-weight:500;font-size:16px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2324045B' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;display:flex;align-items:center}
+.msbtn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msbtn:hover{background-color:var(--chip-hover)}
+.ms.open .msbtn{box-shadow:var(--raise)}
+.mspanel{position:absolute;z-index:20;left:0;right:0;top:calc(100% + 6px);max-height:min(320px,50vh);overflow-y:auto;background:#fff;border:1px solid var(--navy);border-radius:6px;box-shadow:var(--raise);padding:6px}
+.mspanel[hidden]{display:none}
+.mso{display:flex;gap:10px;align-items:center;padding:8px;border-radius:4px;cursor:pointer;font-size:15px;line-height:1.25}
+.mso:hover{background:var(--chip-hover)}
+.mso input{accent-color:var(--navy);width:16px;height:16px;flex:none}
+.f select,.search,.pill{box-shadow:0 2px 6px rgba(0,0,0,.2)}
+#now,.acts .pill,.filter-toggle,.xbtn{box-shadow:var(--raise)}
+.ph{box-shadow:var(--raise)}
+.card:hover .ph,.card:focus-visible .ph{box-shadow:var(--sh-hover)}
+.sheet .ph{box-shadow:none}
+.side{overflow:visible;max-height:none}
+
+/* Vampiro One for the site title and food names */
+.brand b,.meta .t,.info h3{font-family:"Vampiro One","DM Sans",system-ui,sans-serif;font-weight:400;letter-spacing:0}
+.brand b{font-size:2.1rem;line-height:1.05;display:block}
+.meta .t{font-size:17px;line-height:1.2}
+.info h3{font-size:clamp(2rem,4.6vw,3rem);line-height:1.05}
+
+/* EN / IT single-button switcher */
+.langlink{display:inline-flex;padding:0;overflow:hidden;min-height:40px;gap:0;border-radius:6px}
+.langlink span{display:inline-flex;align-items:center;padding:0 16px;font-weight:500;color:var(--navy);min-height:38px}
+.langlink span.on{background:var(--navy);color:#fff;font-weight:700}
+.langlink:hover{background:#fff}
+.langlink:hover span:not(.on){background:var(--chip-hover)}
+
+.rbar{display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;gap:16px;margin:0 0 20px}
+.rbar h2{min-width:0;flex:1 1 auto}
+.langlink{margin-left:auto;flex:none;align-self:center}
+
+/* Today's month: toggle with an off state */
+#now{background:#fff;color:var(--navy);font-weight:500;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+#now:hover{background:var(--chip-hover);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+#now.on{background:var(--navy);color:#fff;font-weight:700;box-shadow:var(--raise)}
+#now.on:hover{background:#34107A}
+
+.ph img{z-index:1}
+.credit{font-size:12px;color:var(--muted);margin:0;line-height:1.4}
+.credit a{color:var(--muted);text-underline-offset:2px}
+.sheet .ph img{object-position:center}
+</style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <div>
-      <h1 data-i="h1"></h1>
-      <p data-i="sub"></p>
-    </div>
-    <div class="live" aria-live="polite"><b id="count">0</b><span data-i="shown"></span><br><a class="lang" id="lang" href="#"></a></div>
-  </header>
-
-  <button class="filter-toggle" id="ftoggle" aria-expanded="false" aria-controls="panel"><span data-i="filters"></span><span id="fsum"></span></button>
-
-  <div class="layout">
-    <aside class="panel" id="panel">
-      <div class="fgroup">
-        <h2 data-i="search"></h2>
-        <input id="q" class="search" type="search" autocomplete="off">
-      </div>
-      <div class="fgroup">
-        <h2 data-i="season"></h2>
-        <div class="seasons" id="seasons"></div>
-      </div>
-      <div class="fgroup">
-        <h2 data-i="month"></h2>
-        <div class="months" id="months"></div>
-      </div>
-      <div class="fgroup">
-        <h2 data-i="group"></h2>
-        <div class="cats" id="cats"></div>
-      </div>
-      <div class="fgroup">
-        <h2 data-i="region"></h2>
-        <select id="region" class="reg"></select>
-        <div class="checks">
-          <label><input type="checkbox" id="spec"> <span><span data-i="spec"></span><br><small style="color:var(--muted)" data-i="specHint"></small></span></label>
-          <label><input type="checkbox" id="yr" checked> <span data-i="yr"></span></label>
-        </div>
-      </div>
-      <div class="fgroup">
-        <h2 data-i="groupBy"></h2>
-        <div class="seg" id="group"><button data-g="cat"></button><button data-g="region"></button></div>
-      </div>
-      <div class="row-actions">
-        <button class="ghost" id="now" data-i="today"></button>
-        <button class="ghost" id="reset" data-i="clear"></button>
-      </div>
-    </aside>
-
-    <main>
-      <div class="summary"><h2 id="sumTitle"></h2><span id="sumMeta"></span></div>
-      <div class="legend" id="legend">
-        <span><i style="background:var(--winter)"></i><b id="leg-w" style="font-weight:400"></b></span>
-        <span><i style="background:var(--spring)"></i><b id="leg-sp" style="font-weight:400"></b></span>
-        <span><i style="background:var(--summer)"></i><b id="leg-su" style="font-weight:400"></b></span>
-        <span><i style="background:var(--autumn)"></i><b id="leg-a" style="font-weight:400"></b></span>
-        <span><i style="background:var(--cell-off)"></i><b data-i="legOff" style="font-weight:400"></b></span>
-      </div>
-      <div id="results"></div>
-    </main>
-  </div>
-
-  <footer id="foot"></footer>
+<div class="wrap layout">
+  <aside class="side" id="side">
+    <header class="bar">
+      <h1 class="brand"><b id="brand"></b><span id="tag"></span></h1>
+    </header>
+    <button class="filter-toggle" id="ftoggle" type="button" aria-expanded="false" aria-controls="filters"><span id="ftLabel"></span><span id="fsum"></span></button>
+    <section class="filters" id="filters" aria-label="Filters">
+      <input id="q" class="search" type="search" autocomplete="off">
+      <div class="f"><span id="lSeason"></span><div class="ms" id="season"></div></div>
+      <div class="f"><span id="lMonth"></span><div class="ms" id="month"></div></div>
+      <div class="f"><span id="lGroup"></span><div class="ms" id="cat"></div></div>
+      <div class="f"><span id="lRegion"></span><div class="ms" id="region"></div></div>
+      <label class="f"><span id="lSort"></span><select id="sort"></select></label>
+      <label class="ck"><input type="checkbox" id="spec"><span id="lSpec"></span></label>
+      <label class="ck"><input type="checkbox" id="yr" checked><span id="lYr"></span></label>
+      <div class="btns"><button class="pill" id="now" type="button"></button><button class="pill" id="reset" type="button"></button></div>
+    </section>
+  </aside>
+  <main class="content">
+    <div class="rbar"><h2 id="count" aria-live="polite"></h2><a class="pill langlink" id="lang" href="#"></a></div>
+    <div id="grid"></div>
+    <footer id="foot"></footer>
+  </main>
 </div>
+<dialog id="dlg" aria-label="Details"></dialog>
 
 <script>
 /* name|English|group|months|regions|tags (D=DOP, I=IGP, S=Presidio)|English note|Italian note */
@@ -410,6 +478,7 @@ Missoltino|Dried agone of Lake Como|P|6-10|LOM|S|Lake sardines salted and dried|
 `;
 
 /* Language comes from <html lang>. The English page is index.html, the Italian page is it/index.html (see build.sh). */
+if(typeof SAMPLE!=="undefined"&&location.hash==="#it")document.documentElement.lang="it";
 const EN = document.documentElement.lang !== "it";
 const LANG = EN ? "en" : "it";
 
@@ -560,17 +629,16 @@ const ITEMS=RAW.trim().split("\n").map(l=>{
 });
 const label=it=>EN?it.en:it.name, other=it=>EN?it.name:"";
 
-const state={q:"",months:new Set(),cats:new Set(),region:"",spec:false,yr:true,group:"cat"};
+const state={q:"",months:new Set(),cats:new Set(),regions:new Set(),spec:false,yr:true,group:"cat"};
 const $=id=>document.getElementById(id);
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const nowMonth=new Date().getMonth()+1;
-
 function matches(it,ignoreCat){
   if(!ignoreCat&&state.cats.size&&!state.cats.has(it.cat))return false;
   if(state.months.size){let ok=false;state.months.forEach(m=>{if(it.mo[m-1])ok=true});if(!ok)return false}
   if(!state.yr&&it.year)return false;
-  if(state.region){
-    const direct=it.reg.includes(state.region);
+  if(state.regions.size){
+    const direct=it.reg.some(r=>state.regions.has(r));
     const wide=it.reg.includes("*");
     if(!(direct||(wide&&!state.spec)))return false;
   }else if(state.spec&&it.reg.includes("*"))return false;
@@ -591,129 +659,165 @@ function selLabel(){
   return ms.map(m=>MON[m-1]).join(", ");
 }
 
-function renderControls(){
-  $("seasons").innerHTML=SEASONS.map(s=>{
-    const on=s.m.every(m=>state.months.has(m));
-    return `<button class="sbtn ${on?"on-btn":""}" data-s="${s.k}" aria-pressed="${on}"><i style="background:var(${s.c})"></i><span>${s.n}<small>${s.alt?s.alt+" · ":""}${s.sub}</small></span></button>`;
-  }).join("");
-  $("months").innerHTML=MON.map((n,i)=>{
-    const m=i+1,on=state.months.has(m);
-    const col=`var(${SEASONS.find(s=>s.m.includes(m)).c})`;
-    return `<button class="mbtn ${on?"on-btn":""} ${m===nowMonth?"now":""}" style="--c:${col}" data-m="${m}" aria-pressed="${on}" title="${MONFULL[i]}">${n}</button>`;
-  }).join("");
-  $("cats").innerHTML=CATS.map(c=>{
-    const n=ITEMS.filter(it=>it.cat===c.k&&matches(it,true)).length;
-    const on=state.cats.has(c.k);
-    return `<button class="chip ${on?"on-btn":""}" data-c="${c.k}" aria-pressed="${on}" title="${catAlt(c)}">${catName(c)}<em>${n}</em></button>`;
-  }).join("");
-  [...$("group").children].forEach(b=>b.classList.toggle("on-btn",b.dataset.g===state.group));
+/* ---- archive layout ---- */
+const PHOTO_DIR=null; /* e.g. "img/" -> img/<slug>.jpg ; leave null until photos exist */
+const X={en:{sortBy:"Sort by",az:"Name A–Z",cat:"Food group",reg:"Region",len:"Longest season",start:"Season start",shuffle:"Shuffle",
+  selected:"selected",custom:"By month",items:"foods",inSeason:"in season",all:"All",allGroups:"All food groups",more:"More in",close:"Close",months:"Best months",where:"Where",
+  fsFilters:"Filters",none:"Nothing matches these filters.",lbl:"Group"},
+ it:{sortBy:"Ordina per",az:"Nome A–Z",cat:"Gruppo alimentare",reg:"Regione",len:"Stagione più lunga",start:"Inizio stagione",shuffle:"Casuale",
+  selected:"selezionati",custom:"Per mese",items:"alimenti",inSeason:"di stagione",all:"Tutti",allGroups:"Tutti i gruppi",more:"Altri in",close:"Chiudi",months:"Mesi migliori",where:"Dove",
+  fsFilters:"Filtri",none:"Nessun risultato con questi filtri.",lbl:"Gruppo"}}[LANG];
+state.sort="cat";
+const slug=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const seasonDot=k=>`var(${SEASONS.find(s=>s.k===k).c})`;
+const catOf=k=>CATS.find(c=>c.k===k);
+let shuffleSeed=Math.random();
+const rnd=(s,i)=>{const x=Math.sin(s*9301+i*49297)*233280;return x-Math.floor(x)};
+function monthLen(it){return it.mo.filter(Boolean).length}
+function startMonth(it){
+  const ref=state.months.size?[...state.months][0]:nowMonth;
+  for(let d=0;d<12;d++){if(it.mo[(ref-1+d)%12])return d}
+  return 12;
 }
-
-function stripHTML(it){
-  return `<div class="strip" role="img" aria-label="${T.atBest}${rangeLabel(it.mo)}">`+
-    it.mo.map((on,i)=>`<i class="c ${on?"on "+seasonOf(i+1):""} ${state.months.has(i+1)?"sel":""}">${INIT[i]}</i>`).join("")+
-    `</div><div class="range">${rangeLabel(it.mo)}</div>`;
+function sorted(list){
+  const a=list.slice();
+  const nm=(x,y)=>label(x).localeCompare(label(y),LANG);
+  if(state.sort==="len")a.sort((x,y)=>monthLen(x)-monthLen(y)||nm(x,y));
+  else if(state.sort==="start")a.sort((x,y)=>startMonth(x)-startMonth(y)||nm(x,y));
+  else if(state.sort==="shuffle"){const idx=new Map(ITEMS.map((it,i)=>[it,i]));a.sort((x,y)=>rnd(shuffleSeed,idx.get(x))-rnd(shuffleSeed,idx.get(y)))}
+  else a.sort(nm);
+  return a;
 }
-function whereHTML(it){
-  if(it.reg.includes("*"))return `<p class="where">${T.wideLine}</p>`;
-  return `<p class="where">`+it.reg.map(r=>r===state.region?`<mark>${RNAME[r]}</mark>`:RNAME[r]).join(" · ")+`</p>`;
+function miniHTML(it){
+  return `<span class="mini" aria-hidden="true">`+it.mo.map((on,i)=>`<i class="${on?"on "+seasonOf(i+1):""} ${state.months.has(i+1)?"sel":""}"></i>`).join("")+`</span>`;
 }
-function itemHTML(it){
-  const badges=(it.tags.includes("D")?`<span class="badge" title="${T.bD}">DOP</span>`:"")+
-    (it.tags.includes("I")?`<span class="badge" title="${T.bI}">IGP</span>`:"")+
-    (it.tags.includes("S")?`<span class="badge sf" title="${T.bS}">Presìdio</span>`:"");
-  return `<article class="item ${it.year?"yr":""}"><div><div class="name"><h4>${esc(label(it))}</h4>${other(it)?`<span class="en" lang="it">${esc(other(it))}</span>`:""}${badges}</div>${it.note?`<p class="note">${esc(it.note)}</p>`:""}${whereHTML(it)}</div><div>${stripHTML(it)}</div></article>`;
+/* photos: file name on Wikimedia Commons, wiki (1 = it.wikipedia), article, licence, author */
+const PHOTOS={"Asparagi":["20170516Asparagus_officinalis1.jpg",1,"Asparagus officinalis","CC0","AnRo0002"],"Castraure":["Carciofo_violetto_di_Sant’Erasmo,_Venezia.jpg",1,"Carciofo violetto di Sant'Erasmo","CC BY-SA 4.0","Antonella Dalle Zotte"],"Carciofi":["Artichoke_J1.jpg",0,"Artichoke","CC BY-SA 3.0","Jamain"],"Fagiolini":["Heaps_of_beans.jpg",0,"Green bean","GFDL 1.2",""],"Zucchine":["CSA-Striped-Zucchini.jpg",0,"Zucchini","Public domain","Evan-Amos"],"Fiori di zucca":["Zucchini_flowers_-_stierch.jpg",0,"Squash blossom","CC BY 4.0","Sarah Stierch"],"Melanzane":["Solanum_melongena_24_08_2012_(1).JPG",0,"Eggplant","CC BY-SA 3.0","Joydeep"],"Peperoni":["Red_capsicum_and_cross_section.jpg",1,"Peperone","GFDL 1.2","fir0002"],"Peperoncino":["Madame_Jeanette_and_other_chillies.jpg",1,"Peperoncino","CC BY-SA 4.0","Takeaway"],"Pomodori":["Tomato_je.jpg",0,"Tomato","CC BY-SA 3.0","Softeis"],"Pomodoro San Marzano":["TomateSanMarzano.jpg",0,"San Marzano tomato","CC BY-SA 3.0","Goldlocki"],"Cetrioli":["ARS_cucumber.jpg",0,"Cucumber","Public domain","Stephen Ausmus, USDA ARS"],"Cipolla rossa di Tropea":["Cipollatropea.jpg",1,"Cipolla rossa di Tropea Calabria","Public domain","Bristakya"],"Aglio rosso di Sulmona":["Aglio_rosso_di_Sulmona.jpg",1,"Aglio rosso di Sulmona","CC BY-SA 4.0","Marica Massaro"],"Cipolla di Giarratana":["Cipolla_di_Giarratana_-_Giarratana_Onion_closeup.JPG",0,"Cipolla di Giarratana","CC BY-SA 4.0","Cavarrone"],"Radicchio di Chioggia":["Trevisane2.jpg",1,"Radicchio di Chioggia","Public domain",""],"Radicchio di Verona":["Radicchio_di_Verona.gif",1,"Radicchio di Verona","CC BY-SA 3.0","FranzJosef"],"Cavolo nero":["Brassica_-_Gardenology.org-IMG_0606_bbg09.jpg",0,"Lacinato kale","CC BY-SA 3.0","Raffi Kojian"],"Cavolfiore":["Chou-fleur_02.jpg",0,"Cauliflower","CC BY-SA 3.0","Coyau"],"Cavolfiore violetto":["Chou-fleur_02.jpg",0,"Cauliflower","CC BY-SA 3.0","Coyau"],"Broccolo romanesco":["Romanesco_broccoli_(Brassica_oleracea).jpg",1,"Broccolo romanesco","CC BY-SA 4.0","Ivar Leidus"],"Broccoli":["Broccoli_and_cross_section_edit.jpg",0,"Broccoli","GFDL 1.2","Fir0002"],"Cime di rapa":["Cima_di_rapa.jpg",1,"Cima di rapa","CC BY-SA 3.0","Angelo Signore"],"Cavolo verza":["Savoy_Cabbage.jpg",0,"Savoy cabbage","CC BY-SA 3.0","Evelyn Gunn"],"Cavolini di Bruxelles":["Brussels_sprout_closeup.jpg",0,"Brussels sprout","CC BY 2.5","Eric Hunt"],"Cardo gobbo":["Cynara_cardunculus_flavescens_(14684164583).jpg",0,"Cardoon","CC BY-SA 2.0","peganum"],"Finocchi":["Foeniculum_July_2011-1a.jpg",0,"Fennel","CC BY-SA 3.0","Alvesgaspar"],"Spinaci":["Spinacia_oleracea_Spinazie_bloeiend.jpg",0,"Spinach","CC BY-SA 3.0","Rasbak"],"Bietole":["Chard_(Beta_vulgaris_var_cicla).jpg",0,"Chard","Public domain","Neelix"],"Puntarelle":["Puntarelle_stehend.jpg",0,"Puntarelle","CC BY-SA 4.0","Jerome Prohaska"],"Agretti":["Salsola_soda_Rignanese.jpg",0,"Soda inermis","CC BY-SA 3.0","Luigi Rignanese"],"Lattuga e insalate":["Iceberg_lettuce_in_SB.jpg",0,"Lettuce","CC BY 1.0","Geographer"],"Porri":["Leek_on_white_background_-_0947.jpg",0,"Leek","CC BY-SA 4.0","Amada44"],"Porro di Cervere":["Porro_di_Cervere_03.jpg",1,"Porro di Cervere","CC BY-SA 4.0","Prof.lumacorno"],"Sedano rosso di Orbassano":["Celery_1.jpg",0,"Celery","Public domain","Lombroso"],"Carote":["Vegetable-Carrot-Bundle-wStalks.jpg",0,"Carrot","Public domain","Evan-Amos"],"Patate novelle":["Patates.jpg",0,"Potato","Public domain","Scott Bauer, USDA ARS"],"Patata di Bologna":["Patates.jpg",0,"Potato","Public domain","Scott Bauer, USDA ARS"],"Patata della Sila":["Raccolta_delle_patate_in_Sila.jpg",1,"Patata della Sila","CC BY-SA 2.0","giopuo"],"Ravanelli":["Radish_3371103037_4ab07db0bf_o.jpg",0,"Radish","Public domain","Jengod"],"Topinambur":["Sunroot_top.jpg",0,"Jerusalem artichoke","CC BY-SA 3.0",""],"Barbabietole":["Detroitdarkredbeets.png",0,"Beetroot","CC BY-SA 3.0","BriannaWalther"],"Zucca":["Pumpkins.jpg",1,"Zucca","GFDL 1.2","Martin Doege"],"Zucca mantovana":["Vellutata_di_zucca_mantovana_con_arancino_di_parfait_d'oca_profumato_al_tartufo.jpg",1,"Zucca mantovana","CC BY 2.0","Paola Sucato"],"Funghi porcini":["Boletus_edulis_IT.jpg",0,"Boletus edulis","CC BY-SA 4.0","ReddishClover"],"Tartufo bianco":["Truffle_washed_and_cut.jpg",0,"Tuber magnatum","CC BY-SA 3.0","MatthiasKabel"],"Tartufo nero pregiato":["Truffe_nature.JPG",0,"Tuber melanosporum","CC BY-SA 3.0",""],"Tartufo estivo":["Tuber_aestivum_Valnerina_018.jpg",0,"Tuber aestivum","Public domain","Rippitippi"],"Basilico genovese":["BasilikumGenovesergroßblättriger.jpg",0,"Genovese basil","CC BY-SA 3.0","Goldlocki"],"Arance":["Oranges_-_whole-halved-segment.jpg",0,"Orange (fruit)","CC BY-SA 4.0","Ivar Leidus"],"Clementine":["Clementines_whole,_peeled,_half_and_sectioned.jpg",0,"Clementine","CC BY-SA 3.0","carol"],"Mandarini":["Citrus_reticulata_April_2013_Nordbaden.JPG",0,"Mandarin orange","CC BY-SA 3.0","4028mdk09"],"Mandarino tardivo di Ciaculli":["Mandarini.jpg",1,"Mandarino tardivo di Ciaculli","CC BY 3.0","Conca d' Oro"],"Limoni":["P1030323.JPG",0,"Lemon","CC BY-SA 4.0","Elena Chochkova"],"Limone Costa d'Amalfi":["Sfusato_Amalfitano_20070320.JPG",1,"Limone Costa d'Amalfi","CC BY-SA 3.0",""],"Bergamotto":["Bergamottepflanze.jpg",1,"Citrus × bergamia","CC BY-SA 3.0",""],"Cedro":["Chinesische_Zedrat_Zitrone.jpg",0,"Citron","CC BY-SA 3.0","Johann Werfring"],"Pompelmi":["Grapefruits_-_whole-halved-segments.jpg",0,"Grapefruit","CC BY-SA 4.0","Ivar Leidus"],"Kiwi":["Actinidia_fruits.jpg",0,"Kiwifruit","CC BY-SA 3.0","Crowhurst et al."],"Mele":["Pink_lady_and_cross_section.jpg",0,"Apple","GFDL 1.2","fir0002"],"Pere":["Pears.jpg",0,"Pear","Public domain","Keith Weller"],"Uva da tavola":["Pione_Grapes.jpg",0,"Table grape","CC BY-SA 4.0","Aw1805"],"Fichi d'India":["FicusIndica.jpg",1,"Opuntia ficus-indica","CC BY-SA 3.0",""],"Cachi":["Fuyu_persimmon_fruits,_one_cut_open.jpg",0,"Persimmon","CC BY-SA 4.0","Frank Schulenburg"],"Melagrane":["Pomegranate_Juice_(2019).jpg",0,"Pomegranate","CC BY-SA 3.0","Augustus Binu"],"Corbezzoli":["Arbutus_unedo_Corsica.jpg",1,"Arbutus unedo","CC BY 2.0","jxandreani"],"Fragole":["Garden_strawberry_(Fragaria_×_ananassa)_single2.jpg",0,"Strawberry","CC BY-SA 4.0","Ivar Leidus"],"Ciliegie":["Cherry_season_(48216568227).jpg",0,"Cherry","CC BY 2.0","spurekar"],"Albicocche":["Apricot_and_cross_section.jpg",0,"Apricot","GFDL 1.2","Fir0002"],"Susine":["Plums_African_Rose_-_whole,_halved_and_slice.jpg",0,"Plum","CC BY-SA 4.0","Ivar Leidus"],"Susina di Dro":["Plums_African_Rose_-_whole,_halved_and_slice.jpg",0,"Plum","CC BY-SA 4.0","Ivar Leidus"],"Meloni":["Cantaloupe_and_canary_melon.jpg",0,"Melon","CC BY 3.0","Atomicbre"],"Angurie":["Taiwan_2009_Tainan_City_Organic_Farm_Watermelon_FRD_7962.jpg",0,"Watermelon","CC BY-SA 3.0","Fred Hsu"],"Nespole":["Loquat-0.jpg",0,"Loquat","CC BY-SA 3.0","Aftabbanoori"],"Mirtilli e lamponi":["Blueberries.jpg",0,"Blueberry","Public domain",""],"More e frutti di bosco":["Ripe,_ripening,_and_green_blackberries.jpg",0,"Blackberry","CC BY-SA 3.0","Ragesoss"],"Castagne e marroni":["Châtaignier_120807_1.jpg",0,"Chestnut","Public domain","Vassil"],"Noci":["Walnuts_-_whole_and_open_with_halved_kernel.jpg",0,"Walnut","CC BY-SA 4.0","Ivar Leidus"],"Nocciole":["Hazelnuts_(Corylus_avellana)_-_whole_with_kernels_(cropped2).jpg",0,"Hazelnut","CC BY-SA 4.0","Ivar Leidus"],"Mandorle":["Almonds_-_in_shell,_shell_cracked_open,_shelled,_blanched.jpg",0,"Almond","CC BY-SA 4.0","Ivar Leidus"],"Pistacchio verde di Bronte":["Pistacchio_di_Bronte_appena_raccolto.jpg",1,"Pistacchio verde di Bronte","CC BY 2.0","Fabio Ingrosso"],"Pinoli":["Pinoli.jpg",0,"Pine nut","CC BY-SA 2.0 de",""],"Piselli freschi":["Doperwt_rijserwt_peulen_Pisum_sativum.jpg",0,"Pea","CC BY-SA 3.0","Rasbak"],"Fagioli borlotti freschi":["Roman_beans.jpg",0,"Cranberry bean","CC0","Bean appreciator"],"Fagioli secchi":["French_beans_J1.JPG",0,"Bean","CC BY-SA 3.0","Jamain"],"Fagiolina del Trasimeno":["Snijboon_peulen_Phaseolus_vulgaris.jpg",0,"Phaseolus vulgaris","CC BY-SA 3.0","Rasbak"],"Fagiolo poverello bianco":["Snijboon_peulen_Phaseolus_vulgaris.jpg",0,"Phaseolus vulgaris","CC BY-SA 3.0","Rasbak"],"Lenticchie":["3_types_of_lentil.png",0,"Lentil","CC BY-SA 2.5","Justinc"],"Ceci":["Chickpea_BNC.jpg",0,"Chickpea","GFDL 1.2","Prathyush Thomas"],"Cicerchia":["Lathyrus_sativus_flowers_Bangladesh_cropped.JPG",0,"Lathyrus sativus","CC BY-SA 3.0","Arr4"],"Roveja":["Roveja.jpg",0,"Rovėja","CC BY-SA 3.0","Tocekas"],"Lupino gigante di Vairano":["Lupinus_albus_000_223_259_O.jpg",0,"Lupinus albus","CC BY 2.0","Jean-Claude Echardour"],"Agnello da latte":["Lamb_meat_(1).jpg",0,"Lamb and mutton","CC BY-SA 3.0",""],"Capretto":["Hausziege_04.jpg",0,"Goat","CC BY-SA 3.0","Kuebi"],"Cinghiale":["Wildschwein,_Nähe_Pulverstampftor_(cropped).jpg",0,"Wild boar","CC BY-SA 3.0","Valentin Panzirsch"],"Lepre":["Scrub_Hare_(Lepus_saxatilis)_close-up_(30544290256)_(2).jpg",0,"Hare","CC BY-SA 2.0","Bernard Dupont"],"Fagiano":["Pheasant.jpg",0,"Pheasant","CC BY-SA 2.0","gary noon"],"Anatra selvatica":["Anas_platyrhynchos_male_female_quadrat.jpg",0,"Mallard","CC BY-SA 2.5",""],"Cervo e capriolo":["Venison_Steaks.jpg",0,"Venison","CC BY-SA 2.0","FotoosVanRobin"],"Maiale fresco":["Schweinebauch-2.jpg",0,"Pork","CC BY-SA 3.0","Rainer Zenz"],"Cappone":["Capons_in_Hainan_-_03.jpg",0,"Capon","CC0","Anna Frodesiak"],"Oca":["Sunset_Park_-_Las_Vegas_(11044584144).jpg",0,"Domestic goose","CC BY-SA 2.0","Tomás Del Coro"],"Bue grasso di Carrù":["Race_piemontaise.JPG",0,"Piedmontese cattle","CC BY-SA 3.0","Aleks"],"Latte d'alpeggio":["Glass_of_Milk_(33657535532).jpg",0,"Milk","CC BY 2.0","NIAID"],"Burro di malga":["Švédský_koláč_naruby_904_(cropped).JPG",0,"Butter","CC BY-SA 3.0","Matěj Baťha"],"Ricotta di pecora":["Ricotte_fresche.jpg",0,"Ricotta","CC0","8w9d"],"Raveggiolo":["Ricotte_fresche.jpg",0,"Ricotta","CC0","8w9d"],"Mascarpone":["Mascarpone_4.png",0,"Mascarpone","CC BY-SA 4.0","Brodolò1"],"Mozzarella di bufala":["Mozzarella_di_bufala3.jpg",0,"Mozzarella","CC BY-SA 3.0","Popo le Chien"],"Burrata":["Burrata2.jpg",0,"Burrata","CC0","Popo le Chien"],"Fontina d'alpeggio":["Fontina_DOP.jpg",0,"Fontina","CC BY 3.0","Luigi Chiesa"],"Formai de Mut":["Formai_de_mut.jpg",1,"Formai de Mut dell'Alta Valle Brembana","CC BY-SA 3.0","MOs810"],"Taleggio":["Taleggio_vecchia_lavorazione_(3323694182).jpg",0,"Taleggio cheese","CC BY-SA 2.0","F. D. Richards"],"Robiola di Roccaverano":["Robiola_della_Valsassina.jpg",0,"Robiola","CC BY-SA 4.0","Tecla.b"],"Pecorino Romano":["Pecorino_romano_cheese.jpg",0,"Pecorino romano","Public domain","Jon Sullivan"],"Pecorino della Montagna Pistoiese":["Pecorino.jpg",0,"Pecorino toscano","CC BY-SA 4.0","Guzzella"],"Caciocavallo podolico del Gargano":["Cacio_cavallo_with_slices.jpg",0,"Caciocavallo","CC BY-SA 4.0","Peachyeung316"],"Formaggio di fossa":["Formaggio_di_fossa.jpg",0,"Formaggio di fossa","CC BY-SA 3.0","Zeugma fr"],"Parmigiano Reggiano":["Parmigiano_Reggiano,_Italien,_Europäische_Union.jpg",0,"Parmesan","CC BY-SA 4.0","Naturpuur"],"Grana Padano":["Grana_Padano_DOP_Riserva.jpg",0,"Grana Padano","CC BY-SA 4.0","Claudia Castaldi"],"Gorgonzola":["A_Gongonzola_from_Baci.jpg",0,"Gorgonzola","CC BY-SA 4.0","Peachyeung316"],"Zampone e cotechino":["Cotechino-Servito-Polenta-Lenticchie.jpg",0,"Cotechino Modena","CC BY-SA 3.0","J.P.Lon"],"Salama da sugo":["Salama-sugo-composizione.png",0,"Salama da sugo","CC BY 3.0","Andycowboy"],"Ciccioli":["Ciccioli.jpg",0,"Ciccioli","CC0","Mauro Renna"],"Ciauscolo":["Ciauscolo.jpg",0,"Ciauscolo","CC BY-SA 4.0","Egijd"],"Capocollo di Martina Franca":["Coppa_di_Parma.jpg",0,"Capocollo","CC BY-SA 4.0","Thomon"],"Prosciutto di Parma e San Daniele":["Prosciutto_di_Parma,_ham_producing.jpg",0,"Prosciutto","CC BY-SA 2.0","Udo Schröter"],"Mortadella Bologna":["Mortadella_tagliata.jpg",0,"Mortadella","CC BY-SA 3.0",""],"Bresaola della Valtellina":["Brisaula.jpg",0,"Bresaola","CC BY-SA 4.0","Romano.massimiliano"],"Alici di menaica":["Anchovy_closeup.jpg",0,"Anchovy","Public domain",""],"Alici e acciughe":["Anchovy_closeup.jpg",0,"Anchovy","Public domain",""],"Sardine":["Sardines_-_鰯(いわし).jpg",0,"Sardine","CC BY 2.0","TANAKA Juuyoh"],"Sgombro":["Trachurus_declivis.jpg",0,"Mackerel","CC BY-SA 2.0","Richard Ling"],"Sugarello":["Trachurus_trachurus_France_1.jpg",1,"Trachurus trachurus","CC BY 4.0","jujurenoult"],"Aguglia":["Garfish,_Peloponnese,_Peloponnese,_Western_Greece_and_the_Ionian_Islands,_GR_imported_from_iNaturalist_photo_222165464.jpg",0,"Garfish","CC BY 4.0","Sarah Faulwetter"],"Pesce spada":["Xiphias_gladius_Linnaeus,_1758_2599925021.jpg",0,"Swordfish","CC0","Naturalis Biodiversity Center"],"Tonno rosso":["Bluefin-big.jpg",0,"Atlantic bluefin tuna","Public domain",""],"Orata":["Sparus_aurata,_Alpes-Maritimes,_Provence-Alpes-Côte_d'Azur,_FR_imported_from_iNaturalist_photo_207799710.jpg",0,"Gilt-head bream","CC BY 4.0","Julien Renoult"],"Spigola":["Sealife,_Bray,_Ireland._(6985874908).jpg",0,"European seabass","CC BY 2.0","Miguel Mendez"],"Triglia":["Mullus_surmuletus_Paros.JPG",1,"Mullidae","CC BY 3.0","Roberto Pillon"],"Scorfano":["Red_Scorpionfish_(cropped).jpg",0,"Scorpaena scrofa","CC BY-SA 4.0","Vicmicallef"],"Rombo":["Psetta_maxima_Luc_Viatour.jpg",0,"Turbot","CC BY-SA 3.0","Luc Viatour"],"Sogliola":["Solea_solea_1.jpg",0,"Common sole","CC BY-SA 4.0","Hans Hillewaert"],"Nasello":["Merluccius_merluccius.002_-_Aquarium_Finisterrae.JPG",0,"Merluccius merluccius","CC BY-SA 4.0","Fernando Losada Rodríguez"],"Dentice":["Dentón_común_(Dentex_dentex),_Cabo_de_Palos,_España,_2022-07-15,_DD_59.jpg",0,"Dentex","CC BY-SA 4.0","Diego Delso"],"Seppie":["Sepia_común_(Sepia_officinalis),_Parque_natural_de_la_Arrábida,_Portugal,_2020-07-21,_DD_62.jpg",0,"Cuttlefish","CC BY-SA 4.0","Diego Delso"],"Calamari e calamaretti":["Sepioteuthis_sepioidea_(Caribbean_Reef_Squid).jpg",0,"Squid","CC BY-SA 3.0","Nick Hobgood"],"Polpo":["Octopus2.jpg",0,"Octopus","CC BY-SA 3.0","albert kok"],"Scampi":["Nephrops_norvegicus.jpg",0,"Nephrops norvegicus","CC BY-SA 4.0","Hans Hillewaert"],"Canocchie":["Squilla_mantis_-_Naturmuseum_Senckenberg_-_DSC02132.JPG",0,"Squilla mantis","CC0","Daderot"],"Moeche":["Soft-shell_crab_on_ice.jpg",0,"Soft-shell crab","Public domain",""],"Granseola":["Maja_squinado.jpg",0,"Maja squinado","CC BY-SA 3.0","Govern de les Illes Balears"],"Ricci di mare":["Tripneustes_ventricosus_(West_Indian_Sea_Egg-top)_and_Echinometra_viridis_(Reef_Urchin_-_bottom).jpg",0,"Sea urchin","CC BY-SA 3.0","Nick Hobgood"],"Baccalà e stoccafisso":["Hjell-oversikt.arj.jpeg",0,"Stockfish","CC BY-SA 3.0",""],"Anguilla marinata di Comacchio":["Anguilla_anguilla.jpg",0,"European eel","CC BY-SA 3.0","GerardM"]};
+const fileUrl=(f,w)=>"https://commons.wikimedia.org/wiki/Special:FilePath/"+encodeURIComponent(f.replace(/ /g,"_"))+"?width="+w;
+function photo(it,big){
+  const L=esc(label(it).charAt(0).toUpperCase());
+  const p=PHOTOS[it.name];
+  const img=p?`<img src="${fileUrl(p[0],big?900:520)}" alt="${esc(label(it))}" ${big?"":'loading="lazy"'} decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">`:"";
+  return `<span class="ph" data-c="${it.cat}"><span class="l" aria-hidden="true">${L}</span>${img}</span>`;
 }
-function sortItems(a){
-  return a.slice().sort((x,y)=>(x.year-y.year)||label(x).localeCompare(label(y),LANG));
+function creditHTML(it){
+  const p=PHOTOS[it.name];if(!p)return "";
+  const wiki=(p[1]?"it":"en")+".wikipedia.org/wiki/"+encodeURIComponent(p[2].replace(/ /g,"_"));
+  const file="https://commons.wikimedia.org/wiki/File:"+encodeURIComponent(p[0].replace(/ /g,"_"));
+  return `<p class="credit">${EN?"Photo":"Foto"}: ${p[4]?esc(p[4])+" · ":""}<a href="${file}" target="_blank" rel="noopener">${esc(p[3]||"Wikimedia Commons")}</a> · <a href="https://${wiki}" target="_blank" rel="noopener">Wikipedia</a></p>`;
 }
-function groupHTML(title,sub,items){
-  return `<section class="group"><div class="ghead"><h3>${title}</h3>${sub?`<span class="en">${sub}</span>`:""}<span class="n">${items.length}</span></div>${sortItems(items).map(itemHTML).join("")}</section>`;
+function cardHTML(it){
+  const i=ITEMS.indexOf(it);
+  const sub=it.reg.includes("*")?T.wideLine:it.reg.slice(0,2).map(r=>RNAME[r]).join(" · ")+(it.reg.length>2?" +"+(it.reg.length-2):"");
+  return `<button class="card" type="button" data-i="${i}" aria-label="${esc(label(it))}">${photo(it)}<span class="meta"><span class="t">${esc(label(it))}</span><span class="s"><span>${esc(catName(catOf(it.cat)))}</span></span><span class="s"><i>${rangeLabel(it.mo)}</i></span></span>${miniHTML(it)}</button>`;
 }
-
+function renderControls2(){
+  renderMS();
+  $("now").classList.toggle("on",isNow());$("now").setAttribute("aria-pressed",String(isNow()));
+  const modes=[["cat",X.cat],["reg",X.reg],["az",X.az],["start",X.start],["len",X.len],["shuffle",X.shuffle]];
+  $("sort").innerHTML=modes.map(([k,n])=>`<option value="${k}" ${state.sort===k?"selected":""}>${n}</option>`).join("");
+}
 function render(){
-  renderControls();
+  renderControls2();
   const list=ITEMS.filter(it=>matches(it,false));
-  $("count").textContent=list.length;
-  $("sumTitle").textContent=selLabel();
+  $("count").textContent=`${list.length} ${X.items} · ${selLabel()}`;
   const bits=[];
-  if(state.region)bits.push(RNAME[state.region]);
-  if(state.cats.size)bits.push([...state.cats].map(k=>catName(CATS.find(c=>c.k===k))).join(", "));
-  if(state.q)bits.push("“"+state.q+"”");
-  $("sumMeta").textContent=bits.length?bits.join(" · "):T.allFilters;
-  $("fsum").textContent=selLabel()+(state.region?" · "+RNAME[state.region]:"");
+  $("fsum").textContent=selLabel()+(state.regions.size?" · "+[...state.regions].map(r=>RNAME[r]).join(", "):"");
   let html="";
-  if(!list.length){
-    html=`<div class="empty"><p>${T.empty}</p><button class="ghost" id="reset2">${T.clearF}</button></div>`;
-  }else if(state.group==="cat"){
-    CATS.forEach(c=>{const g=list.filter(it=>it.cat===c.k);if(g.length)html+=groupHTML(catName(c),catAlt(c),g)});
-  }else{
-    REGIONS.forEach(([code])=>{
-      if(state.region&&state.region!==code)return;
-      const g=list.filter(it=>it.reg.includes(code));
-      if(g.length)html+=groupHTML(RNAME[code],"",g);
-    });
-    const wide=list.filter(it=>it.reg.includes("*"));
-    if(wide.length)html+=groupHTML(T.wideHead,T.wideSub,wide);
-  }
-  $("results").innerHTML=html;
+  const sec=(title,items)=>`<section style="margin-bottom:36px"><h3 style="margin:0 0 14px;font-size:1.05rem;font-weight:700;letter-spacing:-.01em">${title} <span style="color:var(--muted);font-weight:400;font-size:13px">${items.length}</span></h3><div class="grid">${sorted(items).map(cardHTML).join("")}</div></section>`;
+  if(!list.length)html=`<div class="empty"><p>${X.none}</p><button class="pill" id="reset2" type="button">${T.clearF}</button></div>`;
+  else if(state.sort==="cat"){CATS.forEach(c=>{const g=list.filter(it=>it.cat===c.k);if(g.length)html+=sec(catName(c),g)})}
+  else if(state.sort==="reg"){
+    REGIONS.forEach(([code])=>{if(state.regions.size&&!state.regions.has(code))return;const g=list.filter(it=>it.reg.includes(code));if(g.length)html+=sec(RNAME[code],g)});
+    const w=list.filter(it=>it.reg.includes("*"));if(w.length)html+=sec(T.wideHead,w);
+  }else html=`<div class="grid">${sorted(list).map(cardHTML).join("")}</div>`;
+  $("grid").innerHTML=html;
 }
-
-/* events */
-$("seasons").addEventListener("click",e=>{
-  const b=e.target.closest("[data-s]");if(!b)return;
-  const s=SEASONS.find(x=>x.k===b.dataset.s);
-  const all=s.m.every(m=>state.months.has(m));
-  s.m.forEach(m=>all?state.months.delete(m):state.months.add(m));
-  render();
+function openItem(i){
+  const it=ITEMS[i],c=catOf(it.cat);
+  const badges=(it.tags.includes("D")?`<span class="tag" title="${T.bD}">DOP</span>`:"")+(it.tags.includes("I")?`<span class="tag" title="${T.bI}">IGP</span>`:"")+(it.tags.includes("S")?`<span class="tag sf" title="${T.bS}">Presìdio</span>`:"");
+  const big=it.mo.map((on,k)=>`<i class="${on?"on "+seasonOf(k+1):""}">${INIT[k]}</i>`).join("");
+  const where=it.reg.includes("*")?T.wideLine:it.reg.map(r=>RNAME[r]).join(" · ");
+  $("dlg").innerHTML=`<button class="xbtn" type="button" id="dx" aria-label="${X.close}">×</button><div class="sheet">${photo(it,true)}<div class="info">
+    <div class="tagrow"><span class="tag">${esc(catName(c))}</span>${badges}</div>
+    <h3>${esc(label(it))}</h3>${other(it)?`<p class="alt" lang="it">${esc(other(it))}</p>`:""}
+    ${it.note?`<p>${esc(it.note)}</p>`:""}
+    <div class="kv"><b>${X.months} · ${rangeLabel(it.mo)}</b><div class="big" role="img" aria-label="${T.atBest}${rangeLabel(it.mo)}">${big}</div></div>
+    <div class="kv"><b>${X.where}</b><span>${where}</span></div>
+    ${creditHTML(it)}<div class="acts"><button class="pill" type="button" id="more">${X.more} ${esc(catName(c))}</button></div></div></div>`;
+  $("dlg").dataset.cat=it.cat;
+  if(!$("dlg").open)$("dlg").showModal();
+}
+$("grid").addEventListener("click",e=>{
+  const b=e.target.closest(".card");if(b){openItem(+b.dataset.i);return}
+  if(e.target.id==="reset2")resetAll();
 });
-$("months").addEventListener("click",e=>{
-  const b=e.target.closest("[data-m]");if(!b)return;
-  const m=+b.dataset.m;state.months.has(m)?state.months.delete(m):state.months.add(m);render();
+$("dlg").addEventListener("click",e=>{
+  if(e.target===$("dlg")||e.target.id==="dx")$("dlg").close();
+  else if(e.target.id==="more"){state.cats=new Set([$("dlg").dataset.cat]);$("dlg").close();render();window.scrollTo({top:0,behavior:"smooth"})}
 });
-$("cats").addEventListener("click",e=>{
-  const b=e.target.closest("[data-c]");if(!b)return;
-  const k=b.dataset.c;state.cats.has(k)?state.cats.delete(k):state.cats.add(k);render();
-});
-$("group").addEventListener("click",e=>{
-  const b=e.target.closest("[data-g]");if(!b)return;state.group=b.dataset.g;render();
-});
+$("sort").addEventListener("change",e=>{state.sort=e.target.value;if(state.sort==="shuffle")shuffleSeed=Math.random();render()});
 $("q").addEventListener("input",e=>{state.q=e.target.value.trim();render()});
-$("region").addEventListener("change",e=>{state.region=e.target.value;render()});
 $("spec").addEventListener("change",e=>{state.spec=e.target.checked;render()});
 $("yr").addEventListener("change",e=>{state.yr=e.target.checked;render()});
-$("now").addEventListener("click",()=>{state.months=new Set([nowMonth]);render()});
-function resetAll(){
-  state.q="";state.months=new Set();state.cats=new Set();state.region="";state.spec=false;state.yr=true;
-  $("q").value="";$("region").value="";$("spec").checked=false;$("yr").checked=true;render();
-}
+const isNow=()=>state.months.size===1&&state.months.has(nowMonth);
+$("now").addEventListener("click",()=>{state.months=isNow()?new Set():new Set([nowMonth]);render()});
+function resetAll(){state.q="";state.months=new Set();state.cats=new Set();state.regions=new Set();state.spec=false;state.yr=true;$("q").value="";$("spec").checked=false;$("yr").checked=true;render()}
 $("reset").addEventListener("click",resetAll);
-$("results").addEventListener("click",e=>{if(e.target.id==="reset2")resetAll()});
-$("ftoggle").addEventListener("click",()=>{
-  const p=$("panel"),open=p.hidden;p.hidden=!open;$("ftoggle").setAttribute("aria-expanded",String(open));
-});
+$("ftoggle").addEventListener("click",()=>{const p=$("filters"),open=p.hidden;p.hidden=!open;$("ftoggle").setAttribute("aria-expanded",String(open))});
 
 /* static text */
-document.querySelectorAll("[data-i]").forEach(el=>{el.textContent=T[el.dataset.i]});
-document.title=T.h1;
-$("q").placeholder=T.ph;
-$("q").setAttribute("aria-label",T.search);
-$("region").setAttribute("aria-label",T.region);
-$("panel").setAttribute("aria-label",T.filtersLabel);
-$("legend").setAttribute("aria-label",T.legendLabel);
+$("brand").textContent=T.h1;$("tag").textContent=T.sub;document.title=T.h1;
+$("q").placeholder=T.ph;$("q").setAttribute("aria-label",T.search);
+$("lSort").textContent=X.sortBy;$("lSeason").textContent=T.season;$("lMonth").textContent=T.month;$("lGroup").textContent=T.group;$("lRegion").textContent=T.region;
+$("lSpec").textContent=T.spec;$("lYr").textContent=T.yr;$("now").textContent=T.today;$("reset").textContent=T.clear;
+$("ftLabel").textContent=X.fsFilters;
 $("foot").innerHTML=FOOT[LANG];
-const lk=$("lang");lk.textContent=T.otherName;lk.href=T.otherHref;lk.lang=EN?"it":"en";
-$("group").children[0].textContent=T.gCat;$("group").children[1].textContent=T.gReg;
-SEASONS.forEach(s=>{const el=$("leg-"+s.k);if(el)el.textContent=s.n});
-
-/* init */
-$("region").innerHTML=`<option value="">${T.allRegions}</option>`+REGIONS.map(([c])=>`<option value="${c}">${RNAME[c]}</option>`).join("");
+const lk=$("lang");lk.innerHTML=`<span class="${EN?"on":""}" ${EN?'aria-current="true"':""}>EN</span><span class="${EN?"":"on"}" ${EN?"":'aria-current="true"'}>IT</span>`;lk.href=T.otherHref;lk.setAttribute("aria-label",EN?"Switch to Italian":"Passa all'inglese");
+if(typeof SAMPLE!=="undefined"){lk.href=EN?"#it":"#en";lk.addEventListener("click",()=>setTimeout(()=>location.reload(),0))}
 const mq=window.matchMedia("(max-width:860px)");
-function syncPanel(){ $("panel").hidden=mq.matches; $("ftoggle").setAttribute("aria-expanded","false"); }
-syncPanel();
-mq.addEventListener("change",syncPanel);
+function syncPanel(){$("filters").hidden=mq.matches;$("ftoggle").setAttribute("aria-expanded","false")}
+syncPanel();mq.addEventListener("change",syncPanel);
+
+/* multi-select dropdowns */
+const MSCFG={
+  season:{all:()=>X.all,opts:()=>SEASONS.map(s=>({v:s.k,t:s.n+" ("+s.sub+")",short:s.n,on:s.m.every(m=>state.months.has(m))})),
+    toggle:(v,on)=>{const s=SEASONS.find(x=>x.k===v);s.m.forEach(m=>on?state.months.add(m):state.months.delete(m))}},
+  month:{all:()=>X.all,opts:()=>MON.map((n,i)=>({v:String(i+1),t:MONFULL[i]+(i+1===nowMonth?" ·":""),short:n,on:state.months.has(i+1)})),
+    toggle:(v,on)=>{on?state.months.add(+v):state.months.delete(+v)}},
+  cat:{all:()=>X.allGroups,opts:()=>CATS.map(c=>({v:c.k,t:catName(c)+" ("+ITEMS.filter(it=>it.cat===c.k&&matches(it,true)).length+")",short:catName(c),on:state.cats.has(c.k)})),
+    toggle:(v,on)=>{on?state.cats.add(v):state.cats.delete(v)}},
+  region:{all:()=>T.allRegions,opts:()=>REGIONS.map(([c])=>({v:c,t:RNAME[c],short:RNAME[c],on:state.regions.has(c)})),
+    toggle:(v,on)=>{on?state.regions.add(v):state.regions.delete(v)}}
+};
+function renderMS(){
+  Object.keys(MSCFG).forEach(id=>{
+    const el=$(id),cfg=MSCFG[id],opts=cfg.opts(),sel=opts.filter(o=>o.on);
+    const open=el.classList.contains("open"),old=el.querySelector(".mspanel"),st=old?old.scrollTop:0;
+    const fo=document.activeElement&&el.contains(document.activeElement)?document.activeElement.dataset.v:null;
+    let sum=cfg.all();
+    if(sel.length&&sel.length<=2)sum=sel.map(o=>o.short).join(", ");
+    else if(sel.length>2)sum=sel.length+" "+X.selected;
+    else if(id==="season"&&state.months.size)sum=X.custom;
+    el.innerHTML=`<button type="button" class="msbtn" aria-haspopup="true" aria-expanded="${open}"><span>${esc(sum)}</span></button><div class="mspanel" ${open?"":"hidden"}>`+
+      opts.map(o=>`<label class="mso"><input type="checkbox" data-v="${o.v}" ${o.on?"checked":""}><span>${esc(o.t)}</span></label>`).join("")+`</div>`;
+    const p=el.querySelector(".mspanel");p.scrollTop=st;
+    if(fo){const c=p.querySelector(`[data-v="${fo}"]`);if(c)c.focus()}
+  });
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".msbtn");
+  const inside=e.target.closest(".ms");document.querySelectorAll(".ms.open").forEach(m=>{if(m!==inside){m.classList.remove("open");m.querySelector(".mspanel").hidden=true;m.querySelector(".msbtn").setAttribute("aria-expanded","false")}});
+  if(b){const m=b.closest(".ms"),o=!m.classList.contains("open");m.classList.toggle("open",o);m.querySelector(".mspanel").hidden=!o;b.setAttribute("aria-expanded",String(o))}
+});
+document.addEventListener("change",e=>{
+  const c=e.target.closest(".ms input");if(!c)return;
+  MSCFG[c.closest(".ms").id].toggle(c.dataset.v,c.checked);render();
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){const m=document.querySelector(".ms.open");if(m){m.classList.remove("open");m.querySelector(".mspanel").hidden=true;m.querySelector(".msbtn").focus()}}});
 state.months=new Set([nowMonth]);
 render();
+
 </script>
 </body>
 </html>
