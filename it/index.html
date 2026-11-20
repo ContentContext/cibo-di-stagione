@@ -282,27 +282,25 @@ footer p,footer li{color:var(--navy);opacity:.75}
 .brand span{margin-top:8px;font-size:13px}
 @media (max-width:860px){.side .brand b{max-width:100%}}
 
-/* full-width title with sparkles */
+/* full-width 3D title, slowly turning */
 .topbar{grid-column:1/-1;padding:18px 0 6px;position:relative;min-width:0;overflow:visible}
-.topbar .brand{position:relative;display:block;width:100%;margin:0;line-height:.9}
-.topbar .brand b{display:inline-block;white-space:nowrap;line-height:.95;
-  background:linear-gradient(100deg,var(--navy) 0 38%,#6a3fd1 45%,var(--green) 50%,#6a3fd1 55%,var(--navy) 62% 100%);
-  background-size:300% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;
-  animation:shimmer 16s ease-in-out infinite}
-@keyframes shimmer{0%,35%{background-position:100% 0}65%,100%{background-position:0 0}}
-.topbar .brand .sparkles{position:absolute;inset:-6% -1%;pointer-events:none;display:block;max-width:none;margin:0;width:auto}
-.sparkles i{position:absolute;width:var(--s);height:var(--s);background:var(--c);
-  clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);
-  transform:scale(0) rotate(0deg);animation:twinkle var(--d) ease-in-out var(--dl) infinite}
-@keyframes twinkle{0%,100%{transform:scale(0) rotate(0deg);opacity:0}45%{transform:scale(1) rotate(45deg);opacity:1}60%{transform:scale(.7) rotate(70deg);opacity:.9}}
+.topbar .brand{position:relative;display:block;width:100%;margin:0;line-height:.95}
+.topbar .brand span{margin:0;max-width:none;font-size:inherit;color:inherit}
+.topbar .brand .stage{display:block;width:100%;perspective:none;padding:.18em 0}
+.topbar .brand .logo3d{display:inline-block}
+.topbar .brand .dl{display:block}
+.logo3d{position:relative;display:inline-block;transform-style:preserve-3d;animation:spit 14s linear infinite;transform-origin:50% 50%;line-height:.95;will-change:transform}
+.topbar .brand .logo3d b{position:relative;display:inline-block;white-space:nowrap;font-size:inherit;color:var(--navy);transform:translateZ(var(--half,.15em))}
+.topbar .brand .logo3d .dl{position:absolute;left:0;top:0;white-space:nowrap;font-family:"Vampiro One","DM Sans",system-ui,sans-serif;font-weight:400;pointer-events:none}
+@keyframes spit{from{transform:rotateX(0deg)}to{transform:rotateX(-360deg)}}
+@media (prefers-reduced-motion:reduce){.logo3d{animation:none;transform:rotateX(-22deg)}}
 .tagline{margin:0 0 2px;font-size:13px;line-height:1.35;color:var(--muted)}
-@media (prefers-reduced-motion:reduce){.topbar .brand b{animation:none;background:none;color:var(--navy)}.sparkles i{animation:none;transform:scale(.8) rotate(45deg);opacity:.9}}
 </style>
 </head>
 <body>
 <div class="wrap layout">
   <header class="topbar">
-    <h1 class="brand"><b id="brand"></b><span class="sparkles" id="sparkles" aria-hidden="true"></span></h1>
+    <h1 class="brand"><span class="stage"><span class="logo3d" id="logo"><b id="brand"></b></span></span></h1>
   </header>
   <aside class="side" id="side">
     <p class="tagline" id="tag"></p>
@@ -892,16 +890,23 @@ state.months=new Set([nowMonth]);
 render();
 /* fit "Eat the seasons" to the width of the filter column */
 function fitTitle(){
-  const b=$("brand"),w=b.parentElement.clientWidth;if(!w)return;
-  b.style.fontSize="100px";const nat=b.scrollWidth;if(!nat)return;
-  b.style.fontSize=Math.max(20,Math.min(100*w/nat*0.97,420)).toFixed(1)+"px";
+  const logo=$("logo"),b=$("brand"),w=logo.closest(".brand").clientWidth;if(!w)return;
+  logo.style.fontSize="100px";const nat=b.scrollWidth;if(!nat)return;
+  logo.style.fontSize=Math.max(20,Math.min(100*w/nat*0.97,420)).toFixed(1)+"px";
+  buildDepth();
+}
+/* extrude the title: stacked copies pushed back in Z, darker towards the back */
+function buildDepth(){
+  /* solid extrusion like a sign on a spit: front face, darker sides, a back face; centred on the turning axis */
+  const logo=$("logo"),txt=$("brand").textContent;
+  logo.querySelectorAll(".dl").forEach(n=>n.remove());
+  const D=.3,N=72,step=D/N,A=[92,56,176],B=[66,34,140];
+  logo.style.setProperty("--half",(D/2)+"em");
+  for(let k=1;k<=N;k++){const t=k/N,c=k===N?[36,4,91]:A.map((v,i)=>Math.round(v+(B[i]-v)*t));
+    const s=document.createElement("span");s.className="dl";s.setAttribute("aria-hidden","true");s.textContent=txt;
+    s.style.color=`rgb(${c})`;s.style.transform=`translateZ(${(D/2-k*step).toFixed(4)}em)`;logo.insertBefore(s,logo.firstChild)}
 }
 
-/* sparkles over the title */
-(function(){const box=$("sparkles");if(!box)return;const C=["#CD7F32","#B87333","#E0A764","#8C5523"];let s="";
-  for(let i=0;i<22;i++){const sz=(8+Math.random()*22).toFixed(0);
-    s+=`<i style="left:${(Math.random()*98).toFixed(1)}%;top:${(Math.random()*90).toFixed(1)}%;--s:${sz}px;--c:${C[i%C.length]};--d:${(1.8+Math.random()*2.4).toFixed(2)}s;--dl:${(Math.random()*3).toFixed(2)}s"></i>`}
-  box.innerHTML=s})();
 fitTitle();window.addEventListener("resize",fitTitle);
 if(document.fonts){document.fonts.load('400 100px "Vampiro One"',$("brand").textContent).then(fitTitle).catch(()=>{});document.fonts.ready.then(fitTitle);document.fonts.addEventListener("loadingdone",fitTitle)}
 setTimeout(fitTitle,800);setTimeout(fitTitle,2500);
