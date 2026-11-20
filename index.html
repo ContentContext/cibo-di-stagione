@@ -275,14 +275,20 @@ footer p,footer li{color:var(--navy);opacity:.75}
 .brand span{font-size:15px;margin-top:12px;max-width:60ch}
 .side{padding-top:12px}
 .content{padding-top:12px}
+
+/* title fitted to the sidebar column */
+.brand{display:block;width:100%}
+.brand b{display:inline-block;white-space:nowrap;font-size:40px;line-height:1}
+.brand span{margin-top:8px;font-size:13px}
+@media (max-width:860px){.side .brand b{max-width:100%}}
 </style>
 </head>
 <body>
 <div class="wrap layout">
-  <header class="bar topbar">
-    <h1 class="brand"><b id="brand"></b><span id="tag"></span></h1>
-  </header>
   <aside class="side" id="side">
+    <header class="bar">
+      <h1 class="brand"><b id="brand"></b><span id="tag"></span></h1>
+    </header>
     <button class="filter-toggle" id="ftoggle" type="button" aria-expanded="false" aria-controls="filters"><span id="ftLabel"></span><span id="fsum"></span></button>
     <section class="filters" id="filters" aria-label="Filters">
       <input id="q" class="search" type="search" autocomplete="off">
@@ -867,6 +873,15 @@ document.addEventListener("change",e=>{
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){const m=document.querySelector(".ms.open");if(m){m.classList.remove("open");m.querySelector(".mspanel").hidden=true;m.querySelector(".msbtn").focus()}}});
 state.months=new Set([nowMonth]);
 render();
+/* fit "Eat the seasons" to the width of the filter column */
+function fitTitle(){
+  const b=$("brand"),w=b.parentElement.clientWidth;if(!w)return;
+  b.style.fontSize="100px";const nat=b.scrollWidth;if(!nat)return;
+  b.style.fontSize=Math.max(24,Math.min(100*w/nat,180)).toFixed(1)+"px";
+}
+fitTitle();window.addEventListener("resize",fitTitle);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitTitle);
+
 
 </script>
 </body>
