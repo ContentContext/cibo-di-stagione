@@ -295,6 +295,15 @@ footer p,footer li{color:var(--navy);opacity:.75}
 @keyframes spit{from{transform:rotateX(0deg)}to{transform:rotateX(-360deg)}}
 @media (prefers-reduced-motion:reduce){.logo3d{animation:none;transform:rotateX(-22deg)}}
 .tagline{margin:0 0 2px;font-size:13px;line-height:1.35;color:var(--muted)}
+
+/* stop / start the title rotation */
+.rtools{display:flex;flex-direction:column;align-items:flex-end;gap:6px;margin-left:auto;flex:none}
+.rtools .langlink{margin-left:0}
+.spinbtn{border:0;background:none;padding:0;font:inherit;font-size:12px;color:var(--navy);text-decoration:underline;text-underline-offset:3px;cursor:pointer;opacity:.75}
+.spinbtn:hover{opacity:1}
+.logo3d.stopped{animation:none;transform:rotateX(0deg);transition:transform .8s ease}
+
+.topbar .brand .logo3d b,.topbar .brand .logo3d .dl{letter-spacing:0;word-spacing:0;font-family:"Vampiro One","DM Sans",system-ui,sans-serif;font-weight:400;line-height:.95;font-size:inherit;margin:0;padding:0}
 </style>
 </head>
 <body>
@@ -318,7 +327,7 @@ footer p,footer li{color:var(--navy);opacity:.75}
     </section>
   </aside>
   <main class="content">
-    <div class="rbar"><h2 id="count" aria-live="polite"></h2><a class="pill langlink" id="lang" href="#"></a></div>
+    <div class="rbar"><h2 id="count" aria-live="polite"></h2><div class="rtools"><button type="button" class="spinbtn" id="spinbtn" aria-pressed="false"></button><a class="pill langlink" id="lang" href="#"></a></div></div>
     <div id="grid"></div>
     <footer id="foot"></footer>
   </main>
@@ -907,6 +916,22 @@ function buildDepth(){
     s.style.color=`rgb(${c})`;s.style.transform=`translateZ(${(D/2-k*step).toFixed(4)}em)`;logo.insertBefore(s,logo.firstChild)}
 }
 
+
+/* rotation toggle */
+(function(){
+  const btn=$("spinbtn"),logo=$("logo");
+  const L=EN?{stop:"Stop rotation",start:"Rotate logo"}:{stop:"Ferma la rotazione",start:"Fai ruotare il logo"};
+  let stopped=false;
+  try{stopped=localStorage.getItem("spin")==="off"}catch(e){}
+  if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)stopped=true;
+  function set(v){stopped=v;
+    if(v){const m=getComputedStyle(logo).transform;logo.style.transform=m==="none"?"":m;logo.classList.add("stopped");requestAnimationFrame(()=>{logo.style.transform=""})}
+    else logo.classList.remove("stopped");
+    btn.textContent=v?L.start:L.stop;btn.setAttribute("aria-pressed",String(v));
+    try{localStorage.setItem("spin",v?"off":"on")}catch(e){}}
+  btn.addEventListener("click",()=>set(!stopped));
+  set(stopped);
+})();
 fitTitle();window.addEventListener("resize",fitTitle);
 if(document.fonts){document.fonts.load('400 100px "Vampiro One"',$("brand").textContent).then(fitTitle).catch(()=>{});document.fonts.ready.then(fitTitle);document.fonts.addEventListener("loadingdone",fitTitle)}
 setTimeout(fitTitle,800);setTimeout(fitTitle,2500);
