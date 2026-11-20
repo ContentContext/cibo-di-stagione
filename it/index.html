@@ -920,7 +920,7 @@ function buildDepth(){
 /* rotation toggle */
 (function(){
   const btn=$("spinbtn"),logo=$("logo");
-  const L=EN?{stop:"Stop rotation",start:"Rotate logo"}:{stop:"Ferma la rotazione",start:"Fai ruotare il logo"};
+  const L=EN?{stop:"Stop rotation",start:"Start rotation"}:{stop:"Ferma rotazione",start:"Avvia rotazione"};
   let stopped=false;
   try{stopped=localStorage.getItem("spin")==="off"}catch(e){}
   if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)stopped=true;
