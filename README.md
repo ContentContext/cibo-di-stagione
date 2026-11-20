@@ -1,4 +1,4 @@
-# Calendario di Stagione
+# Eat the seasons / Mangia le stagioni
 
 A single-page guide to seasonal foods in Italy. Filter by season, month, food group and region, or search by name.
 

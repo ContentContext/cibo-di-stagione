@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Calendario di Stagione</title>
+<title>Eat the seasons</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600;700&family=Young+Serif&display=swap">
@@ -165,7 +165,7 @@ a{color:var(--accent)}
 <div class="wrap">
   <header class="top">
     <div>
-      <h1>Calendario di Stagione</h1>
+      <h1 data-i="h1"></h1>
       <p data-i="sub"></p>
     </div>
     <div class="live" aria-live="polite"><b id="count">0</b><span data-i="shown"></span><br><a class="lang" id="lang" href="#"></a></div>
@@ -473,6 +473,7 @@ const FOOT = {
 
 const TX = {
   en:{
+    h1:"Eat the seasons",
     sub:"What is at its best in Italy, by month, season, food group and region. Pick a month or let it open on today.",
     shown:"foods shown", filters:"Filters", search:"Search", ph:"Artichokes, bitto, tuna…",
     season:"Season", month:"Month", group:"Food group", region:"Region", allRegions:"All regions",
@@ -487,6 +488,7 @@ const TX = {
     otherName:"Italiano", otherHref:"it/index.html", legendLabel:"Legend", filtersLabel:"Filters"
   },
   it:{
+    h1:"Mangia le stagioni",
     sub:"Cosa è al meglio in Italia, per mese, stagione, gruppo alimentare e regione. Scegli un mese o parti da quello di oggi.",
     shown:"alimenti mostrati", filters:"Filtri", search:"Cerca", ph:"Carciofi, bitto, tonno…",
     season:"Stagione", month:"Mese", group:"Gruppo alimentare", region:"Regione", allRegions:"Tutte le regioni",
@@ -693,6 +695,7 @@ $("ftoggle").addEventListener("click",()=>{
 
 /* static text */
 document.querySelectorAll("[data-i]").forEach(el=>{el.textContent=T[el.dataset.i]});
+document.title=T.h1;
 $("q").placeholder=T.ph;
 $("q").setAttribute("aria-label",T.search);
 $("region").setAttribute("aria-label",T.region);
