@@ -283,12 +283,12 @@ footer p,footer li{color:var(--navy);opacity:.75}
 @media (max-width:860px){.side .brand b{max-width:100%}}
 
 /* full-width title with sparkles */
-.topbar{grid-column:1/-1;padding:18px 0 6px;position:relative}
+.topbar{grid-column:1/-1;padding:18px 0 6px;position:relative;min-width:0;overflow:visible}
 .topbar .brand{position:relative;display:block;width:100%;margin:0;line-height:.9}
 .topbar .brand b{display:inline-block;white-space:nowrap;line-height:.95;
   background:linear-gradient(100deg,var(--navy) 0 38%,#6a3fd1 45%,var(--green) 50%,#6a3fd1 55%,var(--navy) 62% 100%);
   background-size:300% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;
-  animation:shimmer 6s ease-in-out infinite}
+  animation:shimmer 16s ease-in-out infinite}
 @keyframes shimmer{0%,35%{background-position:100% 0}65%,100%{background-position:0 0}}
 .topbar .brand .sparkles{position:absolute;inset:-6% -1%;pointer-events:none;display:block;max-width:none;margin:0;width:auto}
 .sparkles i{position:absolute;width:var(--s);height:var(--s);background:var(--c);
@@ -894,16 +894,17 @@ render();
 function fitTitle(){
   const b=$("brand"),w=b.parentElement.clientWidth;if(!w)return;
   b.style.fontSize="100px";const nat=b.scrollWidth;if(!nat)return;
-  b.style.fontSize=Math.max(24,Math.min(100*w/nat*0.995,420)).toFixed(1)+"px";
+  b.style.fontSize=Math.max(20,Math.min(100*w/nat*0.97,420)).toFixed(1)+"px";
 }
 
 /* sparkles over the title */
-(function(){const box=$("sparkles");if(!box)return;const C=["#74FF43","#24045B","#74FF43","#B9A6FF"];let s="";
+(function(){const box=$("sparkles");if(!box)return;const C=["#CD7F32","#B87333","#E0A764","#8C5523"];let s="";
   for(let i=0;i<22;i++){const sz=(8+Math.random()*22).toFixed(0);
     s+=`<i style="left:${(Math.random()*98).toFixed(1)}%;top:${(Math.random()*90).toFixed(1)}%;--s:${sz}px;--c:${C[i%C.length]};--d:${(1.8+Math.random()*2.4).toFixed(2)}s;--dl:${(Math.random()*3).toFixed(2)}s"></i>`}
   box.innerHTML=s})();
 fitTitle();window.addEventListener("resize",fitTitle);
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitTitle);
+if(document.fonts){document.fonts.load('400 100px "Vampiro One"',$("brand").textContent).then(fitTitle).catch(()=>{});document.fonts.ready.then(fitTitle);document.fonts.addEventListener("loadingdone",fitTitle)}
+setTimeout(fitTitle,800);setTimeout(fitTitle,2500);
 
 
 </script>
