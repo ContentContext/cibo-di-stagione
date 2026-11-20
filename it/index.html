@@ -743,7 +743,7 @@ function photo(it,big){
   const img=p?`<img src="${thumbUrl(p)}" data-orig="${origUrl(p)}" crossorigin="anonymous" alt="${esc(label(it))}" ${big?"":'loading="lazy"'} decoding="async" referrerpolicy="no-referrer" onload="ditherImg(this)" onerror="imgFail(this)">`:"";
   return `<span class="ph" data-c="${it.cat}"><span class="l" aria-hidden="true">${L}</span>${img}</span>`;
 }
-/* one-colour ordered dither: 8x8 Bayer threshold map, auto-levels on luminance, navy ink on white, 1px cells */
+/* full-colour ordered dither: 8x8 Bayer threshold map, auto-levels per channel, 3 levels per channel, 1px cells */
 const BAYER=(()=>{let m=[[0,2],[3,1]];while(m.length<8){const n=m.length,o=[];for(let y=0;y<2*n;y++){o.push([]);for(let x=0;x<2*n;x++){const b=m[y%n][x%n]*4,q=[[0,2],[3,1]][(y/n)|0][(x/n)|0];o[y].push(b+q)}}m=o}return m.flat().map(v=>(v+.5)/64)})();
 const DCACHE=new Map();
 function imgFail(img){
@@ -764,15 +764,14 @@ function ditherImg(img){
       const iw=img.naturalWidth,ih=img.naturalHeight,s=Math.max(W/iw,H/ih);
       const sw=W/s,sh=H/s;x.imageSmoothingQuality="high";
       x.drawImage(img,(iw-sw)/2,(ih-sh)/2,sw,sh,0,0,W,H);
-      d=x.getImageData(0,0,W,H);const a=d.data,N=W*H,Y=new Float32Array(N);
-      const hist=new Uint32Array(256);
-      for(let p=0,i=0;p<N;p++,i+=4){const y=.299*a[i]+.587*a[i+1]+.114*a[i+2];Y[p]=y;hist[y|0]++}
-      let acc=0,lo=0;while(lo<255&&(acc+=hist[lo])<N*.02)lo++;acc=0;let hi=255;while(hi>0&&(acc+=hist[hi])<N*.02)hi--;
-      if(hi-lo<16){lo=0;hi=255}
-      const INK=[36,4,91],PAPER=[255,255,255];
+      d=x.getImageData(0,0,W,H);const a=d.data,N=W*H,L=3;
+      const lo=[0,0,0],hi=[255,255,255];
+      for(let k=0;k<3;k++){const hist=new Uint32Array(256);for(let i=k;i<a.length;i+=4)hist[a[i]]++;
+        let acc=0,l=0;while(l<255&&(acc+=hist[l])<N*.02)l++;acc=0;let u=255;while(u>0&&(acc+=hist[u])<N*.02)u--;
+        if(u-l>16){lo[k]=l;hi[k]=u}}
       for(let yy=0;yy<H;yy++)for(let xx=0;xx<W;xx++){
-        const p=yy*W+xx,i=p*4;let v=(Y[p]-lo)/(hi-lo);
-        const c=v>BAYER[(yy&7)*8+(xx&7)]?PAPER:INK;a[i]=c[0];a[i+1]=c[1];a[i+2]=c[2];a[i+3]=255;
+        const t=BAYER[(yy&7)*8+(xx&7)],i=(yy*W+xx)*4;
+        for(let k=0;k<3;k++){let v=(a[i+k]-lo[k])/(hi[k]-lo[k]);v=v<0?0:v>1?1:v;let q=Math.floor(v*(L-1)+t);if(q>L-1)q=L-1;a[i+k]=Math.round(q*255/(L-1))}
       }
       DCACHE.set(key,d);
     }
