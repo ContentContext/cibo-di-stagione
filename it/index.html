@@ -399,9 +399,288 @@ footer{display:block}
   .side .filter-toggle{margin-top:0}
   .mspanel{position:static;max-height:none;margin-top:6px;box-shadow:none}
 }
+
+/* print-style drawings: background at four depths, the band of icons at the top, and the drawings view for the cards */
+.pp{--red:#E4572E;--green:#24045B;--yellow:#74FF43;--leaf:#5A35B0;--ink:#1A1A1A}
+.bgart{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bgart .layer{position:absolute;left:0;right:0;top:0;will-change:transform}
+.bgart .ico{position:absolute;display:block;overflow:visible;width:var(--s);height:var(--s);transform:rotate(var(--r))}
+.bgart .ico>svg{width:100%;height:100%}
+.bgart .guy{position:absolute;display:block;height:auto}
+.bgart .k0{opacity:.11}.bgart .k1{opacity:.08}.bgart .k2{opacity:.12}.bgart .k3{opacity:.18}.bgart .kg{opacity:.3}
+body>.wrap,body>.band{position:relative;z-index:1}
+.ill{display:block;overflow:visible}
+.ill .ln{fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.band{border-bottom:1px solid var(--navy);background:rgba(255,255,255,.85);padding:12px 0;overflow:hidden}
+.band-row{display:flex;gap:26px;align-items:center;width:max-content;padding-left:18px}
+.band-row .ico{display:block;overflow:visible;width:42px;height:42px;flex:none}
+.band-row .ico:nth-child(odd){transform:rotate(-8deg)}
+.band-row .ico:nth-child(3n){transform:rotate(9deg) translateY(4px)}
+@media (prefers-reduced-motion:no-preference){.band-row{animation:drift 50s linear infinite}}
+@keyframes drift{to{transform:translateX(-50%)}}
+.ph.drw{display:grid;place-items:center;background:#FBF7EC}
+.ph.drw .ill{width:72%;height:auto;position:relative;z-index:1}
+.rrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.viewsw{font:inherit;cursor:pointer;background:#fff;border:1px solid var(--navy)}
+@media (max-width:520px){.langlink span{padding:0 11px}.rbar{flex-wrap:wrap;gap:10px}.rtools{width:100%;flex-direction:row-reverse;justify-content:space-between;align-items:center}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- slightly ragged ink edge, like a hand-pulled screen print -->
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/>
+    </filter>
+    <pattern id="dots" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="1.1" fill="#fff" opacity=".35"/></pattern>
+
+    <!-- each drawing: a spot-colour layer printed a little off register, then the black linework -->
+    <symbol id="i-tomato" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <g transform="translate(3 2.5)">
+          <path style="fill:var(--red)" d="M50 30C76 28 90 44 90 62C90 81 71 93 50 93C29 93 10 81 10 62C10 44 24 28 50 30Z"/>
+          <path style="fill:url(#dots)" d="M50 30C76 28 90 44 90 62C90 81 71 93 50 93C29 93 10 81 10 62C10 44 24 28 50 30Z"/>
+          <path style="fill:var(--leaf)" d="M50 20L56 33L71 29L61 40L68 51L50 42L32 51L39 40L29 29L44 33Z"/>
+        </g>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M50 30C76 28 90 44 90 62C90 81 71 93 50 93C29 93 10 81 10 62C10 44 24 28 50 30Z"/>
+          <path d="M50 22V10M50 10C55 9 58 11 60 14"/><path d="M28 50C24 56 23 64 26 72"/><path d="M50 20L56 33L71 29L61 40L68 51L50 42L32 51L39 40L29 29L44 33Z"/>
+        </g>
+      </g>
+    </symbol>
+
+    <symbol id="i-lemon" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <circle cx="52" cy="52" r="40" style="fill:var(--yellow)"/>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round">
+          <circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="33"/>
+          <path d="M50 50L50 18M50 50L73 27M50 50L82 50M50 50L73 73M50 50L50 82M50 50L27 73M50 50L18 50M50 50L27 27"/>
+        </g>
+      </g>
+    </symbol>
+
+    <symbol id="i-pear" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <g transform="translate(3 2)">
+          <path style="fill:var(--green)" d="M50 20C59 20 61 31 63 39C79 48 84 66 76 80C68 94 32 94 24 80C16 66 23 48 38 39C40 31 41 20 50 20Z"/>
+          <path style="fill:var(--leaf)" d="M55 14C63 6 75 8 78 12C72 19 62 20 55 14Z"/>
+        </g>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M50 20C59 20 61 31 63 39C79 48 84 66 76 80C68 94 32 94 24 80C16 66 23 48 38 39C40 31 41 20 50 20Z"/>
+          <path d="M50 20C50 14 52 9 56 6"/><path d="M33 62C32 70 35 77 40 81"/>
+        </g>
+      </g>
+    </symbol>
+
+    <symbol id="i-apple" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <path style="fill:var(--red)" transform="translate(2.5 2)" d="M50 26C60 18 80 20 86 38C92 58 82 84 64 90C57 92 53 89 50 89C47 89 43 92 36 90C18 84 8 58 14 38C20 20 40 18 50 26Z"/>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M50 26C60 18 80 20 86 38C92 58 82 84 64 90C57 92 53 89 50 89C47 89 43 92 36 90C18 84 8 58 14 38C20 20 40 18 50 26Z"/>
+          <path d="M50 26C52 18 54 12 58 8"/>
+          <path style="fill:#fff" d="M50 40C60 42 64 52 62 62C60 72 54 76 50 76C46 76 40 72 38 62C36 52 40 42 50 40Z"/>
+        </g>
+        <g style="fill:var(--ink)"><ellipse cx="45" cy="55" rx="2.2" ry="4"/><ellipse cx="55" cy="55" rx="2.2" ry="4"/><ellipse cx="50" cy="64" rx="2.2" ry="4"/></g>
+        <path style="fill:var(--leaf)" d="M58 12C66 4 80 8 82 14C74 19 64 19 58 12Z"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-fork" viewBox="0 0 100 100">
+      <g filter="url(#rough)" style="fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round;stroke-linejoin:round">
+        <path d="M38 6V30C38 40 62 40 62 30V6"/><path d="M46 6V30M54 6V30"/>
+        <path style="fill:var(--ink)" d="M50 38C47 58 46 80 47 93C48 97 52 97 53 93C54 80 53 58 50 38Z"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-spoon" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <ellipse cx="50" cy="24" rx="15" ry="20" style="fill:none;stroke:var(--ink);stroke-width:3"/>
+        <ellipse cx="46" cy="20" rx="5" ry="8" style="fill:var(--ink);opacity:.15"/>
+        <path style="fill:var(--ink)" d="M50 44C47 62 46 80 47 93C48 97 52 97 53 93C54 80 53 62 50 44Z"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-cheese" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <path transform="translate(2.5 2)" style="fill:var(--yellow)" d="M8 70L70 22L92 44V82L8 82Z"/>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linejoin:round">
+          <path d="M8 70L70 22L92 44V82L8 82Z"/><path d="M8 70L92 44"/>
+        </g>
+        <g style="fill:#fff;stroke:var(--ink);stroke-width:2.2">
+          <ellipse cx="34" cy="72" rx="6" ry="4"/><ellipse cx="62" cy="66" rx="8" ry="6"/><ellipse cx="80" cy="74" rx="4" ry="3"/><ellipse cx="62" cy="44" rx="4" ry="3"/>
+        </g>
+      </g>
+    </symbol>
+
+    <symbol id="i-fish" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <path transform="translate(2.5 2)" style="fill:var(--green)" d="M8 50C22 30 48 26 66 36L88 22L84 50L88 78L66 64C48 74 22 70 8 50Z"/>
+        <path transform="translate(2.5 2)" style="fill:url(#dots)" d="M8 50C22 30 48 26 66 36L88 22L84 50L88 78L66 64C48 74 22 70 8 50Z"/>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M8 50C22 30 48 26 66 36L88 22L84 50L88 78L66 64C48 74 22 70 8 50Z"/>
+          <path d="M28 40C32 46 32 54 28 60"/><path d="M40 52C46 50 52 50 58 52"/><path d="M42 36C46 30 52 28 56 30"/>
+        </g>
+        <circle cx="19" cy="47" r="2.6" style="fill:var(--ink)"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-pea" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <path transform="translate(2.5 2)" style="fill:var(--green)" d="M8 62C24 40 56 26 90 30C80 52 50 76 14 72C10 70 8 66 8 62Z"/>
+        <g style="fill:#fff;stroke:var(--ink);stroke-width:2.4">
+          <circle cx="28" cy="58" r="7"/><circle cx="43" cy="51" r="7.5"/><circle cx="58" cy="44" r="7.5"/><circle cx="73" cy="38" r="6.5"/>
+        </g>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M8 62C24 40 56 26 90 30C80 52 50 76 14 72C10 70 8 66 8 62Z"/><path d="M90 30C93 26 95 22 94 18"/>
+        </g>
+      </g>
+    </symbol>
+
+    <symbol id="i-cherries" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <g transform="translate(2.5 2)" style="fill:var(--red)"><circle cx="30" cy="72" r="17"/><circle cx="68" cy="70" r="17"/></g>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round">
+          <circle cx="30" cy="72" r="17"/><circle cx="68" cy="70" r="17"/>
+          <path d="M30 55C34 36 44 20 58 10M68 53C66 38 62 22 58 10"/><path d="M24 66C24 62 27 59 30 59"/>
+        </g>
+        <path style="fill:var(--leaf)" d="M58 10C66 2 82 4 86 10C78 17 66 17 58 10Z"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-artichoke" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <path transform="translate(2.5 2)" style="fill:var(--leaf)" d="M50 14C70 24 82 44 78 64C74 82 62 90 50 90C38 90 26 82 22 64C18 44 30 24 50 14Z"/>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M50 14C70 24 82 44 78 64C74 82 62 90 50 90C38 90 26 82 22 64C18 44 30 24 50 14Z"/>
+          <path d="M50 14C44 26 44 34 50 42C56 34 56 26 50 14"/>
+          <path d="M30 40C36 50 44 52 50 50C56 52 64 50 70 40"/>
+          <path d="M24 60C34 70 44 70 50 66C56 70 66 70 76 60"/>
+          <path d="M34 82C40 78 46 78 50 82C54 78 60 78 66 82"/>
+          <path d="M50 90V97"/>
+        </g>
+      </g>
+    </symbol>
+
+    <symbol id="i-chilli" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <path transform="translate(2.5 2)" style="fill:var(--red)" d="M70 24C82 30 82 46 70 60C56 76 34 88 12 90C30 80 46 66 54 50C60 38 60 28 70 24Z"/>
+        <path style="fill:var(--leaf)" d="M64 20C70 14 80 16 82 24C76 28 68 28 64 20Z"/>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M70 24C82 30 82 46 70 60C56 76 34 88 12 90C30 80 46 66 54 50C60 38 60 28 70 24Z"/><path d="M74 20C76 14 80 10 86 8"/><path d="M64 40C62 50 56 58 48 66"/>
+        </g>
+      </g>
+    </symbol>
+
+    <symbol id="i-mushroom" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <path transform="translate(2.5 2)" style="fill:var(--red)" d="M10 52C10 30 30 14 50 14C70 14 90 30 90 52Z"/>
+        <g style="fill:#fff"><circle cx="34" cy="34" r="5"/><circle cx="56" cy="26" r="4"/><circle cx="70" cy="42" r="5"/><circle cx="48" cy="44" r="3"/></g>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M10 52C10 30 30 14 50 14C70 14 90 30 90 52Z"/>
+          <path style="fill:#fff" d="M38 52C36 66 34 80 36 90H64C66 80 64 66 62 52"/>
+          <path d="M44 62V82"/>
+        </g>
+      </g>
+    </symbol>
+
+    <symbol id="i-sprig" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <g transform="translate(2.5 2)" style="fill:var(--leaf)">
+          <path d="M50 30C40 18 26 18 20 26C30 34 42 36 50 30Z"/><path d="M52 50C64 38 78 40 84 48C74 56 60 58 52 50Z"/>
+          <path d="M48 66C36 56 22 58 16 66C26 74 40 74 48 66Z"/><path d="M52 20C56 10 66 6 74 10C70 18 60 22 52 20Z"/>
+        </g>
+        <path style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round" d="M50 96C50 70 50 40 54 14"/>
+      </g>
+    </symbol>
+    <symbol id="i-knife" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <path style="fill:#fff;stroke:var(--ink);stroke-width:2.6;stroke-linejoin:round" d="M46 6C56 10 60 26 58 52H44C42 34 42 16 46 6Z"/>
+        <path style="fill:none;stroke:var(--ink);stroke-width:1.6;opacity:.6" d="M50 14C53 24 54 36 53 48"/>
+        <path style="fill:var(--ink)" d="M44 52H58C58 66 57 82 55 93C54 97 48 97 47 93C45 82 44 66 44 52Z"/>
+        <g style="fill:#fff"><circle cx="51" cy="64" r="1.8"/><circle cx="51" cy="80" r="1.8"/></g>
+      </g>
+    </symbol>
+    <symbol id="i-carrot" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <path transform="translate(2.5 2)" style="fill:var(--red);opacity:.9" d="M70 30C80 40 76 50 66 58C52 70 30 84 12 92C22 74 34 52 46 38C54 28 62 24 70 30Z"/>
+        <path style="fill:var(--leaf)" d="M66 26C64 14 70 6 76 4C76 14 74 22 70 28ZM72 30C80 20 90 18 96 20C90 28 82 32 74 32ZM68 28C60 18 56 10 58 4C64 8 68 16 70 26Z"/>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M70 30C80 40 76 50 66 58C52 70 30 84 12 92C22 74 34 52 46 38C54 28 62 24 70 30Z"/>
+          <path d="M52 44L58 48M42 58L48 60M32 72L37 74"/>
+        </g>
+      </g>
+    </symbol>
+    <symbol id="i-eggplant" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <path transform="translate(2.5 2)" style="fill:var(--leaf);filter:saturate(0)" d="M0 0"/>
+        <path transform="translate(2.5 2)" style="fill:#5B2A7A" d="M60 28C76 34 84 52 78 70C72 88 50 96 32 90C16 84 12 66 22 54C32 42 44 40 50 32C53 28 56 26 60 28Z"/>
+        <path transform="translate(2.5 2)" style="fill:url(#dots)" d="M60 28C76 34 84 52 78 70C72 88 50 96 32 90C16 84 12 66 22 54C32 42 44 40 50 32C53 28 56 26 60 28Z"/>
+        <path style="fill:var(--leaf)" d="M50 30C54 20 64 18 72 22C70 30 62 34 54 34Z"/>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M60 28C76 34 84 52 78 70C72 88 50 96 32 90C16 84 12 66 22 54C32 42 44 40 50 32C53 28 56 26 60 28Z"/>
+          <path d="M62 22C64 14 68 10 74 8"/><path d="M30 66C30 74 34 80 40 84"/>
+        </g>
+      </g>
+    </symbol>
+    <symbol id="i-garlic" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <path transform="translate(2.5 2)" style="fill:var(--yellow);opacity:.55" d="M50 18C56 30 80 40 80 64C80 82 66 90 50 90C34 90 20 82 20 64C20 40 44 30 50 18Z"/>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M50 18C56 30 80 40 80 64C80 82 66 90 50 90C34 90 20 82 20 64C20 40 44 30 50 18Z"/>
+          <path d="M50 18C50 12 48 8 46 6"/><path d="M50 34C42 46 40 70 46 90M50 34C58 46 60 70 54 90M36 46C30 58 30 76 36 86M64 46C70 58 70 76 64 86"/>
+          <path d="M40 92L36 96M50 92V97M60 92L64 96"/>
+        </g>
+      </g>
+    </symbol>
+    <symbol id="i-wheel" viewBox="0 0 100 100">
+      <g filter="url(#rough)">
+        <path transform="translate(2.5 2)" style="fill:var(--yellow)" d="M10 44C10 30 28 22 50 22C72 22 90 30 90 44V66C90 80 72 88 50 88C28 88 10 80 10 66Z"/>
+        <path transform="translate(2.5 2)" style="fill:url(#dots)" d="M10 44V66C10 80 28 88 50 88C72 88 90 80 90 66V44C90 58 72 66 50 66C28 66 10 58 10 44Z"/>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+          <ellipse cx="50" cy="44" rx="40" ry="22"/><path d="M10 44V66C10 80 28 88 50 88C72 88 90 80 90 66V44"/>
+          <path style="fill:#fff" d="M50 44L82 34C88 38 90 41 90 44L58 54Z"/>
+          <path d="M24 56L24 60M36 62L36 66M66 62L66 66M76 56L76 60"/>
+        </g>
+      </g>
+    </symbol>
+    <!-- an original market-stall character: flat cap, apron, a crate of tomatoes -->
+    <symbol id="i-vendor" viewBox="0 0 160 230">
+      <g filter="url(#rough)">
+        <circle cx="80" cy="64" r="32" style="fill:#fff"/>
+        <g transform="translate(3 2.5)">
+          <path style="fill:var(--green)" d="M50 118H110L118 214H42Z"/>
+          <path style="fill:var(--red)" d="M58 70a7 6 0 1 0 0.1 0ZM102 70a7 6 0 1 0 0.1 0Z"/>
+          <path style="fill:var(--ink);opacity:.85" d="M44 40C46 22 64 14 82 15C102 16 116 26 116 40C104 34 62 32 44 40Z"/>
+        </g>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round">
+          <circle cx="80" cy="64" r="32"/>
+          <path style="fill:var(--ink)" d="M44 42C46 24 64 15 82 16C102 17 116 27 116 42C104 36 62 34 44 42Z"/>
+          <path d="M40 44C58 38 102 37 124 44C112 48 66 48 40 44Z" style="fill:var(--ink)"/>
+          <path d="M66 60C68 57 72 57 74 60M86 60C88 57 92 57 94 60"/>
+          <path d="M80 64C78 70 78 72 82 73"/>
+          <path d="M68 80C74 87 86 87 92 80"/>
+          <path d="M48 84C44 98 44 108 50 118H110C116 108 116 98 112 84"/>
+          <path d="M50 118H110L118 214H42Z"/>
+          <path d="M62 118V98M98 118V98"/><path d="M70 150H90V170H70Z"/>
+          <path d="M42 214L38 224M118 214L122 224"/>
+          <path d="M46 96C30 112 26 132 34 146M114 96C130 112 134 132 126 146"/>
+        </g>
+        <g transform="translate(18 132)">
+          <path transform="translate(3 2)" style="fill:var(--yellow)" d="M6 22H118L110 64H14Z"/>
+          <g style="fill:var(--red)"><circle cx="30" cy="16" r="13"/><circle cx="56" cy="12" r="14"/><circle cx="84" cy="15" r="13"/><circle cx="104" cy="19" r="10"/></g>
+          <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linejoin:round">
+            <circle cx="30" cy="16" r="13"/><circle cx="56" cy="12" r="14"/><circle cx="84" cy="15" r="13"/><circle cx="104" cy="19" r="10"/>
+            <path style="fill:none" d="M6 22H118L110 64H14Z"/><path d="M10 36H116M13 50H113M40 22V64M84 22V64"/>
+          </g>
+          <g style="fill:var(--leaf)"><path d="M26 4L30 8L34 4L32 10Z"/><path d="M52 0L56 4L60 0L58 6Z"/><path d="M80 3L84 7L88 3L86 9Z"/></g>
+        </g>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+<div class="bgart pp" id="bgart" aria-hidden="true"></div>
+<div class="band pp" aria-hidden="true"><div class="band-row" id="bandRow"></div></div>
 <div class="wrap layout">
   <header class="topbar">
     <h1 class="brand"><span class="stage"><span class="logo3d" id="logo"><b id="brand"></b></span></span></h1>
@@ -422,7 +701,7 @@ footer{display:block}
     </section>
   </aside>
   <main class="content">
-    <div class="rbar"><h2 id="count" aria-live="polite"></h2><div class="rtools"><button type="button" class="spinbtn" id="spinbtn" aria-pressed="false"></button><a class="pill langlink" id="lang" href="#"></a></div></div>
+    <div class="rbar"><h2 id="count" aria-live="polite"></h2><div class="rtools"><button type="button" class="spinbtn" id="spinbtn" aria-pressed="false"></button><div class="rrow"><button type="button" class="pill langlink viewsw" id="viewsw"></button><a class="pill langlink" id="lang" href="#"></a></div></div></div>
     <div id="grid"></div>
     <footer id="foot"></footer>
   </main>
@@ -431,6 +710,152 @@ footer{display:block}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+/* ---- print-style food drawings: one small illustration per entry ----
+   Each drawing = a spot-colour layer printed slightly off register, black linework on top, ragged ink edges (filter #rough). */
+const ILL=(()=>{
+const R="var(--red)",G="var(--green)",Y="var(--yellow)",LF="var(--leaf)",W="#fff",K="#1A1A1A";
+const PU="#5B2A7A",OR="#F08A24",BR="#9A5B2E",PK="#F2A0A8",CR="#F6E7C1",BL="#3A6FB0",DK="#3B2A2A",TA="#D9B48A",WH="#FBF7EC";
+const f=(d,c)=>`<path d="${d}" fill="${c}"/>`;
+const l=d=>`<path class="ln" d="${d}"/>`;
+const c=(x,y,r,col)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${col}"/>`;
+const cl=(x,y,r)=>`<circle class="ln" cx="${x}" cy="${y}" r="${r}"/>`;
+const e=(x,y,rx,ry,col)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${col}"/>`;
+const el=(x,y,rx,ry)=>`<ellipse class="ln" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"/>`;
+const dots=d=>`<path d="${d}" fill="url(#dots)"/>`;
+const leafAt=(x,y,s=1,col=LF)=>{const p=`M${x} ${y}C${x+8*s} ${y-10*s} ${x+22*s} ${y-10*s} ${x+26*s} ${y-4*s}C${x+18*s} ${y+4*s} ${x+8*s} ${y+4*s} ${x} ${y}Z`;return [f(p,col),l(p)]};
+const svg=(fill,line,top="")=>`<svg viewBox="0 0 100 100" class="ill" aria-hidden="true"><g filter="url(#rough)"><g transform="translate(3 2.5)">${fill}</g>${line}${top}</g></svg>`;
+
+const ROUND="M50 26C74 24 88 40 88 60C88 80 70 92 50 92C30 92 12 80 12 60C12 40 26 24 50 26Z";
+const T={
+apple:(col=R)=>{const [lf,ll]=leafAt(52,20,.8);return svg(f(ROUND,col)+dots(ROUND)+lf,l(ROUND)+l("M50 26C50 18 52 12 56 8")+ll+l("M28 48C24 56 24 66 28 74"))},
+citrus:(col=OR)=>{const [lf,ll]=leafAt(50,24,.9);return svg(f(ROUND,col)+lf,l(ROUND)+ll+l("M30 52C27 58 27 66 30 72"),`<g fill="${K}" opacity=".55">${[[40,46],[60,50],[70,64],[44,70],[56,78],[34,62],[62,36]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.3"/>`).join("")}</g>`)},
+slice:(col=Y,inner)=>svg(c(50,50,40,col)+(inner?c(50,50,31,inner):""),cl(50,50,40)+cl(50,50,33)+l("M50 50L50 18M50 50L73 27M50 50L82 50M50 50L73 73M50 50L50 82M50 50L27 73M50 50L18 50M50 50L27 27")),
+pear:(col=G)=>{const p="M50 20C59 20 61 31 63 39C79 48 84 66 76 80C68 94 32 94 24 80C16 66 23 48 38 39C40 31 41 20 50 20Z";const [lf,ll]=leafAt(54,16,.7);return svg(f(p,col)+lf,l(p)+l("M50 20C50 14 52 9 56 6")+ll+l("M33 62C32 70 35 77 40 81"))},
+quince:(col=Y)=>{const p="M48 22C60 20 66 30 66 38C80 44 88 58 84 72C80 88 60 94 44 90C26 86 14 72 18 56C22 44 32 40 36 34C38 28 42 22 48 22Z";const [lf,ll]=leafAt(52,18,.8);return svg(f(p,col)+dots(p)+lf,l(p)+ll+l("M30 60C30 68 34 74 40 78"))},
+tomato:(col=R)=>{const B="M50 30C76 28 90 44 90 62C90 81 71 93 50 93C29 93 10 81 10 62C10 44 24 28 50 30Z",S="M50 20L56 33L71 29L61 40L68 51L50 42L32 51L39 40L29 29L44 33Z";return svg(f(B,col)+dots(B)+f(S,LF),l(B)+l(S)+l("M50 22V10")+l("M28 50C24 56 23 64 26 72"))},
+plumtomato:(col=R)=>{const B="M50 22C68 22 76 38 76 58C76 80 64 94 50 94C36 94 24 80 24 58C24 38 32 22 50 22Z",S="M50 14L55 24L66 22L58 30L62 38L50 32L38 38L42 30L34 22L45 24Z";return svg(f(B,col)+dots(B)+f(S,LF),l(B)+l(S)+l("M36 48C34 56 34 66 37 74"))},
+cherries:(col=R)=>svg(c(30,72,17,col)+c(68,70,17,col)+f("M58 10C66 2 82 4 86 10C78 17 66 17 58 10Z",LF),cl(30,72,17)+cl(68,70,17)+l("M30 55C34 36 44 20 58 10M68 53C66 38 62 22 58 10")+l("M24 66C24 62 27 59 30 59")),
+berries:(col=PU,leafy=true)=>{const pts=[[38,50],[56,46],[47,64],[66,62],[30,68],[56,80],[40,82],[72,78]];const [lf,ll]=leafy?leafAt(46,30,1):["",""];return svg(pts.map(([x,y])=>c(x,y,10,col)).join("")+lf,pts.map(([x,y])=>cl(x,y,10)).join("")+ll,`<g fill="${W}" opacity=".7">${pts.map(([x,y])=>`<circle cx="${x-3}" cy="${y-3}" r="2"/>`).join("")}</g>`)},
+strawberry:(col=R)=>{const B="M50 30C70 28 84 38 80 54C76 72 60 90 50 92C40 90 24 72 20 54C16 38 30 28 50 30Z",S="M50 22L56 32L68 28L60 36L50 34L40 36L32 28L44 32Z";return svg(f(B,col)+f(S,LF),l(B)+l(S),`<g fill="${Y}">${[[38,46],[52,44],[64,48],[44,60],[58,62],[50,76],[36,58],[66,62]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="1.6" ry="2.6"/>`).join("")}</g>`)},
+grapes:(col=G)=>{const pts=[[36,40],[50,38],[64,40],[42,54],[58,54],[50,68],[34,56],[66,56],[46,80],[56,80]];const [lf,ll]=leafAt(52,26,1);return svg(pts.map(([x,y])=>c(x,y,9,col)).join("")+lf,pts.map(([x,y])=>cl(x,y,9)).join("")+ll+l("M50 30V16"))},
+fig:(col=PU)=>{const p="M50 16C56 24 60 30 68 40C82 56 80 84 50 90C20 84 18 56 32 40C40 30 44 24 50 16Z";return svg(f(p,col)+dots(p),l(p)+l("M50 16C50 10 52 6 56 4")+l("M38 54C36 64 38 74 44 80"))},
+peach:(col=OR,blush=R)=>{const [lf,ll]=leafAt(52,22,.8);return svg(f(ROUND,col)+`<path d="M30 40C20 56 26 80 46 86C34 72 32 56 40 40Z" fill="${blush}" opacity=".6"/>`+lf,l(ROUND)+ll+l("M50 28C42 46 42 70 50 90"))},
+plum:(col=PU)=>{const p="M50 22C70 22 82 40 80 60C78 80 64 92 50 92C36 92 22 80 20 60C18 40 30 22 50 22Z";return svg(f(p,col)+dots(p),l(p)+l("M50 22C46 44 46 70 50 92")+l("M50 22C52 16 54 12 58 10"))},
+melon:(col=Y)=>{const p="M50 20C76 20 92 38 92 58C92 78 74 92 50 92C26 92 8 78 8 58C8 38 24 20 50 20Z";return svg(f(p,col),l(p)+l("M20 40C40 50 60 50 80 40M14 58C38 66 62 66 86 58M20 76C40 84 60 84 80 76M50 20V92M32 24C26 46 26 70 32 88M68 24C74 46 74 70 68 88"))},
+watermelon:()=>{const r="M8 40C8 66 28 86 50 86C72 86 92 66 92 40Z",i="M16 42C16 62 32 78 50 78C68 78 84 62 84 42Z";return svg(f(r,G)+f(i,R),l(r)+l(i)+l("M8 40H92"),`<g fill="${K}">${[[34,52],[50,58],[66,52],[42,66],[58,66]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="2" ry="3.2"/>`).join("")}</g>`)},
+pomegranate:(col=R)=>{const p="M50 26C72 26 88 42 88 62C88 80 70 92 50 92C30 92 12 80 12 62C12 42 28 26 50 26Z",k="M40 28L42 14L48 22L52 12L56 22L62 14L62 28";return svg(f(p,col)+dots(p)+f(k+"Z",col),l(p)+l(k)+l("M28 50C24 58 24 68 28 76"))},
+kiwi:()=>svg(c(50,50,40,BR)+c(50,50,32,G)+c(50,50,10,CR),cl(50,50,40)+cl(50,50,32)+cl(50,50,10),`<g fill="${K}">${Array.from({length:12},(_,i)=>{const a=i*Math.PI/6;return `<ellipse cx="${(50+17*Math.cos(a)).toFixed(1)}" cy="${(50+17*Math.sin(a)).toFixed(1)}" rx="1.6" ry="2.6" transform="rotate(${i*30+90} ${(50+17*Math.cos(a)).toFixed(1)} ${(50+17*Math.sin(a)).toFixed(1)})"/>`}).join("")}</g>`),
+persimmon:(col=OR)=>{const p="M50 34C76 32 90 46 88 64C86 82 70 90 50 90C30 90 14 82 12 64C10 46 24 32 50 34Z",s="M50 28L60 36L74 32L64 42L50 40L36 42L26 32L40 36Z";return svg(f(p,col)+f(s,LF),l(p)+l(s)+l("M50 28V18"))},
+pricklypear:(col=OR)=>{const p="M50 18C70 20 82 40 80 62C78 82 64 92 50 92C36 92 22 82 20 62C18 40 30 20 50 18Z";return svg(f(p,col),l(p)+l("M44 18L50 12L56 18"),`<g fill="${K}">${[[36,36],[52,30],[66,40],[32,56],[50,52],[68,60],[40,74],[58,78]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.8"/>`).join("")}</g>`)},
+smallfruit:(col=Y,n=3)=>{const pts=[[36,62],[60,66],[48,44],[70,46],[30,40]].slice(0,n);const [lf,ll]=leafAt(50,26,1);return svg(pts.map(([x,y])=>e(x,y,13,16,col)).join("")+lf,pts.map(([x,y])=>el(x,y,13,16)).join("")+ll+l("M50 26C48 34 48 40 48 44"),`<g fill="${W}" opacity=".6">${pts.map(([x,y])=>`<ellipse cx="${x-4}" cy="${y-6}" rx="2.5" ry="4"/>`).join("")}</g>`)},
+avocado:()=>{const p="M50 12C62 12 66 30 74 46C84 66 76 92 50 92C24 92 16 66 26 46C34 30 38 12 50 12Z",i="M50 22C58 24 62 36 68 50C76 66 70 84 50 84C30 84 24 66 32 50C38 36 42 24 50 22Z";return svg(f(p,G)+f(i,"#D8E79A")+c(50,62,13,BR),l(p)+l(i)+cl(50,62,13))},
+leafy:(col=G,vein=W)=>{const p="M50 18C70 16 88 30 88 52C88 76 70 90 50 90C30 90 12 76 12 52C12 30 30 16 50 18Z";return svg(f(p,col)+dots(p),l(p)+l("M50 90C50 70 50 50 50 30M50 60C40 52 30 50 20 52M50 60C60 52 70 50 80 52M50 76C40 70 32 70 24 72M50 76C60 70 68 70 76 72")+l("M20 40C30 30 40 26 50 26C60 26 70 30 80 40"))},
+longleaf:(col=G,stem=W)=>{const a="M40 92C26 70 22 40 34 14C48 30 54 62 40 92Z",b="M56 92C54 66 60 38 80 20C86 46 76 74 56 92Z";return svg(f(a,col)+f(b,col),l(a)+l(b)+`<path d="M40 92C38 66 36 40 34 16M56 92C62 66 70 42 80 22" fill="none" stroke="${stem}" stroke-width="3" stroke-linecap="round"/>`+l("M36 50L28 42M38 66L30 60M62 56L70 48M60 72L68 66"))},
+radicchio:(col="#9E1B3C")=>{const p="M50 20C72 20 86 36 86 56C86 76 70 90 50 90C30 90 14 76 14 56C14 36 28 20 50 20Z";return svg(f(p,col),l(p),`<path d="M50 88C50 64 50 44 50 24M50 56C40 48 30 46 20 50M50 56C60 48 70 46 80 50M50 72C42 66 32 66 24 70M50 72C58 66 68 66 76 70" fill="none" stroke="${W}" stroke-width="3" stroke-linecap="round"/>`)},
+treviso:(col="#9E1B3C")=>{const a="M38 92C28 66 26 34 38 10C48 30 50 64 42 92Z",b="M52 92C54 62 58 34 70 14C80 40 70 72 56 92Z",d="M30 92C18 72 14 50 18 30C30 48 36 70 34 92Z";return svg(f(a,col)+f(b,col)+f(d,col),l(a)+l(b)+l(d),`<path d="M40 90C38 64 37 38 38 14M54 90C58 64 62 40 70 18M32 90C26 72 22 52 19 34" fill="none" stroke="${W}" stroke-width="3" stroke-linecap="round"/>`)},
+broccoli:(col=G)=>{const h="M50 16C64 14 74 22 76 30C88 30 94 44 86 52C78 60 64 58 58 54H42C36 58 22 60 14 52C6 44 12 30 24 30C26 22 36 14 50 16Z",s="M42 54L36 90H64L58 54";return svg(f(h,col)+dots(h)+f(s+"Z","#BFD9A0"),l(h)+l(s)+l("M46 70L50 60L54 70"))},
+cauli:(col=CR,leaf=LF)=>{const h="M50 22C64 20 74 28 76 36C86 38 90 48 84 56C76 64 62 62 50 62C38 62 24 64 16 56C10 48 14 38 24 36C26 28 36 22 50 22Z",lv="M10 54C14 76 30 90 50 90C70 90 86 76 90 54C80 64 66 70 50 70C34 70 20 64 10 54Z";return svg(f(lv,leaf)+f(h,col),l(h)+l(lv)+l("M38 36C34 42 36 48 40 50M56 32C52 38 54 46 58 48M30 46C30 50 32 54 36 56M66 44C64 50 66 54 70 56"))},
+romanesco:(col="#8BC34A")=>{const tri=(x,y,s)=>`M${x} ${y-s}L${x+s*.9} ${y+s*.6}L${x-s*.9} ${y+s*.6}Z`;const ts=[[50,30,14],[34,50,11],[66,50,11],[50,56,12],[26,70,9],[74,70,9],[42,72,10],[58,72,10]];return svg(ts.map(t=>f(tri(...t),col)).join(""),ts.map(t=>l(tri(...t))).join("")+l("M20 84C36 92 64 92 80 84"))},
+sprouts:(col=G)=>{const pts=[[34,60],[60,56],[46,76],[70,76],[50,40]];return svg(pts.map(([x,y])=>c(x,y,14,col)).join(""),pts.map(([x,y])=>cl(x,y,14)+l(`M${x-8} ${y}C${x-4} ${y-8} ${x+4} ${y-8} ${x+8} ${y}M${x} ${y-14}V${y-6}`)).join(""))},
+artichoke:(col=LF)=>{const p="M50 14C70 24 82 44 78 64C74 82 62 90 50 90C38 90 26 82 22 64C18 44 30 24 50 14Z";return svg(f(p,col),l(p)+l("M50 14C44 26 44 34 50 42C56 34 56 26 50 14M30 40C36 50 44 52 50 50C56 52 64 50 70 40M24 60C34 70 44 70 50 66C56 70 66 70 76 60M34 82C40 78 46 78 50 82C54 78 60 78 66 82M50 90V97"))},
+asparagus:(col=G,tip=PU)=>{const sp=[[36,10],[50,6],[64,12]];return svg(sp.map(([x,y])=>f(`M${x-5} 94L${x-4} ${y+10}C${x-4} ${y} ${x+4} ${y} ${x+4} ${y+10}L${x+5} 94Z`,col)+f(`M${x-4} ${y+14}C${x-4} ${y} ${x+4} ${y} ${x+4} ${y+14}Z`,tip)).join(""),sp.map(([x,y])=>l(`M${x-5} 94L${x-4} ${y+10}C${x-4} ${y} ${x+4} ${y} ${x+4} ${y+10}L${x+5} 94Z`)+l(`M${x-4} ${y+30}L${x} ${y+26}L${x+4} ${y+30}M${x-4} ${y+50}L${x} ${y+46}L${x+4} ${y+50}`)).join("")+l("M28 70H72"))},
+fennel:(col="#DDEBC8")=>{const b="M50 40C66 40 82 54 82 70C82 86 66 92 50 92C34 92 18 86 18 70C18 54 34 40 50 40Z";return svg(f(b,col)+f("M30 22L36 8M50 40L50 6M68 22L64 8","none"),l(b)+l("M38 42L30 10M50 40V6M62 42L70 10M40 60C38 70 40 80 46 88M60 60C62 70 60 80 54 88")+`<path d="M30 10L24 4M30 10L22 12M50 6L44 2M50 6L56 2M70 10L76 4M70 10L78 12" fill="none" stroke="${LF}" stroke-width="3" stroke-linecap="round"/>`)},
+stalks:(col=G,base=W)=>{const s=[[36,92,30,10],[50,92,50,6],[64,92,70,10]];return svg(s.map(([x1,y1,x2,y2])=>f(`M${x1-6} ${y1}L${x2-5} ${y2+20}L${x2+5} ${y2+20}L${x1+6} ${y1}Z`,base)+f(`M${x2-5} ${y2+22}C${x2-10} ${y2+6} ${x2-4} ${y2} ${x2} ${y2}C${x2+4} ${y2} ${x2+10} ${y2+6} ${x2+5} ${y2+22}Z`,col)).join(""),s.map(([x1,y1,x2,y2])=>l(`M${x1-6} ${y1}L${x2-5} ${y2+20}C${x2-10} ${y2+6} ${x2-4} ${y2} ${x2} ${y2}C${x2+4} ${y2} ${x2+10} ${y2+6} ${x2+5} ${y2+20}L${x1+6} ${y1}Z`)).join("")+l("M30 80H70"))},
+onion:(col=PU)=>{const p="M50 18C56 30 84 40 84 64C84 82 68 92 50 92C32 92 16 82 16 64C16 40 44 30 50 18Z";return svg(f(p,col)+dots(p),l(p)+l("M50 18C50 12 48 8 46 4M50 30C40 44 36 66 44 90M50 30C60 44 64 66 56 90M42 94L38 98M50 94V99M58 94L62 98"))},
+garlic:(col=CR)=>{const p="M50 18C56 30 80 40 80 64C80 82 66 90 50 90C34 90 20 82 20 64C20 40 44 30 50 18Z";return svg(f(p,col),l(p)+l("M50 18C50 12 48 8 46 6M50 34C42 46 40 70 46 90M50 34C58 46 60 70 54 90M36 46C30 58 30 76 36 86M64 46C70 58 70 76 64 86M40 92L36 96M50 92V97M60 92L64 96"))},
+carrot:(col=OR)=>{const p="M70 30C80 40 76 50 66 58C52 70 30 84 12 92C22 74 34 52 46 38C54 28 62 24 70 30Z";return svg(f(p,col)+f("M66 26C64 14 70 6 76 4C76 14 74 22 70 28ZM72 30C80 20 90 18 96 20C90 28 82 32 74 32Z",LF),l(p)+l("M52 44L58 48M42 58L48 60M32 72L37 74"))},
+root:(col=R,top=LF,shape=0)=>{const p=shape?"M50 34C72 34 84 48 84 62C84 78 66 86 50 92C34 86 16 78 16 62C16 48 28 34 50 34Z":"M50 34C70 34 82 46 82 62C82 78 68 86 54 90C52 94 50 98 50 98C50 98 48 94 46 90C32 86 18 78 18 62C18 46 30 34 50 34Z";const lv="M44 34C36 20 30 10 26 4C36 8 44 20 48 32ZM52 32C56 20 62 10 70 6C70 16 62 26 56 34Z";return svg(f(p,col)+f(lv,top),l(p)+l(lv)+l("M32 56C30 64 32 72 38 78"))},
+potato:(col=TA)=>{const p="M30 30C46 18 72 22 84 40C94 58 84 80 62 86C40 92 18 84 14 64C10 48 18 38 30 30Z";return svg(f(p,col),l(p),`<g fill="${K}">${[[36,44],[62,38],[72,62],[44,70],[54,56]].map(([x,y])=>`<path d="M${x-3} ${y}C${x-1} ${y-2} ${x+1} ${y-2} ${x+3} ${y}" stroke="${K}" stroke-width="2" fill="none"/>`).join("")}</g>`)},
+pumpkin:(col=OR)=>{const p="M50 28C64 24 82 30 88 50C94 72 78 90 50 90C22 90 6 72 12 50C18 30 36 24 50 28Z";return svg(f(p,col)+dots(p),l(p)+l("M50 28C42 46 42 74 50 90M50 28C58 46 58 74 50 90M30 32C22 50 24 76 34 88M70 32C78 50 76 76 66 88M50 28C50 20 54 14 60 12"))},
+longveg:(col=G,stripe=true)=>{const p="M16 72C10 64 14 56 24 52L74 24C84 18 94 24 90 34C88 40 82 44 76 48L28 76C24 78 20 76 16 72Z";return svg(f(p,col)+(stripe?dots(p):"")+f("M84 22L92 14L96 18L90 26Z",LF),l(p)+l("M28 64L72 38M34 70L78 44"))},
+pods:(col=G)=>{const a="M12 80C30 60 60 30 88 14C80 34 50 66 18 86Z",b="M20 90C40 72 66 44 92 30C84 48 56 76 26 94Z";return svg(f(a,col)+f(b,col),l(a)+l(b)+l("M88 14L94 8M92 30L98 26"))},
+zflower:(col=OR)=>{const p="M50 92L44 60L22 40C30 30 40 34 44 40C42 26 48 14 50 10C52 14 58 26 56 40C60 34 70 30 78 40L56 60Z";return svg(f(p,col)+f("M44 70L56 70L54 94L46 94Z",G),l(p)+l("M44 70L56 70L54 94L46 94Z")+l("M50 40V60"))},
+eggplant:()=>{const p="M60 28C76 34 84 52 78 70C72 88 50 96 32 90C16 84 12 66 22 54C32 42 44 40 50 32C53 28 56 26 60 28Z";return svg(f(p,PU)+dots(p)+f("M50 30C54 20 64 18 72 22C70 30 62 34 54 34Z",LF),l(p)+l("M62 22C64 14 68 10 74 8")+l("M30 66C30 74 34 80 40 84"))},
+pepper:(col=R)=>{const p="M30 30C40 24 60 24 70 30C84 38 84 60 76 76C70 88 58 92 50 86C42 92 30 88 24 76C16 60 16 38 30 30Z";return svg(f(p,col)+dots(p)+f("M44 26C44 18 50 12 58 10L60 16C54 18 52 22 52 26Z",LF),l(p)+l("M50 30C46 50 46 70 50 86")+l("M58 10C60 8 64 8 66 10"))},
+chilli:(col=R)=>{const p="M70 24C82 30 82 46 70 60C56 76 34 88 12 90C30 80 46 66 54 50C60 38 60 28 70 24Z";return svg(f(p,col)+f("M64 20C70 14 80 16 82 24C76 28 68 28 64 20Z",LF),l(p)+l("M74 20C76 14 80 10 86 8")+l("M64 40C62 50 56 58 48 66"))},
+mushroom:(cap=BR,stem=WH,spots=false)=>{const cp="M10 54C10 30 30 14 50 14C70 14 90 30 90 54Z",st="M38 54C36 68 34 80 36 90H64C66 80 64 68 62 54";return svg(f(cp,cap)+(spots?"":dots(cp)),l(cp)+`<path class="ln" style="fill:${stem}" d="${st}"/>`+l("M44 64V84"),spots?`<g fill="${W}"><circle cx="34" cy="34" r="5"/><circle cx="56" cy="26" r="4"/><circle cx="70" cy="42" r="5"/></g>`:"")},
+chanterelle:(col=Y)=>{const p="M14 28C30 20 70 20 86 28C80 40 62 50 58 60C56 72 58 84 60 92H40C42 84 44 72 42 60C38 50 20 40 14 28Z";return svg(f(p,col),l(p)+l("M26 32C36 40 44 46 46 54M74 32C64 40 56 46 54 54M50 30V56"))},
+ovolo:()=>{const cp="M14 50C14 28 32 16 50 16C68 16 86 28 86 50Z",st="M40 50V78H60V50",v="M32 76C32 92 68 92 68 76Z";return svg(f(cp,OR)+f(v,W),l(cp)+`<path class="ln" style="fill:#FFE58A" d="${st}Z"/>`+l(v)+l("M40 60H60"))},
+trumpet:()=>{const p="M18 18C34 12 66 12 82 18C72 30 60 42 58 56C56 70 56 82 58 94H42C44 82 44 70 42 56C40 42 28 30 18 18Z";return svg(f(p,DK)+dots(p),l(p)+l("M30 22C40 30 46 40 48 52M70 22C60 30 54 40 52 52"))},
+clustercaps:(col=TA)=>{const caps=[[30,40],[52,30],[70,44],[44,56]];return svg(caps.map(([x,y])=>f(`M${x-14} ${y}C${x-14} ${y-12} ${x+14} ${y-12} ${x+14} ${y}Z`,col)).join(""),caps.map(([x,y])=>l(`M${x-14} ${y}C${x-14} ${y-12} ${x+14} ${y-12} ${x+14} ${y}Z`)+l(`M${x} ${y}C${x-2} ${y+20} ${x+4} ${y+34} ${50} 92`)).join(""))},
+oyster:(col="#C9B79C")=>{const p="M12 46C14 26 40 16 62 20C84 24 92 40 86 54C78 66 60 64 52 70C46 76 46 86 48 92H36C38 82 38 74 32 68C22 62 12 58 12 46Z";return svg(f(p,col)+dots(p),l(p)+l("M24 44C36 38 52 36 70 38M30 54C44 50 58 50 74 50"))},
+truffle:(col=DK)=>{const p="M50 20C68 18 86 30 86 52C86 74 70 90 50 90C28 90 14 76 14 54C14 34 30 22 50 20Z";return svg(f(p,col),l(p),`<g fill="${W}" opacity=".55">${Array.from({length:22},(_,i)=>`<circle cx="${(22+(i*37)%60).toFixed(0)}" cy="${(32+(i*23)%52).toFixed(0)}" r="1.6"/>`).join("")}</g>`)},
+basil:()=>{const ls=[["M50 30C40 18 26 18 20 26C30 34 42 36 50 30Z"],["M52 50C64 38 78 40 84 48C74 56 60 58 52 50Z"],["M48 66C36 56 22 58 16 66C26 74 40 74 48 66Z"],["M52 20C56 10 66 6 74 10C70 18 60 22 52 20Z"]];return svg(ls.map(([p])=>f(p,LF)).join(""),ls.map(([p])=>l(p)).join("")+l("M50 96C50 70 50 40 54 14"))},
+saffron:()=>{const p="M50 60C36 54 26 40 28 22C38 26 46 34 50 46C54 34 62 26 72 22C74 40 64 54 50 60Z";return svg(f(p,"#8E6CC8")+f("M50 92V60",G),l(p)+l("M50 60V94")+l("M44 64C36 70 32 80 34 90"),`<path d="M50 50L42 26M50 50L50 22M50 50L58 26" stroke="${R}" stroke-width="3" fill="none" stroke-linecap="round"/>`)},
+capers:()=>{const pts=[[30,50],[50,42],[70,52],[40,68],[60,70],[50,86]];return svg(pts.map(([x,y])=>e(x,y,9,11,"#7E9A4A")).join(""),pts.map(([x,y])=>el(x,y,9,11)+l(`M${x-4} ${y-6}L${x+4} ${y+6}`)).join(""))},
+needles:(col=G)=>svg(`<path d="M50 92C40 70 20 50 10 40M50 92C44 66 34 40 30 20M50 92C50 64 50 40 50 12M50 92C56 66 66 40 70 20M50 92C60 70 80 50 90 40" stroke="${col}" stroke-width="7" fill="none" stroke-linecap="round"/>`,l("M50 92C40 70 20 50 10 40M50 92C44 66 34 40 30 20M50 92C50 64 50 40 50 12M50 92C56 66 66 40 70 20M50 92C60 70 80 50 90 40")),
+cardoon:(col="#C8D4B8")=>{const s=[30,44,58,72];return svg(s.map(x=>f(`M${x-6} 94L${x-3} 14H${x+3}L${x+6} 94Z`,col)).join(""),s.map(x=>l(`M${x-6} 94L${x-3} 14H${x+3}L${x+6} 94Z`)+l(`M${x} 20V90`)).join(""))},
+chestnut:(col=BR)=>{const p="M50 18C66 30 84 48 84 66C84 82 68 90 50 90C32 90 16 82 16 66C16 48 34 30 50 18Z";return svg(f(p,col)+`<path d="M20 70C30 84 70 84 80 70C80 80 66 90 50 90C34 90 20 80 20 70Z" fill="${TA}"/>`,l(p)+l("M20 70C30 82 70 82 80 70")+l("M50 18L50 12"),`<path d="M36 36C40 30 46 26 50 24" stroke="${W}" stroke-width="3" fill="none" opacity=".6"/>`)},
+walnut:(col=TA)=>{const p="M50 16C70 16 84 32 84 54C84 76 70 90 50 90C30 90 16 76 16 54C16 32 30 16 50 16Z";return svg(f(p,col),l(p)+l("M50 16C46 40 54 66 50 90M30 30C38 40 34 52 26 60M70 30C62 40 66 52 74 60M30 70C38 64 44 72 40 82M70 70C62 64 56 72 60 82"))},
+hazelnut:(col=BR)=>{const p="M50 26C70 26 82 44 80 62C78 80 64 90 50 90C36 90 22 80 20 62C18 44 30 26 50 26Z",h="M26 34C34 18 66 18 74 34C70 26 60 30 56 24C52 32 44 28 40 22C38 30 30 28 26 34Z";return svg(f(p,col)+f(h,G),l(p)+l(h)+l("M34 50C32 58 34 66 38 72"))},
+almond:(col=TA)=>{const pts=[[36,50],[64,46],[50,74]];return svg(pts.map(([x,y])=>f(`M${x} ${y-24}C${x+14} ${y-10} ${x+14} ${y+10} ${x} ${y+20}C${x-14} ${y+10} ${x-14} ${y-10} ${x} ${y-24}Z`,col)).join(""),pts.map(([x,y])=>l(`M${x} ${y-24}C${x+14} ${y-10} ${x+14} ${y+10} ${x} ${y+20}C${x-14} ${y+10} ${x-14} ${y-10} ${x} ${y-24}Z`)+l(`M${x-4} ${y-8}V${y+6}M${x+4} ${y-6}V${y+8}`)).join(""))},
+pistachio:()=>{const pts=[[34,44],[64,40],[48,70],[72,70]];return svg(pts.map(([x,y])=>e(x,y,14,10,CR)+`<path d="M${x-6} ${y-4}C${x} ${y-8} ${x+8} ${y-4} ${x+6} ${y+4}C${x} ${y+6} ${x-6} ${y+2} ${x-6} ${y-4}Z" fill="#8DBF4A"/>`).join(""),pts.map(([x,y])=>el(x,y,14,10)).join(""))},
+pinenuts:()=>{const pts=[[30,40],[50,34],[70,42],[36,62],[58,58],[46,80],[68,76]];return svg(pts.map(([x,y])=>e(x,y,6,10,CR)).join(""),pts.map(([x,y])=>`<ellipse class="ln" cx="${x}" cy="${y}" rx="6" ry="10" transform="rotate(${(x*7)%50-25} ${x} ${y})"/>`).join(""))},
+peapod:(col=G)=>{const p="M8 62C24 40 56 26 90 30C80 52 50 76 14 72C10 70 8 66 8 62Z";return svg(f(p,col),l(p)+l("M90 30C93 26 95 22 94 18"),[[28,58],[43,51],[58,44],[73,38]].map(([x,y])=>`<circle class="ln" style="fill:#B7E07E" cx="${x}" cy="${y}" r="7"/>`).join(""))},
+favapod:(col=G)=>{const p="M10 70C20 44 52 24 88 24C84 52 58 76 22 82C14 82 10 78 10 70Z";return svg(f(p,col),l(p),[[30,64],[50,54],[70,42]].map(([x,y])=>`<ellipse class="ln" style="fill:#D8EFA6" cx="${x}" cy="${y}" rx="10" ry="7" transform="rotate(-25 ${x} ${y})"/>`).join(""))},
+beans:(col=CR,speck)=>{const pts=[[30,46],[54,40],[74,50],[40,64],[64,66],[28,80],[52,84],[76,82]];return svg(pts.map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="11" ry="7" fill="${col}" transform="rotate(${(x*3)%40-20} ${x} ${y})"/>`).join(""),pts.map(([x,y])=>`<ellipse class="ln" cx="${x}" cy="${y}" rx="11" ry="7" transform="rotate(${(x*3)%40-20} ${x} ${y})"/>`).join(""),speck?`<g fill="${speck}">${pts.map(([x,y])=>`<circle cx="${x-3}" cy="${y-1}" r="1.6"/><circle cx="${x+4}" cy="${y+1}" r="1.3"/>`).join("")}</g>`:"")},
+lentils:(col=BR)=>{const pts=[];for(let i=0;i<16;i++)pts.push([22+(i%5)*14+(i>9?7:0),40+Math.floor(i/5)*14]);return svg(pts.map(([x,y])=>e(x,y,6,4.5,col)).join(""),pts.map(([x,y])=>el(x,y,6,4.5)).join("")+l("M14 84C36 94 64 94 86 84"))},
+chickpeas:(col=TA)=>{const pts=[[30,46],[52,40],[72,48],[40,66],[62,64],[30,84],[52,84],[74,80]];return svg(pts.map(([x,y])=>c(x,y,10,col)).join(""),pts.map(([x,y])=>cl(x,y,10)+l(`M${x-2} ${y-10}C${x+2} ${y-6} ${x+2} ${y-2} ${x-1} ${y+2}`)).join(""))},
+lupini:()=>{const pts=[[32,44],[56,40],[74,54],[42,66],[64,72],[30,82]];return svg(pts.map(([x,y])=>c(x,y,11,Y)).join(""),pts.map(([x,y])=>cl(x,y,11)+cl(x,y,4)).join(""))},
+bird:(col=BR,head=G)=>{const b="M20 58C20 40 40 30 60 34C72 36 80 46 82 58C84 74 70 86 50 86C32 86 20 76 20 58Z";return svg(f(b,col)+dots(b)+c(76,32,12,head),l(b)+cl(76,32,12)+l("M88 32L96 30L88 36")+l("M20 58C10 50 6 44 6 36C14 42 18 48 24 50")+l("M38 52C48 48 58 50 66 58"),`<circle cx="79" cy="30" r="2" fill="${K}"/>`)},
+steak:(col="#C9433C",fat=CR)=>{const o="M16 40C22 22 50 16 70 22C90 28 92 52 82 68C70 86 40 90 24 78C12 68 12 52 16 40Z",i="M24 42C28 30 50 26 66 30C80 36 82 52 74 64C64 76 42 80 30 72C22 64 20 52 24 42Z";return svg(f(o,fat)+f(i,col)+dots(i),l(o)+l(i)+l("M36 46C44 54 52 56 62 52M40 62C48 66 56 66 64 62"))},
+chop:(col="#C9433C")=>{const m="M40 30C56 20 80 28 84 46C88 64 72 76 54 74C44 72 40 64 36 56Z",b="M36 56L12 84C10 88 14 92 18 90L44 66";return svg(f(m,col)+f(b,CR),l(m)+l(b)+l("M48 40C56 36 68 40 72 48"),`<circle cx="14" cy="86" r="5" class="ln" style="fill:${W}"/>`)},
+ham:(col="#C9433C")=>{const p="M18 30C34 14 60 14 76 28C90 40 92 62 80 76C70 86 56 84 50 76C44 70 36 70 30 74L20 82C14 86 8 80 12 74L22 62C14 52 10 40 18 30Z";return svg(f(p,col)+dots(p),l(p)+l("M30 34C46 26 62 30 72 42"),`<path d="M22 62L12 74C8 80 14 86 20 82L30 74" fill="${CR}" stroke="${K}" stroke-width="2.6"/>`)},
+salami:(col="#A2332E",fat=W)=>{const log="M12 44C12 32 24 28 40 30L70 32C84 34 90 44 90 54C90 64 84 72 70 72L40 74C24 76 12 70 12 56Z";return svg(f(log,col)+c(72,52,18,col),l(log)+l("M16 40L20 34M16 64L20 70M28 30C26 46 26 60 28 74")+cl(72,52,18)+l("M12 44C6 42 4 38 6 34"),`<g fill="${fat}">${[[66,46],[76,44],[80,56],[70,60],[62,54],[74,52]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="2.4"/>`).join("")}</g>`)},
+mortadella:()=>svg(c(50,52,40,PK),cl(50,52,40),`<g fill="${W}">${[[34,40],[60,32],[70,56],[44,64],[56,74],[30,60],[50,48]].map(([x,y])=>`<rect x="${x}" y="${y}" width="6" height="5" rx="1"/>`).join("")}</g><g fill="#8DBF4A">${[[44,36],[64,46],[38,74]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="2.2"/>`).join("")}</g>`),
+sausage:(col="#B4453A")=>{const s="M10 56C10 44 22 40 32 44C40 36 52 36 58 44C66 36 80 36 86 46C94 56 86 68 76 66C70 72 58 72 52 64C46 72 34 72 30 66C20 70 10 66 10 56Z";return svg(f(s,col)+dots(s),l(s)+l("M32 44C30 52 30 60 30 66M58 44C56 52 54 58 52 64")+l("M10 56L4 52M86 46L94 40"))},
+lardo:()=>{const p="M14 38L80 26L88 64L22 76Z";return svg(f(p,WH),l(p)+l("M14 38L22 76"),`<path d="M18 44L82 32" stroke="#D97B6C" stroke-width="5" fill="none" opacity=".7"/><g fill="${K}">${[[40,52],[56,50],[70,58],[34,64]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.4"/>`).join("")}</g>`)},
+nduja:()=>{const p="M20 30C30 18 70 18 80 30C90 44 86 76 70 86C58 92 42 92 30 86C14 76 10 44 20 30Z";return svg(f(p,"#C2261E")+dots(p),l(p)+l("M40 20L36 10M60 20L64 10")+l("M30 46C32 60 36 70 44 78"))},
+milk:()=>{const p="M38 8H62V20L72 36V90H28V36L38 20Z";return svg(f(p,W)+f("M28 56H72V74H28Z",BL),l(p)+l("M38 20H62M28 56H72M28 74H72"))},
+butter:()=>{const top="M14 44L56 30L88 42L46 58Z",side="M14 44V64L46 78V58ZM46 58V78L88 62V42Z";return svg(f(top,"#FFE58A")+f(side,Y),l(top)+l(side)+l("M30 40L62 32"))},
+ricotta:()=>{const m="M18 58C18 40 32 30 50 30C68 30 82 40 82 58Z",b="M14 58H86L78 86H22Z";return svg(f(m,W)+f(b,TA),l(m)+l(b)+l("M24 66H76M26 76H74M34 58L32 86M50 58V86M66 58L68 86"))},
+mozz:(knot=false)=>{const p="M50 26C72 26 86 42 86 60C86 78 70 90 50 90C30 90 14 78 14 60C14 42 28 26 50 26Z";return svg(f(p,W)+(knot?f("M40 26C42 16 58 16 60 26C56 22 44 22 40 26Z",W):""),l(p)+(knot?l("M40 26C42 16 58 16 60 26M44 28C46 22 54 22 56 28"):"")+l("M28 50C26 58 28 68 34 74"),`<path d="M58 40C64 42 68 48 68 54" stroke="${BL}" stroke-width="3" fill="none" opacity=".35"/>`)},
+softcheese:(col=CR,rind=W)=>{const top="M12 44C12 32 30 26 50 26C70 26 88 32 88 44C88 56 70 62 50 62C30 62 12 56 12 44Z",side="M12 44V64C12 76 30 82 50 82C70 82 88 76 88 64V44C88 56 70 62 50 62C30 62 12 56 12 44Z";return svg(f(side,rind)+f(top,col),l(top)+l(side)+l("M50 44L84 36C88 40 88 42 88 44L58 54Z"))},
+wheel:(col=Y)=>{const top="M10 44C10 30 28 22 50 22C72 22 90 30 90 44C90 58 72 66 50 66C28 66 10 58 10 44Z",side="M10 44V66C10 80 28 88 50 88C72 88 90 80 90 66V44";return svg(f(top+side.slice(9)+"Z",col)+dots("M10 44V66C10 80 28 88 50 88C72 88 90 80 90 66V44C90 58 72 66 50 66C28 66 10 58 10 44Z"),l(top)+l(side)+`<path class="ln" style="fill:${W}" d="M50 44L82 34C88 38 90 41 90 44L58 54Z"/>`+l("M24 56L24 60M36 62L36 66M66 62L66 66M76 56L76 60"))},
+wedge:(col=Y,holes=true,rind=BR)=>{const p="M8 70L70 22L92 44V82L8 82Z";return svg(f(p,col)+f("M70 22L92 44V82L86 82V46L68 26Z",rind),l(p)+l("M8 70L92 44"),holes?`<g class="ln" style="fill:${W}"><ellipse cx="34" cy="72" rx="6" ry="4"/><ellipse cx="62" cy="66" rx="8" ry="6"/><ellipse cx="60" cy="44" rx="4" ry="3"/></g>`:"")},
+blue:()=>{const p="M8 70L70 22L92 44V82L8 82Z";return svg(f(p,"#F4F0DC"),l(p)+l("M8 70L92 44"),`<path d="M26 74C34 70 38 76 46 70M50 62C58 58 62 66 70 60M62 76C66 72 72 74 76 70M60 40C64 38 66 42 70 40" stroke="${BL}" stroke-width="3.2" fill="none" stroke-linecap="round"/>`)},
+cacio:(col="#F2D98A")=>{const p="M50 30C66 30 78 46 78 64C78 82 66 92 50 92C34 92 22 82 22 64C22 46 34 30 50 30Z",h="M42 30C40 22 44 14 50 14C56 14 60 22 58 30Z";return svg(f(p,col)+f(h,col),l(p)+l(h)+l("M46 18L40 6M54 18L60 6M40 30H60"))},
+tub:()=>{const p="M18 34H82L76 86H24Z";return svg(f(p,W)+f("M18 34C18 26 82 26 82 34C82 42 18 42 18 34Z",CR),l(p)+l("M18 34C18 26 82 26 82 34C82 42 18 42 18 34Z")+l("M22 50H78"),`<path d="M40 30C46 24 54 24 60 30" stroke="${K}" stroke-width="2" fill="none"/>`)},
+fish:(col=G,slim=1)=>{const p=`M8 50C22 ${50-20*slim} 48 ${50-24*slim} 66 ${50-14*slim}L88 ${50-28*slim}L84 50L88 ${50+28*slim}L66 ${50+14*slim}C48 ${50+24*slim} 22 ${50+20*slim} 8 50Z`;return svg(f(p,col)+dots(p),l(p)+l(`M28 ${50-10*slim}C32 46 32 54 28 ${50+10*slim}M40 52C46 50 52 50 58 52`),`<circle cx="19" cy="${47}" r="2.6" fill="${K}"/>`)},
+twofish:(col=BL)=>{const p=(y)=>`M10 ${y}C22 ${y-9} 46 ${y-11} 70 ${y-5}L90 ${y-13}L86 ${y}L90 ${y+13}L70 ${y+5}C46 ${y+11} 22 ${y+9} 10 ${y}Z`;return svg(f(p(36),col)+f(p(66),col)+dots(p(36))+dots(p(66)),l(p(36))+l(p(66))+l("M24 30C26 34 26 38 24 42M24 60C26 64 26 68 24 72"),`<circle cx="17" cy="35" r="2" fill="${K}"/><circle cx="17" cy="65" r="2" fill="${K}"/>`)},
+tuna:(col=BL)=>{const p="M6 50C20 32 50 26 72 38L90 22L86 50L90 78L72 62C50 74 20 68 6 50Z";return svg(f(p,col)+f("M20 56C40 64 60 62 72 58C60 70 34 70 20 56Z",W),l(p)+l("M40 34L46 22L52 34M44 66L48 76L52 66M60 40L64 38M62 44L66 42M64 48L68 46"),`<circle cx="18" cy="46" r="2.6" fill="${K}"/>`)},
+swordfish:()=>{const p="M18 50C30 34 56 30 74 40L92 26L88 50L92 74L74 60C56 70 30 66 18 50Z";return svg(f(p,"#7A8FA8")+dots(p),l(p)+l("M18 48L2 46L18 52")+l("M48 32L56 18L60 34"),`<circle cx="26" cy="46" r="2.6" fill="${K}"/>`)},
+flatfish:(col=TA)=>{const p="M50 10C74 14 88 34 86 54C84 72 70 84 54 86L58 96L42 96L46 86C30 84 16 72 14 54C12 34 26 14 50 10Z";return svg(f(p,col)+dots(p),l(p)+l("M50 20V80M30 30C26 46 26 62 30 76M70 30C74 46 74 62 70 76"),`<circle cx="44" cy="28" r="2.4" fill="${K}"/><circle cx="54" cy="26" r="2.4" fill="${K}"/>`)},
+eel:(col=DK)=>{const p="M8 56C20 40 34 40 44 50C54 60 66 62 76 50C82 42 90 42 94 48C86 52 82 60 76 64C64 74 50 72 40 62C30 52 20 54 12 64Z";return svg(f(p,col),l(p),`<circle cx="88" cy="46" r="1.8" fill="${W}"/>`)},
+clam:(col=CR,ridge=BR)=>{const p="M14 66C14 40 32 22 50 22C68 22 86 40 86 66C76 74 62 78 50 78C38 78 24 74 14 66Z";return svg(f(p,col),l(p)+l("M44 78L40 88H60L56 78"),`<path d="M50 26V76M32 32L40 76M68 32L60 76M20 48L32 76M80 48L68 76" stroke="${ridge}" stroke-width="2.4" fill="none" opacity=".7"/>`)},
+mussel:()=>{const p="M20 80C14 62 22 36 44 20C58 10 76 12 82 22C90 36 76 60 56 76C44 86 26 90 20 80Z";return svg(f(p,"#26314F")+dots(p),l(p),`<path d="M30 74C34 58 46 40 62 30M40 78C46 64 56 50 70 40" stroke="${BL}" stroke-width="2.4" fill="none" opacity=".8"/>`)},
+scallop:(col="#F2B48A")=>{const p="M50 82L14 46C14 26 30 14 50 14C70 14 86 26 86 46Z";return svg(f(p,col),l(p)+l("M50 82L28 18M50 82L40 14M50 82V14M50 82L60 14M50 82L72 18M50 82L84 36M50 82L16 36")+l("M38 82H62L58 92H42Z"))},
+octopus:(col="#C65A7A")=>{const h="M50 14C66 14 76 26 76 40C76 52 68 58 62 60H38C32 58 24 52 24 40C24 26 34 14 50 14Z";return svg(f(h,col)+`<path d="M38 58C30 70 18 74 10 70M44 60C40 74 34 84 24 90M50 60C50 76 50 86 46 94M56 60C60 74 66 84 76 90M62 58C70 70 82 74 90 70" stroke="${col}" stroke-width="8" fill="none" stroke-linecap="round"/>`,l(h)+l("M38 58C30 70 18 74 10 70M44 60C40 74 34 84 24 90M50 60C50 76 50 86 46 94M56 60C60 74 66 84 76 90M62 58C70 70 82 74 90 70"),`<circle cx="42" cy="40" r="3" fill="${K}"/><circle cx="58" cy="40" r="3" fill="${K}"/>`)},
+squid:(col="#E9C9D6")=>{const p="M50 6L66 26C70 40 66 56 60 64H40C34 56 30 40 34 26Z";return svg(f(p,col)+dots(p),l(p)+l("M42 64C40 76 34 86 30 94M48 64C48 78 46 88 44 96M52 64C52 78 54 88 56 96M58 64C60 76 66 86 70 94")+l("M34 26L22 34L36 38M66 26L78 34L64 38"),`<circle cx="44" cy="58" r="2.4" fill="${K}"/><circle cx="56" cy="58" r="2.4" fill="${K}"/>`)},
+cuttle:(col="#B48C7A")=>{const p="M50 12C68 12 78 28 78 48C78 66 68 76 60 78H40C32 76 22 66 22 48C22 28 32 12 50 12Z";return svg(f(p,col)+dots(p),l(p)+l("M24 40C16 50 16 62 26 70M76 40C84 50 84 62 74 70")+l("M42 78C40 86 36 92 32 96M50 78V96M58 78C60 86 64 92 68 96"),`<circle cx="42" cy="66" r="2.4" fill="${K}"/><circle cx="58" cy="66" r="2.4" fill="${K}"/>`)},
+prawn:(col="#F08A6C")=>{const p="M80 30C66 16 40 16 26 30C14 42 14 62 26 74C34 82 46 84 54 78C46 74 40 66 42 56C44 46 54 40 66 42C74 44 80 38 80 30Z";return svg(f(p,col)+dots(p),l(p)+l("M44 22C42 30 42 38 46 44M58 20C56 28 58 36 62 42M30 32C34 38 38 44 42 50M54 78L60 92L66 84L58 80")+l("M80 30C88 20 92 12 94 6M78 26C84 16 86 8 86 2"),`<circle cx="74" cy="32" r="2.4" fill="${K}"/>`)},
+crab:(col=R)=>{const b="M20 54C20 38 34 30 50 30C66 30 80 38 80 54C80 68 66 76 50 76C34 76 20 68 20 54Z";return svg(f(b,col)+dots(b)+f("M16 40C8 32 10 20 18 18L24 28L28 22C34 30 26 40 16 40Z",col)+f("M84 40C92 32 90 20 82 18L76 28L72 22C66 30 74 40 84 40Z",col),l(b)+l("M16 40C8 32 10 20 18 18L24 28L28 22C34 30 26 40 16 40ZM84 40C92 32 90 20 82 18L76 28L72 22C66 30 74 40 84 40Z")+l("M22 60L8 66M24 68L12 78M78 60L92 66M76 68L88 78M28 44L22 38M72 44L78 38"),`<circle cx="44" cy="42" r="2.4" fill="${K}"/><circle cx="56" cy="42" r="2.4" fill="${K}"/>`)},
+lobster:(col=R)=>{const b="M42 30H58L62 70L56 84L50 94L44 84L38 70Z";return svg(f(b,col)+dots(b)+f("M38 30C28 20 24 10 30 6C36 12 40 20 42 28ZM62 30C72 20 76 10 70 6C64 12 60 20 58 28Z",col),l(b)+l("M38 30C28 20 24 10 30 6C36 12 40 20 42 28ZM62 30C72 20 76 10 70 6C64 12 60 20 58 28Z")+l("M40 44H60M40 54H60M40 64H60M38 36L22 46M38 44L20 56M62 36L78 46M62 44L80 56"),`<circle cx="46" cy="34" r="2" fill="${K}"/><circle cx="54" cy="34" r="2" fill="${K}"/>`)},
+urchin:()=>{const sp=Array.from({length:18},(_,i)=>{const a=i*Math.PI/9;return `M${(50+26*Math.cos(a)).toFixed(1)} ${(56+22*Math.sin(a)).toFixed(1)}L${(50+44*Math.cos(a)).toFixed(1)} ${(56+38*Math.sin(a)).toFixed(1)}`}).join("");return svg(e(50,56,28,24,"#3B2A5A"),`<path d="${sp}" stroke="${K}" stroke-width="2.2" fill="none"/>`+el(50,56,28,24),`<ellipse cx="50" cy="56" rx="12" ry="8" fill="${OR}"/>`)},
+bottarga:()=>{const p="M14 40C30 30 70 30 86 40C92 46 92 58 86 64C70 74 30 74 14 64C8 58 8 46 14 40Z";return svg(f(p,OR)+dots(p),l(p)+l("M30 34C28 46 28 58 30 70M70 34C72 46 72 58 70 70"))},
+cod:()=>{const p="M50 6L84 40L74 92H26L16 40Z";return svg(f(p,"#E8DCC0")+dots(p),l(p)+l("M50 6V92M32 30L50 60L68 30"))},
+olives:()=>{const pts=[[36,56,G],[60,52,"#3B2A3A"],[48,76,G]];const [lf,ll]=leafAt(40,32,1.1);return svg(pts.map(([x,y,col])=>e(x,y,12,15,col)).join("")+lf,pts.map(([x,y])=>el(x,y,12,15)).join("")+ll+l("M40 32C36 24 30 18 24 14"),`<g fill="${W}" opacity=".6">${pts.map(([x,y])=>`<ellipse cx="${x-4}" cy="${y-6}" rx="2.5" ry="4"/>`).join("")}</g>`)},
+};
+
+/* food -> drawing */
+const M={
+"Asparagi":["asparagus"],"Castraure":["artichoke","#7A4E9E"],"Carciofi":["artichoke"],"Fagiolini":["pods"],"Zucchine":["longveg"],"Fiori di zucca":["zflower"],"Melanzane":["eggplant"],"Peperoni":["pepper"],"Peperoncino":["chilli"],"Pomodori":["tomato"],"Pomodoro San Marzano":["plumtomato"],"Cetrioli":["longveg","#4E8A3C",false],"Cipolla rossa di Tropea":["onion","#8E2A5E"],"Aglio fresco":["garlic"],"Aglio rosso di Sulmona":["garlic","#D9A0B8"],"Cipolla di Giarratana":["onion","#E8C58E"],"Radicchio rosso di Treviso tardivo":["treviso"],"Radicchio di Chioggia":["radicchio"],"Radicchio di Verona":["radicchio","#7E1B3C"],"Radicchio di Castelfranco":["leafy","#E6EDC0","#B8325A"],"Cavolo nero":["longleaf","#2E4B3A","#8DA88A"],"Cavolfiore":["cauli"],"Cavolfiore violetto":["cauli","#A47CC8"],"Broccolo romanesco":["romanesco"],"Broccoli":["broccoli"],"Cime di rapa":["longleaf","#4E8A3C","#E9F2C8"],"Cavolo verza":["leafy","#8DBF6A","#E9F2C8"],"Cavolini di Bruxelles":["sprouts"],"Cardo gobbo":["cardoon"],"Finocchi":["fennel"],"Spinaci":["longleaf","#2F7A3E","#CFE6B8"],"Bietole":["longleaf","#3E8A3C","#E04848"],"Cicoria":["longleaf","#4E9A3C","#F4F7E6"],"Puntarelle":["stalks","#7EB65A","#EEF4DC"],"Agretti":["needles"],"Lattuga e insalate":["leafy","#9AD06A","#EEF7DA"],"Porri":["stalks","#3E8A3C","#F2F4E4"],"Porro di Cervere":["stalks","#2F7A3E","#F2F4E4"],"Sedano rosso di Orbassano":["stalks","#7EB65A","#D98A8A"],"Carote":["carrot"],"Patate novelle":["potato","#E8C98E"],"Patata di Bologna":["potato"],"Patata della Sila":["potato","#C99A6A"],"Ravanelli":["root","#E0466A"],"Topinambur":["potato","#C9A98A"],"Barbabietole":["root","#8E1B3E"],"Zucca":["pumpkin"],"Zucca mantovana":["pumpkin","#4E7A5A"],"Funghi porcini":["mushroom"],"Tartufo bianco":["truffle","#D9C8A4"],"Tartufo nero pregiato":["truffle"],"Tartufo estivo":["truffle","#5A4630"],"Basilico genovese":["basil"],
+"Finferli":["chanterelle"],"Ovoli":["ovolo"],"Trombette dei morti":["trumpet"],"Chiodini":["clustercaps"],"Cardoncelli":["oyster"],"Tartufo bianchetto":["truffle","#C9B48E"],"Asparagi selvatici":["asparagus","#4E8A3C","#2F5A2A"],"Scarola":["leafy","#B8DC8A","#FFFFFF"],"Indivia riccia":["needles","#8DC24A"],"Cavolo cappuccio":["leafy","#8E5A9E","#E9DCF2"],"Rape":["root","#F2EFE6"],"Sedano rapa":["root","#D9CBA4",undefined,1],"Rafano":["carrot","#E8DCC0"],"Cipolline borettane":["onion","#F0E2C2"],"Scalogno di Romagna":["onion","#C98A6A"],"Piattoni":["pods","#6AA84A"],"Capperi di Pantelleria":["capers"],"Zafferano":["saffron"],
+"Arance":["citrus"],"Clementine":["citrus","#F59A2A"],"Mandarini":["citrus","#F7A23A"],"Mandarino tardivo di Ciaculli":["citrus","#F28A1A"],"Limoni":["citrus","#F4D13A"],"Limone Costa d'Amalfi":["citrus","var(--yellow)"],"Bergamotto":["citrus","#C8D84A"],"Cedro":["quince","#E8E06A"],"Pompelmi":["slice","#F7C76A","#F28A7A"],"Kiwi":["kiwi"],"Mele":["apple"],"Melannurca":["apple","#C9433C"],"Mele cotogne":["quince"],"Pere":["pear"],"Uva da tavola":["grapes"],"Fichi":["fig"],"Fichi d'India":["pricklypear"],"Cachi":["persimmon"],"Melagrane":["pomegranate"],"Corbezzoli":["berries","#E8452A"],"Fragole":["strawberry"],"Ciliegie":["cherries"],"Albicocche":["peach","#F5A54A","#F07A3A"],"Pesche e nettarine":["peach"],"Pesca Bella di Borgo d'Ale":["peach","#F7C08A"],"Susine":["plum"],"Susina di Dro":["plum","#4A2A6A"],"Meloni":["melon"],"Angurie":["watermelon"],"Nespole":["smallfruit","#F5A54A",3],"Mirtilli e lamponi":["berries","#3A3A8A"],"More e frutti di bosco":["berries","#2A1A3A"],"Olive":["olives"],"Arancia rossa di Sicilia":["slice","#F28A3A","#B3243A"],"Avocado siciliano":["avocado"],"Ribes":["berries","#D8342A"],"Fragoline di bosco":["berries","#E0362A"],"Giuggiole":["smallfruit","#A8452A",4],"Mirto":["berries","#2A2A4A",false],"Uva fragola":["grapes","#4A2A6A"],"Pesca tabacchiera":["peach","#F7D09A","#E86A5A"],
+"Castagne e marroni":["chestnut"],"Noci":["walnut"],"Nocciole":["hazelnut"],"Mandorle":["almond"],"Pistacchio verde di Bronte":["pistachio"],"Pinoli":["pinenuts"],
+"Piselli freschi":["peapod"],"Fave fresche":["favapod"],"Fave secche":["beans","#C9A06A"],"Fagioli borlotti freschi":["beans","#F2D9C8","#B3243A"],"Fagioli secchi":["beans","#F4EEDC"],"Fagiolina del Trasimeno":["beans","#E8D8A8","#7A4A2A"],"Fagiolo poverello bianco":["beans","#FBF7EC"],"Lenticchie":["lentils"],"Ceci":["chickpeas"],"Cicerchia":["chickpeas","#E0D0A0"],"Roveja":["lentils","#6A5A3A"],"Lupino gigante di Vairano":["lupini"],"Lenticchia di Castelluccio":["lentils","#8A6A3A"],"Fagiolo di Sorana":["beans","#FBF3E0"],
+"Agnello da latte":["chop"],"Capretto":["chop","#D06A5A"],"Cinghiale":["steak","#7A2A2A"],"Lepre":["steak","#8A3A2A"],"Fagiano":["bird","#A8582A","#1E6A3E"],"Anatra selvatica":["bird","#8A6A4A","#1E6A3E"],"Cervo e capriolo":["steak","#8A2A2A"],"Maiale fresco":["steak","#E88A8A"],"Cappone":["bird","#E8C08A","#D8342A"],"Oca":["bird","#F2F0E8","#E8A23A"],"Bue grasso di Carrù":["steak"],"Quaglia":["bird","#B08A5A","#7A5A3A"],
+"Latte d'alpeggio":["milk"],"Burro di malga":["butter"],"Ricotta di pecora":["ricotta"],"Raveggiolo":["softcheese","#FBF7EC","#F2EAD0"],"Mascarpone":["tub"],"Caprino fresco":["softcheese","#FFFFFF","#EEEADC"],"Mozzarella di bufala":["mozz"],"Burrata":["mozz",true],"Squacquerone di Romagna":["tub"],"Ricotta romana":["ricotta"],
+"Bitto Storico":["wheel","#F2D98A"],"Fontina d'alpeggio":["wedge","#F2D07A",true,"#B07A3A"],"Formaggio di malga":["wheel","#F4E2A0"],"Formai de Mut":["wheel","#F2DA8A"],"Castelmagno":["wedge","#F4ECD0",false,"#C9A06A"],"Furmàcc del féen":["wheel","#E8D08A"],"Taleggio":["softcheese","#F6EAC0","#E8A26A"],"Robiola di Roccaverano":["softcheese","#FBF7EC","#EEE6CC"],"Pecorino Romano":["wedge","#F4ECD0",false,"#3B2A2A"],"Pecorino della Montagna Pistoiese":["wedge","#F2E2B0",false,"#B07A3A"],"Caciocavallo podolico del Gargano":["cacio"],"Formaggio di fossa":["wedge","#E8D6A8",false,"#8A6A3A"],"Parmigiano Reggiano":["wedge","#F2D27A",false,"#C98A3A"],"Grana Padano":["wedge","#F4DC8A",false,"#C9A06A"],"Gorgonzola":["blue"],"Montasio":["wheel","#F2DC9A"],"Asiago":["wedge","#F6E6A8",true,"#C9A06A"],"Fiore Sardo":["wheel","#E8C88A"],"Ragusano":["cacio","#F0D07A"],"Toma Piemontese":["wheel","#F4E6B8"],
+"Culatello di Zibello":["ham","#B3243A"],"Zampone e cotechino":["sausage","#B4453A"],"Salama da sugo":["sausage","#8A2A2A"],"Ciccioli":["lardo"],"Mariola":["salami","#9A2A2A"],"Spalla cotta di San Secondo":["ham","#E88A8A"],"Violino di capra":["ham","#8A2A2A"],"Ciauscolo":["salami","#D06A6A"],"Susianella di Viterbo":["sausage","#A2332E"],"Capocollo di Martina Franca":["salami","#B3243A"],"Sacchiettu di Longobucco":["salami","#A2332E"],"Prosciutto di Parma e San Daniele":["ham"],"Mortadella Bologna":["mortadella"],"Bresaola della Valtellina":["salami","#6A1A1A","#7A2A2A"],"Speck Alto Adige":["ham","#7A2A2A"],"Lardo di Colonnata":["lardo"],"'Nduja di Spilinga":["nduja"],"Finocchiona":["salami","#C9433C"],
+"Alici di menaica":["twofish","#5A7AA8"],"Alici e acciughe":["twofish"],"Sardine":["twofish","#6A8AB8"],"Sgombro":["fish","#2E6A8A",.8],"Sugarello":["fish","#7A9AB8",.7],"Aguglia":["fish","#4A8AA8",.45],"Pesce spada":["swordfish"],"Tonno rosso":["tuna"],"Orata":["fish","#B8C4CC",1.1],"Spigola":["fish","#9AAAB8",.9],"Triglia":["fish","#E8605A",.8],"Scorfano":["fish","#D8342A",1.2],"Rombo":["flatfish"],"Sogliola":["flatfish","#C9A47A"],"Nasello":["fish","#C8CCD4",.7],"Dentice":["fish","#E8A0A8",1],"Seppie":["cuttle"],"Calamari e calamaretti":["squid"],"Polpo":["octopus"],"Mazzancolle":["prawn","#E89A8A"],"Scampi":["prawn","#F2A08A"],"Canocchie":["prawn","#C8B49A"],"Moeche":["crab","#6A8A5A"],"Granseola":["crab"],"Ricci di mare":["urchin"],"Baccalà e stoccafisso":["cod"],"Anguilla marinata di Comacchio":["eel"],"Missoltino":["twofish","#A8A08A"],"Cozze":["mussel"],"Vongole veraci":["clam"],"Telline":["clam","#F2D8C0","#C9875A"],"Ostriche":["oyster"],"Capesante":["scallop"],"Moscardini":["octopus","#D88AA8"],"Gambero rosso di Mazara":["prawn","#D8342A"],"Aragosta":["lobster","#C9433C"],"Astice":["lobster","#2E4A7A"],"Ricciola":["fish","#C8B44A",.8],"Lampuga":["fish","#4AA86A",.8],"Palamita":["tuna","#4A6A8A"],"Bottarga di Cabras":["bottarga"],"Alborella":["twofish","#C8D0D8"]
+};
+function draw(name,cat){const m=M[name];if(m&&T[m[0]])return T[m[0]](...m.slice(1));
+  const d={V:"leafy",F:"apple",N:"walnut",G:"beans",C:"steak",S:"salami",L:"mozz",Q:"wedge",P:"fish"}[cat]||"apple";return T[d]()}
+return {draw,M,T};
+})();
+
+let VIEW="photo";try{if(localStorage.getItem("view")==="draw")VIEW="draw"}catch(e){}
 /* name|English|group|months|regions|tags (D=DOP, I=IGP, S=Presidio)|English note|Italian note */
 const RAW = `
 Asparagi|Asparagus|V|4-6|VEN,EMR,LOM|DI|White from Bassano, green from Altedo, pink from Mezzago|Bianchi di Bassano, verdi di Altedo, rosa di Mezzago
@@ -908,6 +1333,7 @@ const thumbUrl=p=>{const f=encodeURIComponent(p[0].replace(/ /g,"_"));return WM+
 const origUrl=p=>WM+p[5]+"/"+encodeURIComponent(p[0].replace(/ /g,"_"));
 function photo(it,big){
   const L=esc(label(it).charAt(0).toUpperCase());
+  if(VIEW==="draw")return `<span class="ph drw pp" data-c="${it.cat}">${ILL.draw(it.name,it.cat)}</span>`;
   const p=PHOTOS[it.name];
   const img=p?`<img src="${thumbUrl(p)}" data-orig="${origUrl(p)}" crossorigin="anonymous" alt="${esc(label(it))}" ${big?"":'loading="lazy"'} decoding="async" referrerpolicy="no-referrer" onload="ditherImg(this)" onerror="imgFail(this)">`:"";
   return `<span class="ph" data-c="${it.cat}"><span class="l" aria-hidden="true">${L}</span>${img}</span>`;
@@ -949,6 +1375,7 @@ function ditherImg(img){
   }catch(e){/* CORS blocked: leave the plain photo */}
 }
 function creditHTML(it){
+  if(VIEW==="draw")return "";
   const p=PHOTOS[it.name];if(!p)return "";
   const wiki=p[2]?(p[1]?"it":"en")+".wikipedia.org/wiki/"+encodeURIComponent(p[2].replace(/ /g,"_")):"";
   const file="https://commons.wikimedia.org/wiki/File:"+encodeURIComponent(p[0].replace(/ /g,"_"));
@@ -1185,7 +1612,7 @@ function syncPanel(){$("filters").hidden=mq.matches;$("ftoggle").setAttribute("a
   const tag=$("tag"),side=$("side");if(mq.matches){if(tag.parentElement===side)side.before(tag)}else if(tag.parentElement!==side)side.prepend(tag)}
 syncPanel();mq.addEventListener("change",syncPanel);
 /* mark the mobile filter bar once it is stuck to the top, for its shadow */
-(function(){const side=$("side");const s=document.createElement("div");s.style.height="1px";side.before(s);
+(function(){const side=$("side");const s=document.createElement("div");s.style.cssText="height:1px;margin-bottom:-1px;grid-column:1/-1";s.setAttribute("aria-hidden","true");side.before(s);
   if("IntersectionObserver" in window)new IntersectionObserver(es=>side.classList.toggle("stuck",!es[0].isIntersecting&&mq.matches)).observe(s)})();
 
 
@@ -1316,6 +1743,48 @@ if(!initLogo3D()){$("spinbtn").hidden=true}
 
 
 
+
+/* photos or drawings */
+(function(){const b=$("viewsw");const L=EN?["Photos","Drawings"]:["Foto","Disegni"];
+  function paint(){b.innerHTML=`<span class="${VIEW==="photo"?"on":""}">${L[0]}</span><span class="${VIEW==="draw"?"on":""}">${L[1]}</span>`;
+    b.setAttribute("aria-label",(EN?"Show ":"Mostra ")+(VIEW==="photo"?L[1]:L[0]).toLowerCase())}
+  b.addEventListener("click",()=>{VIEW=VIEW==="photo"?"draw":"photo";try{localStorage.setItem("view",VIEW)}catch(e){}paint();render()});
+  paint();
+})();
+/* band of drawings across the top */
+(function(){const ids=["tomato","fork","knife","spoon","lemon","pear","cheese","wheel","carrot","eggplant","garlic","cherries","pea","fish","apple","artichoke","chilli","mushroom","sprig"];
+  const one=ids.map(i=>`<svg class="ico" viewBox="0 0 100 100"><use href="#i-${i}"/></svg>`).join("");$("bandRow").innerHTML=one+one})();
+/* background drawings: one layer moves with the page, three drift more slowly, plus the market-stall character.
+   Each layer repeats every T pixels, so it stays a fixed size however long the list gets. */
+(function(){
+  const host=$("bgart"),pool=ITEMS.map(i=>[i.name,i.cat]),tools=["fork","knife","spoon"];
+  const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const CONF=[{r:1,n:7,min:40,max:150,k:"k0"},{r:.88,n:10,min:36,max:64,k:"k1"},{r:.72,n:7,min:64,max:110,k:"k2"},{r:.5,n:5,min:120,max:220,k:"k3"}];
+  let layers=[],lastW=0;
+  function build(){const W=innerWidth;if(W===lastW&&layers.length)return;lastW=W;
+    let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+    const T=Math.max(2400,innerHeight+300),dens=Math.max(.55,Math.min(1.4,W/1100));
+    host.innerHTML="";layers=[];
+    CONF.forEach(c=>{const n=Math.round(c.n*dens*T/2400);const items=[];
+      for(let i=0;i<n;i++){const s=Math.round(c.min+rnd()*(c.max-c.min))*(W<600?.8:1);
+        items.push({x:Math.round(rnd()*(W-s*.6)-s*.2),y:Math.round((i+rnd())*(T/n)),s:Math.round(s),r:Math.round(rnd()*120-60),fl:rnd()<.3?-1:1,
+          tool:i%6===0?tools[(i/6|0)%3]:null,f:pool[Math.floor(rnd()*pool.length)]})}
+      const html=off=>items.map(o=>o.tool?`<svg class="ico" viewBox="0 0 100 100" style="--s:${o.s}px;--r:${o.r}deg;left:${o.x}px;top:${o.y+off}px"><use href="#i-${o.tool}"/></svg>`
+        :`<div class="ico" style="--s:${o.s}px;--r:${o.r}deg;left:${o.x}px;top:${o.y+off}px;scale:${o.fl} 1">${ILL.draw(o.f[0],o.f[1])}</div>`).join("");
+      const el=document.createElement("div");el.className="layer "+c.k;el.style.height=2*T+"px";el.innerHTML=html(0)+html(T);host.appendChild(el);layers.push({el,r:c.r,T})});
+    /* the character, twice per repeat, once on each side */
+    const G=Math.max(3200,innerHeight+300),h=W>860?420:230,w=Math.round(h*160/230);
+    const spots=[[W-w*(W>860?1:.65)-(W>860?30:0),260,-4,1],[W>860?40:-w*.3,G*.58,5,-1]];
+    const gl=document.createElement("div");gl.className="layer kg";gl.style.height=2*G+"px";
+    gl.innerHTML=[0,G].map(off=>spots.map(([x,y,r,fl])=>`<svg class="guy" viewBox="0 0 160 230" style="width:${w}px;left:${Math.round(x)}px;top:${Math.round(y+off)}px;transform:rotate(${r}deg) scaleX(${fl})"><use href="#i-vendor"/></svg>`).join("")).join("");
+    host.appendChild(gl);layers.push({el:gl,r:.8,T:G});
+    update()}
+  let ticking=false;
+  function update(){ticking=false;const y=scrollY;
+    layers.forEach(L=>{const r=RM?1:L.r;L.el.style.transform=`translate3d(0,${-((y*r)%L.T).toFixed(1)}px,0)`})}
+  addEventListener("scroll",()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});
+  addEventListener("resize",build);build();
+})();
 </script>
 </body>
 </html>
