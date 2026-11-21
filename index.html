@@ -1252,12 +1252,12 @@ function initLogo3D(){
   const scene=new THREE.Scene();scene.add(mesh);
   scene.add(new THREE.AmbientLight(0xffffff,0.6));
   const dl=new THREE.DirectionalLight(0xffffff,0.75);dl.position.set(0.2,1,0.6);scene.add(dl);
-  const cam=new THREE.OrthographicCamera(-1,1,1,-1,-10*W,10*W);cam.position.z=5*W;
+  const FOV=14,cam=new THREE.PerspectiveCamera(FOV,2,1,100*W); /* mild perspective so the turn direction reads clearly */
   const cv=renderer.domElement;cv.className="logo-gl";cv.setAttribute("aria-hidden","true");h1.appendChild(cv);h1.classList.add("gl");
   function size(){
     const w=h1.clientWidth||800,s=w*0.985/W,h=Math.ceil(2*R*s*1.04);
     renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.setSize(w,h,true);
-    cam.left=-w/2/s;cam.right=w/2/s;cam.top=h/2/s;cam.bottom=-h/2/s;cam.updateProjectionMatrix();draw();
+    const vh=h/s*0.94;cam.aspect=w/h;cam.position.set(0,0,(vh/2)/Math.tan(FOV*Math.PI/360)+R);cam.lookAt(0,0,0);cam.updateProjectionMatrix();draw();
   }
   let angle=0,last=performance.now(),visible=true,raf=0;
   const TURN=14000; /* ms per full turn */
