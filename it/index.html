@@ -398,7 +398,15 @@ footer{display:block}
   .side .filters:not([hidden]){max-height:calc(100vh - 80px);max-height:calc(100dvh - 80px);overflow-y:auto;overscroll-behavior:contain;padding:12px 2px 6px}
   .side .filter-toggle{margin-top:0}
   .mspanel{position:static;max-height:none;margin-top:6px;box-shadow:none}
+  /* open menu: the bar says Close, and a Show-results button stays pinned to the bottom of the menu */
+  .filter-toggle .fclose{display:none;align-items:center;gap:8px}
+  .filter-toggle .fclose::after{content:"";width:12px;height:12px;background:linear-gradient(45deg,transparent 44%,currentColor 44% 56%,transparent 56%),linear-gradient(-45deg,transparent 44%,currentColor 44% 56%,transparent 56%)}
+  .filter-toggle[aria-expanded="true"] #fsum{display:none}
+  .filter-toggle[aria-expanded="true"] .fclose{display:inline-flex}
+  .fdone{display:block;position:sticky;bottom:0;z-index:2;width:100%;margin-top:10px;padding:13px 16px;border:1px solid var(--navy);border-radius:6px;background:#74FF43;color:var(--navy);font:inherit;font-weight:700;cursor:pointer;box-shadow:0 -10px 14px -6px #fff,var(--raise)}
+  body.menu-open .totop{display:none}
 }
+@media (min-width:861px){.fdone{display:none}}
 
 /* print-style drawings: background at four depths, the band of icons at the top, and the drawings view for the cards */
 .pp{--red:#E4572E;--green:#24045B;--yellow:#74FF43;--leaf:#5A35B0;--ink:#1A1A1A}
@@ -776,7 +784,7 @@ body>.wrap,body>.band{position:relative;z-index:1}
   </header>
   <aside class="side" id="side">
     <p class="tagline" id="tag"></p>
-    <button class="filter-toggle" id="ftoggle" type="button" aria-expanded="false" aria-controls="filters"><span id="ftLabel"></span><span id="fsum"></span></button>
+    <button class="filter-toggle" id="ftoggle" type="button" aria-expanded="false" aria-controls="filters"><span id="ftLabel"></span><span id="fsum"></span><span class="fclose" id="fclose"></span></button>
     <section class="filters" id="filters" aria-label="Filters">
       <div class="prefs">
         <div class="f"><span id="lView"></span><button type="button" class="pill langlink viewsw" id="viewsw"></button></div>
@@ -791,6 +799,7 @@ body>.wrap,body>.band{position:relative;z-index:1}
       <label class="ck"><input type="checkbox" id="spec"><span id="lSpec"></span></label>
       <label class="ck"><input type="checkbox" id="yr"><span id="lYr"></span></label>
       <div class="btns"><button class="pill" id="now" type="button"></button><button class="pill" id="reset" type="button"></button></div>
+      <button class="fdone" id="fdone" type="button"></button>
     </section>
   </aside>
   <main class="content">
@@ -1725,7 +1734,27 @@ const isNow=()=>state.months.size===1&&state.months.has(nowMonth);
 $("now").addEventListener("click",()=>{state.months=isNow()?new Set():new Set([nowMonth]);render()});
 function resetAll(){state.q="";state.months=new Set();state.cats=new Set();state.regions=new Set();state.spec=false;state.yr=true;$("q").value="";$("spec").checked=false;$("yr").checked=true;render()}
 $("reset").addEventListener("click",resetAll);
-$("ftoggle").addEventListener("click",()=>{const p=$("filters"),open=p.hidden;p.hidden=!open;$("ftoggle").setAttribute("aria-expanded",String(open))});
+$("ftoggle").addEventListener("click",()=>{const p=$("filters");if(p.hidden){p.hidden=false;$("ftoggle").setAttribute("aria-expanded","true")}else closeMenu(false)});
+/* Close the phone menu and bring the results into view; on desktop, where the menu is always there, just make sure the results are in view.
+   Used by the Close bar, the Show-results button, Enter in the search box and Escape. */
+function closeMenu(toResults){
+  const p=$("filters"),small=mq.matches;
+  if(small&&!p.hidden){p.hidden=true;$("ftoggle").setAttribute("aria-expanded","false")}
+  if(document.activeElement&&p.contains(document.activeElement))document.activeElement.blur();
+  if(!toResults)return;
+  const bar=small?$("side").getBoundingClientRect().height:0;
+  const rb=document.querySelector(".rbar")||$("grid");const top=rb.getBoundingClientRect().top;
+  if(top<bar||top>innerHeight*.55){const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({top:Math.max(0,top+scrollY-bar-8),behavior:RM?"auto":"smooth"})}}
+$("fdone").addEventListener("click",()=>closeMenu(true));
+/* keep the open menu inside the screen, so its bottom (and the Show-results button) is always reachable */
+function fitPanel(){const p=$("filters");document.body.classList.toggle("menu-open",!p.hidden&&mq.matches);if(p.hidden||!mq.matches){p.style.maxHeight="";return}
+  const vh=window.visualViewport?visualViewport.height:innerHeight;p.style.maxHeight=Math.max(160,Math.floor(vh-p.getBoundingClientRect().top-6))+"px"}
+new MutationObserver(fitPanel).observe($("filters"),{attributes:true,attributeFilter:["hidden"]});
+addEventListener("scroll",fitPanel,{passive:true});addEventListener("resize",fitPanel);
+if(window.visualViewport)visualViewport.addEventListener("resize",fitPanel);
+$("q").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();closeMenu(true)}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&mq.matches&&!$("filters").hidden&&!document.querySelector(".ms.open")){closeMenu(false);$("ftoggle").focus()}});
 
 /* static text */
 $("brand").textContent=T.h1;$("tag").textContent=T.sub;document.title=T.h1;
@@ -1823,7 +1852,9 @@ let ARRIVE=null,MENU=null;
   else if(OPEN>=0)ARRIVE={i:OPEN,y:24};
 })();
 render();
-{const r0=render;render=function(){r0.apply(this,arguments);writeHash()};
+function paintDone(){const c=($("count").textContent||"").split(" · ")[0].trim();$("fdone").textContent=(EN?"Show ":"Mostra ")+c;$("fclose").textContent=EN?"Close":"Chiudi"}
+paintDone();
+{const r0=render;render=function(){r0.apply(this,arguments);writeHash();paintDone()};
  const s0=setOpen;setOpen=function(){s0.apply(this,arguments);writeHash()};}
 writeHash();
 /* switched language from the open menu on a phone: the new page arrives with the menu still open, scrolled where it was,
