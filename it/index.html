@@ -306,6 +306,16 @@ footer p,footer li{color:var(--navy);opacity:.75}
 .topbar .brand .logo3d b,.topbar .brand .logo3d .dl{letter-spacing:0;word-spacing:0;font-family:"Vampiro One","DM Sans",system-ui,sans-serif;font-weight:400;line-height:.95;font-size:inherit;margin:0;padding:0}
 
 .mso-all{border-bottom:1px solid var(--line);margin-bottom:4px;padding-bottom:10px;font-weight:600}
+
+/* collapsible footer */
+footer{display:block}
+.fdet>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:700;font-size:1.05rem;color:var(--navy);padding:4px 0}
+.fdet>summary::-webkit-details-marker{display:none}
+.fdet>summary::after{content:"+";font-size:1.6rem;font-weight:400;line-height:1;transition:transform .2s}
+.fdet[open]>summary::after{transform:rotate(45deg)}
+.fdet>summary:focus-visible{outline:2px solid var(--navy);outline-offset:4px}
+.fgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:24px 56px;padding-top:18px}
+@media (max-width:760px){.fgrid{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
@@ -918,7 +928,7 @@ $("q").placeholder=T.ph;$("q").setAttribute("aria-label",T.search);
 $("lSort").textContent=X.sortBy;$("lSeason").textContent=T.season;$("lMonth").textContent=T.month;$("lGroup").textContent=T.group;$("lRegion").textContent=T.region;
 $("lSpec").textContent=T.spec;$("lYr").textContent=T.yr;$("now").textContent=T.today;$("reset").textContent=T.clear;
 $("ftLabel").textContent=X.fsFilters;
-$("foot").innerHTML=FOOT[LANG];
+$("foot").innerHTML=`<details class="fdet"><summary>${EN?"About this guide and sources":"Informazioni sulla guida e fonti"}</summary><div class="fgrid">${FOOT[LANG]}</div></details>`;
 const lk=$("lang");lk.innerHTML=`<span class="${EN?"on":""}" ${EN?'aria-current="true"':""}>EN</span><span class="${EN?"":"on"}" ${EN?"":'aria-current="true"'}>IT</span>`;lk.href=T.otherHref;lk.setAttribute("aria-label",EN?"Switch to Italian":"Passa all'inglese");
 if(typeof SAMPLE!=="undefined"){lk.href=EN?"#it":"#en";lk.addEventListener("click",()=>setTimeout(()=>location.reload(),0))}
 const mq=window.matchMedia("(max-width:860px)");
