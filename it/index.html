@@ -1749,23 +1749,7 @@ function initLogo3D(){
   geo.setAttribute("color",new THREE.BufferAttribute(col,3));
   const W=bb.max.x-bb.min.x,HH=bb.max.y-bb.min.y,R=Math.sqrt(HH*HH+D*D)/2;
   const face=new THREE.MeshBasicMaterial({color:0x24045B});
-  /* sides drawn as print stipple, like the shading on 1930s Italian poster lettering: solid next to the letter face,
-     breaking into scattered dots towards the back. The dots are a lighter purple than the navy face; between them the page shows through. */
-  const side=new THREE.ShaderMaterial({
-    uniforms:{cell:{value:1},D:{value:D},col:{value:new THREE.Color(0x5C38B0)}},
-    vertexShader:"varying vec2 vUv;varying float vZ;void main(){vUv=uv;vZ=position.z;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}",
-    fragmentShader:[
-      "uniform float cell;uniform float D;uniform vec3 col;varying vec2 vUv;varying float vZ;",
-      "float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}",
-      "void main(){",
-      " vec2 p=gl_FragCoord.xy/cell;vec2 c=floor(p);",
-      " float t=clamp((D*0.5-vZ)/D,0.0,1.0);",
-      " float dens=mix(1.0,0.03,pow(t,0.75));",
-      " if(hash(c)>dens)discard;",
-      " vec2 o=0.5+(vec2(hash(c+17.0),hash(c+41.0))-0.5)*0.3;",
-      " float r=mix(0.28,0.78,dens);",
-      " if(length(fract(p)-o)>r)discard;",
-      " gl_FragColor=vec4(col,1.0);}"].join("\n")});
+  const side=new THREE.MeshBasicMaterial({vertexColors:true});
   const mesh=new THREE.Mesh(geo,[face,side]);
   const scene=new THREE.Scene();scene.add(mesh);
   const cam=new THREE.OrthographicCamera(-1,1,1,-1,-10*W,10*W);cam.position.z=5*W;
@@ -1773,9 +1757,7 @@ function initLogo3D(){
   function size(){
     const w=h1.clientWidth||800,s=w*0.97/W,h=Math.ceil(2*R*s*1.02);
     renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.setSize(w,h,true);
-    cam.left=-w/2/s;cam.right=w/2/s;cam.top=h/2/s;cam.bottom=-h/2/s;cam.updateProjectionMatrix();
-    side.uniforms.cell.value=Math.max(2.4,w/460)*Math.min(2,window.devicePixelRatio||1); /* stipple cell in device pixels: dots stay round, like print */
-    draw();
+    cam.left=-w/2/s;cam.right=w/2/s;cam.top=h/2/s;cam.bottom=-h/2/s;cam.updateProjectionMatrix();draw();
   }
   const TURN=14000,EASE_MS=800,TAU=2*Math.PI;
   let angle=0,last=performance.now(),visible=true,tween=null,wasOff=SPIN_OFF;
