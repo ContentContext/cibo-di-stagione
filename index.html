@@ -327,6 +327,41 @@ footer{display:block}
 .gsec:not([open])>summary::after{transform:rotate(-45deg)}
 .gsec:not([open]){margin-bottom:18px}
 .gsec>summary:focus-visible{outline:2px solid var(--navy);outline-offset:4px}
+
+/* expanding cards */
+.grid{grid-auto-flow:row dense}
+.card{display:block;min-width:0}
+.cardhit{display:block;width:100%;padding:0;border:0;background:none;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.cardhit:hover .ph,.cardhit:focus-visible .ph{transform:translateY(-3px);box-shadow:var(--sh-hover)}
+.card.open{grid-column:1/-1;will-change:transform}
+.xp{position:relative;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);gap:24px 32px;background:#fff;border:1px solid var(--navy);border-radius:6px;box-shadow:var(--raise);padding:22px}
+.xp-ph .ph{aspect-ratio:4/5;height:auto}
+.xp-ph .ph .l{font-size:8rem}
+.xp-info{display:flex;flex-direction:column;gap:12px;min-width:0;padding-right:44px}
+.xp-info h3{margin:0;font-family:"Vampiro One","DM Sans",system-ui,sans-serif;font-weight:400;font-size:clamp(1.8rem,3.6vw,2.8rem);line-height:1.05;color:var(--navy)}
+.xp-info .alt{margin:-6px 0 0;color:var(--muted);font-style:italic}
+.xp-info p{margin:0;max-width:60ch}
+.xclose{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:6px;border:1px solid var(--navy);background:#fff;color:var(--navy);font-size:22px;line-height:1;cursor:pointer;box-shadow:var(--raise);z-index:3}
+.xclose:hover{background:var(--chip-hover)}
+.pair{grid-column:1/-1;border-top:1px solid var(--line);padding-top:18px}
+.pairhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin-bottom:14px}
+.pairhead h4{margin:0;font-size:1.05rem;font-weight:700;color:var(--navy)}
+.pairhead p{margin:0;font-size:13px;color:var(--muted);max-width:80ch}
+.pairs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.pairbtn{display:flex;flex-direction:column;gap:3px;padding:0;border:0;background:none;text-align:left;cursor:pointer;font:inherit;color:var(--navy);min-width:0}
+.pairbtn .ph{aspect-ratio:4/3;margin-bottom:6px;transition:transform .18s,box-shadow .18s}
+.pairbtn .ph .l{font-size:2.6rem}
+.pairbtn:hover .ph,.pairbtn:focus-visible .ph{transform:translateY(-3px);box-shadow:var(--sh-hover)}
+.pairbtn .pt{font-family:"Vampiro One","DM Sans",system-ui,sans-serif;font-size:16px;line-height:1.15}
+.pairbtn .pc{font-size:12px;color:var(--muted)}
+.pairbtn .pa{align-self:flex-start;margin-top:4px;font-size:11.5px;font-weight:600;background:var(--green);color:var(--navy);border-radius:4px;padding:2px 7px}
+@media (max-width:760px){
+  .xp{grid-template-columns:minmax(0,1fr);padding:16px}
+  .xp-ph .ph{aspect-ratio:4/3}
+  .xp-info{padding-right:0}
+  .pairs{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.xp-info h3::before,.pairhead h4::before{display:none!important;content:none!important}
 </style>
 </head>
 <body>
@@ -791,10 +826,10 @@ function selLabel(){
 /* ---- archive layout ---- */
 const PHOTO_DIR=null; /* e.g. "img/" -> img/<slug>.jpg ; leave null until photos exist */
 const X={en:{sortBy:"Sort by",az:"Name A–Z",cat:"Food group",reg:"Region",len:"Longest season",start:"Season start",shuffle:"Shuffle",
-  selected:"selected",custom:"By month",items:"foods",inSeason:"in season",all:"All",allSeasons:"All seasons",allMonths:"All months",allGroups:"All food groups",more:"More in",close:"Close",months:"Best months",where:"Where",
+  selected:"selected",pairT:"Pair it with",pairHas:"Mainly brings",pairN:"These four in-season foods from other groups add what it lacks. A rough guide from typical nutrient profiles, not a diet plan.",custom:"By month",items:"foods",inSeason:"in season",all:"All",allSeasons:"All seasons",allMonths:"All months",allGroups:"All food groups",more:"More in",close:"Close",months:"Best months",where:"Where",
   fsFilters:"Filters",none:"Nothing matches these filters.",lbl:"Group"},
  it:{sortBy:"Ordina per",az:"Nome A–Z",cat:"Gruppo alimentare",reg:"Regione",len:"Stagione più lunga",start:"Inizio stagione",shuffle:"Casuale",
-  selected:"selezionati",custom:"Per mese",items:"alimenti",inSeason:"di stagione",all:"Tutti",allSeasons:"Tutte le stagioni",allMonths:"Tutti i mesi",allGroups:"Tutti i gruppi",more:"Altri in",close:"Chiudi",months:"Mesi migliori",where:"Dove",
+  selected:"selezionati",pairT:"Da abbinare a",pairHas:"Apporta soprattutto",pairN:"Questi quattro alimenti di stagione di altri gruppi aggiungono ciò che gli manca. Una guida indicativa basata sui profili nutrizionali tipici, non un piano alimentare.",custom:"Per mese",items:"alimenti",inSeason:"di stagione",all:"Tutti",allSeasons:"Tutte le stagioni",allMonths:"Tutti i mesi",allGroups:"Tutti i gruppi",more:"Altri in",close:"Chiudi",months:"Mesi migliori",where:"Dove",
   fsFilters:"Filtri",none:"Nessun risultato con questi filtri.",lbl:"Gruppo"}}[LANG];
 state.sort="cat";
 const slug=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
@@ -873,11 +908,6 @@ function creditHTML(it){
   const file="https://commons.wikimedia.org/wiki/File:"+encodeURIComponent(p[0].replace(/ /g,"_"));
   return `<p class="credit">${EN?"Photo":"Foto"}: ${p[4]?esc(p[4])+" · ":""}<a href="${file}" target="_blank" rel="noopener">${esc(p[3]||"Wikimedia Commons")}</a>${wiki?` · <a href="https://${wiki}" target="_blank" rel="noopener">Wikipedia</a>`:" · Wikimedia Commons"}</p>`;
 }
-function cardHTML(it){
-  const i=ITEMS.indexOf(it);
-  const sub=it.reg.includes("*")?T.wideLine:it.reg.slice(0,2).map(r=>RNAME[r]).join(" · ")+(it.reg.length>2?" +"+(it.reg.length-2):"");
-  return `<button class="card" type="button" data-i="${i}" aria-label="${esc(label(it))}">${photo(it)}<span class="meta"><span class="t">${esc(label(it))}</span><span class="s"><span>${esc(catName(catOf(it.cat)))}</span></span><span class="s"><i>${rangeLabel(it.mo)}</i></span></span>${miniHTML(it)}</button>`;
-}
 function renderControls2(){
   renderMS();
   $("now").classList.toggle("on",isNow());$("now").setAttribute("aria-pressed",String(isNow()));
@@ -903,29 +933,126 @@ function render(){
   }else html=`<div class="grid">${sorted(list).map(cardHTML).join("")}</div>`;
   $("grid").innerHTML=html;
 }
-function openItem(i){
-  const it=ITEMS[i],c=catOf(it.cat);
+/* ---- nutrition profiles (rough, by food group with per-food adjustments) ---- */
+const NUT={prot:["Protein","Proteine"],fib:["Fibre","Fibre"],vc:["Vitamin C","Vitamina C"],va:["Vitamin A","Vitamina A"],fe:["Iron","Ferro"],ca:["Calcium","Calcio"],o3:["Omega-3","Omega-3"],fat:["Healthy fats","Grassi buoni"],carb:["Complex carbs","Carboidrati complessi"],b12:["Vitamin B12","Vitamina B12"],fol:["Folate","Folati"]};
+const NKEYS=Object.keys(NUT);
+const nutName=k=>NUT[k][EN?0:1];
+const GDEF={V:"fib vc fol",F:"vc fib",N:"fat prot fib",G:"prot fib fe carb fol",C:"prot fe b12",S:"prot b12",L:"ca prot",Q:"ca prot b12",P:"prot o3 b12"};
+const NADJ=[
+ ["Spinaci|Bietole|Cavolo nero|Cime di rapa|Cicoria|Puntarelle|Agretti|Scarola|Indivia riccia|Cavolo verza|Broccoli|Broccolo romanesco|Asparagi|Asparagi selvatici|Fave fresche|Piselli freschi","+fe +ca +va"],
+ ["Carote|Zucca|Zucca mantovana|Albicocche|Cachi|Meloni|Peperoni|Pomodori|Pomodoro San Marzano|Peperoncino|Basilico genovese|Nespole","+va"],
+ ["Patate novelle|Patata di Bologna|Patata della Sila|Topinambur|Barbabietole|Pastinaca","+carb"],
+ ["Castagne e marroni","=carb fib vc"],
+ ["Olive|Avocado siciliano","=fat fib"],
+ ["Funghi porcini|Finferli|Ovoli|Trombette dei morti|Chiodini|Cardoncelli|Tartufo bianco|Tartufo nero pregiato|Tartufo estivo|Tartufo bianchetto","=fib prot"],
+ ["Zafferano|Capperi di Pantelleria|Rafano|Burro di malga|Lardo di Colonnata","="],
+ ["Noci|Pinoli","+o3"],["Mandorle","+ca"],["Pistacchio verde di Bronte","+fe"],
+ ["Cozze|Vongole veraci|Telline|Ostriche|Capesante|Ricci di mare","+fe"],
+ ["Alici di menaica|Alici e acciughe|Sardine|Sgombro|Sugarello|Missoltino|Aguglia","+ca"],
+ ["Nasello|Sogliola|Rombo|Orata|Spigola|Dentice|Scorfano|Seppie|Calamari e calamaretti|Polpo|Moscardini|Baccalà e stoccafisso|Mazzancolle|Scampi|Canocchie|Gambero rosso di Mazara|Aragosta|Astice|Granseola|Moeche","-o3"],
+ ["Mascarpone","=ca"],["Ciccioli","=prot"],
+ ["Latte d'alpeggio","+b12"],["Bottarga di Cabras","+fat"],
+ ["Lenticchie|Lenticchia di Castelluccio|Ceci|Fagioli secchi|Fave secche","-fol +fol"]
+];
+const PROF=new Map();
+function profile(it){
+  if(PROF.has(it.name))return PROF.get(it.name);
+  const s=new Set((GDEF[it.cat]||"").split(" ").filter(Boolean));
+  for(const [names,ops] of NADJ){if(!names.split("|").includes(it.name))continue;
+    const parts=ops.split(" ");if(parts[0].startsWith("=")){s.clear();if(parts[0].length>1)s.add(parts[0].slice(1));parts.slice(1).forEach(p=>s.add(p))}
+    else parts.forEach(p=>{if(p[0]==="+")s.add(p.slice(1));else if(p[0]==="-")s.delete(p.slice(1))})}
+  if(["Arance","Clementine","Mandarini","Mandarino tardivo di Ciaculli","Limoni","Limone Costa d'Amalfi","Bergamotto","Cedro","Pompelmi","Arancia rossa di Sicilia","Kiwi","Fragole","Ribes","Peperoni","Cavolfiore","Broccoli","Cavolini di Bruxelles"].includes(it.name))s.add("vc");
+  PROF.set(it.name,s);return s;
+}
+const hashStr=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))|0;return h};
+function pairsFor(it){
+  const P=profile(it),miss=new Set(NKEYS.filter(k=>!P.has(k)));const remaining=new Set(miss);
+  const FAM={L:"D",Q:"D",C:"M",S:"M"},fam=k=>FAM[k]||k;
+  const fm=it.mo.filter(Boolean).length||12,chosen=[],cats=new Set([fam(it.cat)]);
+  const pool=ITEMS.filter(c=>c!==it&&fam(c.cat)!==fam(it.cat)&&profile(c).size>0);
+  for(let n=0;n<4;n++){
+    let best=null,bs=-1e9;
+    for(const c of pool){if(cats.has(fam(c.cat))||chosen.includes(c))continue;
+      const pc=profile(c);let cov=0;pc.forEach(k=>{if(remaining.has(k))cov++});
+      let ov=0;for(let m=0;m<12;m++)if(it.mo[m]&&c.mo[m])ov++;
+      const reg=(!it.reg.includes("*")&&c.reg.some(r=>it.reg.includes(r)))?1:0;
+      const s=(ov===0?-20:0)+(cov===0?-3:0)+cov*3+(ov/fm)*2.2+reg*.6-(c.year?.4:0)+((hashStr(it.name+c.name)&255)/2550);
+      if(s>bs){bs=s;best=c}}
+    if(!best)break;chosen.push(best);cats.add(fam(best.cat));profile(best).forEach(k=>remaining.delete(k));
+  }
+  return chosen.map(c=>({it:c,adds:[...profile(c)].filter(k=>miss.has(k)).slice(0,3)}));
+}
+
+/* ---- in-place expanding cards ---- */
+let OPEN=-1,OPENSHOW=-1;
+function expandedHTML(it,host){
+  const c=catOf(it.cat);
   const badges=(it.tags.includes("D")?`<span class="tag" title="${T.bD}">DOP</span>`:"")+(it.tags.includes("I")?`<span class="tag" title="${T.bI}">IGP</span>`:"")+(it.tags.includes("S")?`<span class="tag sf" title="${T.bS}">Presìdio</span>`:"");
   const big=it.mo.map((on,k)=>`<i class="${on?"on "+seasonOf(k+1):""}">${INIT[k]}</i>`).join("");
   const where=it.reg.includes("*")?T.wideLine:it.reg.map(r=>RNAME[r]).join(" · ");
-  $("dlg").innerHTML=`<button class="xbtn" type="button" id="dx" aria-label="${X.close}">×</button><div class="sheet">${photo(it,true)}<div class="info">
-    <div class="tagrow"><span class="tag">${esc(catName(c))}</span>${badges}</div>
-    <h3>${esc(label(it))}</h3>${other(it)?`<p class="alt" lang="it">${esc(other(it))}</p>`:""}
-    ${it.note?`<p>${esc(it.note)}</p>`:""}
-    <div class="kv"><b>${X.months} · ${rangeLabel(it.mo)}</b><div class="big" role="img" aria-label="${T.atBest}${rangeLabel(it.mo)}">${big}</div></div>
-    <div class="kv"><b>${X.where}</b><span>${where}</span></div>
-    ${creditHTML(it)}<div class="acts"><button class="pill" type="button" id="more">${X.more} ${esc(catName(c))}</button></div></div></div>`;
-  $("dlg").dataset.cat=it.cat;
-  if(!$("dlg").open)$("dlg").showModal();
+  const pairs=pairsFor(it);
+  const has=[...profile(it)].map(nutName).join(", ");
+  return `<div class="xp">
+    <div class="xp-ph">${photo(it,true)}</div>
+    <div class="xp-info">
+      <button class="xclose" type="button" aria-label="${X.close}">×</button>
+      <div class="tagrow"><span class="tag">${esc(catName(c))}</span>${badges}</div>
+      <h3>${esc(label(it))}</h3>${other(it)?`<p class="alt" lang="it">${esc(other(it))}</p>`:""}
+      ${it.note?`<p>${esc(it.note)}</p>`:""}
+      <div class="kv"><b>${X.months} · ${rangeLabel(it.mo)}</b><div class="big" role="img" aria-label="${T.atBest}${rangeLabel(it.mo)}">${big}</div></div>
+      <div class="kv"><b>${X.where}</b><span>${where}</span></div>
+      ${creditHTML(it)}
+      <div class="acts"><button class="pill morebtn" type="button" data-cat="${it.cat}">${X.more} ${esc(catName(c))}</button></div>
+    </div>
+    <div class="pair">
+      <div class="pairhead"><h4>${X.pairT}</h4><p>${has?`${X.pairHas} ${esc(has.toLowerCase())}. `:""}${X.pairN}</p></div>
+      <div class="pairs">${pairs.map(p=>`<button class="pairbtn" type="button" data-j="${ITEMS.indexOf(p.it)}">${photo(p.it)}<span class="pt">${esc(label(p.it))}</span><span class="pc">${esc(catName(catOf(p.it.cat)))} · ${rangeLabel(p.it.mo)}</span>${p.adds.length?`<span class="pa">+ ${p.adds.map(nutName).join(", ")}</span>`:""}</button>`).join("")}</div>
+    </div>
+  </div>`;
+}
+function cardHTML(it){
+  const i=ITEMS.indexOf(it);
+  if(i===OPEN)return `<article class="card open" data-i="${i}">${expandedHTML(OPENSHOW>=0?ITEMS[OPENSHOW]:it)}</article>`;
+  return `<article class="card" data-i="${i}"><button class="cardhit" type="button" aria-expanded="false" aria-label="${esc(label(it))}">${photo(it)}<span class="meta"><span class="t">${esc(label(it))}</span><span class="s"><span>${esc(catName(catOf(it.cat)))}</span></span><span class="s"><i>${rangeLabel(it.mo)}</i></span></span>${miniHTML(it)}</button></article>`;
+}
+const RM=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+function swapCard(idx){
+  const el=$("grid").querySelector(`.card[data-i="${idx}"]`);if(!el)return null;
+  const t=document.createElement("div");t.innerHTML=cardHTML(ITEMS[idx]);const n=t.firstElementChild;el.replaceWith(n);return n;
+}
+function setOpen(i,show){
+  const grid=$("grid"),prev=OPEN;
+  const els=[...grid.querySelectorAll(".card,.gsec>summary")];
+  const before=new Map(els.map(e=>[e.dataset.i??("s"+(e.parentElement.dataset.k||"")),e.getBoundingClientRect()]));
+  OPEN=i;OPENSHOW=show??-1;
+  if(prev>=0&&prev!==i)swapCard(prev);
+  const opened=i>=0?swapCard(i):null;
+  if(RM){if(opened)opened.scrollIntoView({block:"start"});return}
+  const E="cubic-bezier(.2,.8,.2,1)",D=560;let targetY=null;
+  [...grid.querySelectorAll(".card,.gsec>summary")].forEach(e=>{
+    const k=e.dataset.i??("s"+(e.parentElement.dataset.k||""));const a=before.get(k);if(!a)return;
+    const b=e.getBoundingClientRect();const dx=a.left-b.left,dy=a.top-b.top;
+    if(e===opened){targetY=b.top+scrollY-24;
+      e.animate([{transformOrigin:"0 0",transform:`translate(${dx}px,${dy}px) scale(${a.width/b.width},${a.height/b.height})`},{transformOrigin:"0 0",transform:"none"}],{duration:D,easing:E});
+      e.querySelectorAll(".xp-info,.pair").forEach((x,n)=>x.animate([{opacity:0,transform:"translateY(14px)"},{opacity:1,transform:"none"}],{duration:420,delay:240+n*110,easing:E,fill:"backwards"}));
+      e.querySelectorAll(".pairbtn").forEach((x,n)=>x.animate([{opacity:0,transform:"translateY(18px) scale(.96)"},{opacity:1,transform:"none"}],{duration:420,delay:380+n*70,easing:E,fill:"backwards"}));
+    }else if(Math.abs(dx)>.5||Math.abs(dy)>.5){
+      e.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:"none"}],{duration:D,easing:E});
+    }
+  });
+  if(opened&&targetY!==null){const top=targetY-scrollY+24;if(top<70||top>innerHeight*.45)setTimeout(()=>window.scrollTo({top:targetY,behavior:"smooth"}),D*.4)}
+  else if(prev>=0){const back=grid.querySelector(`.card[data-i="${prev}"] .cardhit`);if(back)back.focus({preventScroll:true})}
 }
 $("grid").addEventListener("click",e=>{
-  const b=e.target.closest(".card");if(b){openItem(+b.dataset.i);return}
-  if(e.target.id==="reset2")resetAll();
+  if(e.target.id==="reset2"){resetAll();return}
+  const hit=e.target.closest(".cardhit");if(hit){setOpen(+hit.closest(".card").dataset.i);return}
+  if(e.target.closest(".xclose")){setOpen(-1);return}
+  const pb=e.target.closest(".pairbtn");if(pb){const j=+pb.dataset.j;
+    if($("grid").querySelector(`.card[data-i="${j}"]`))setOpen(j);else setOpen(OPEN,j);return}
+  const mb=e.target.closest(".morebtn");if(mb){state.cats=new Set([mb.dataset.cat]);OPEN=-1;render();window.scrollTo({top:0,behavior:"smooth"})}
 });
-$("dlg").addEventListener("click",e=>{
-  if(e.target===$("dlg")||e.target.id==="dx")$("dlg").close();
-  else if(e.target.id==="more"){state.cats=new Set([$("dlg").dataset.cat]);$("dlg").close();render();window.scrollTo({top:0,behavior:"smooth"})}
-});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&OPEN>=0&&!document.querySelector(".ms.open"))setOpen(-1)});
+
 $("sort").addEventListener("change",e=>{state.sort=e.target.value;if(state.sort==="shuffle")shuffleSeed=Math.random();render()});
 $("q").addEventListener("input",e=>{state.q=e.target.value.trim();render()});
 $("spec").addEventListener("change",e=>{state.spec=e.target.checked;render()});
