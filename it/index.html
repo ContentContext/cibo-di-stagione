@@ -389,11 +389,6 @@ footer{display:block}
 .brand .logo-gl{display:block;width:100%;height:auto}
 .brand.gl .stage{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-/* stopped: show the flat typeset title in place of the 3D object */
-.brand.gl.flat .logo-gl{display:none!important}
-.logo-flat{display:none}
-.brand.gl.flat .logo-flat{display:flex;align-items:center;justify-content:center;height:var(--glh,auto)}
-.logo-flat svg{display:block;height:auto}
 </style>
 </head>
 <body>
@@ -1242,44 +1237,47 @@ function pathToShapes(d){
   return sp.toShapes(false);
 }
 function initLogo3D(){
+  /* Same look and motion as the earlier stacked-text version (flat colours, no perspective, 14 s per turn, eases to front on stop),
+     but drawn as one solid extruded shape so the sides no longer break into stripes or flicker. */
   if(!window.THREE)return false;
   const h1=$("logo").closest(".brand");let renderer;
   try{renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});}catch(e){return false}
   if(!renderer.getContext())return false;
   const P=TITLEP[EN?"en":"it"],shapes=pathToShapes(P.d);
-  const H=P.bb[3]-P.bb[1],D=H*0.34;
-  const geo=new THREE.ExtrudeGeometry(shapes,{depth:D,bevelEnabled:false,curveSegments:10});
+  const D=30; /* 0.3 em, as before */
+  const geo=new THREE.ExtrudeGeometry(shapes,{depth:D,bevelEnabled:false,curveSegments:12});
   geo.computeBoundingBox();const bb=geo.boundingBox;
   geo.translate(-(bb.min.x+bb.max.x)/2,-(bb.min.y+bb.max.y)/2,-D/2);
+  /* side colour runs from lighter purple at the front to deeper purple at the back, like the old layers */
+  const pos=geo.attributes.position,col=new Float32Array(pos.count*3),A=[92,56,176],B=[66,34,140];
+  for(let i=0;i<pos.count;i++){const t=(D/2-pos.getZ(i))/D;for(let k=0;k<3;k++)col[i*3+k]=(A[k]+(B[k]-A[k])*t)/255}
+  geo.setAttribute("color",new THREE.BufferAttribute(col,3));
   const W=bb.max.x-bb.min.x,HH=bb.max.y-bb.min.y,R=Math.sqrt(HH*HH+D*D)/2;
   const face=new THREE.MeshBasicMaterial({color:0x24045B});
-  const side=new THREE.MeshLambertMaterial({color:0x8a66f0});
+  const side=new THREE.MeshBasicMaterial({vertexColors:true});
   const mesh=new THREE.Mesh(geo,[face,side]);
   const scene=new THREE.Scene();scene.add(mesh);
-  scene.add(new THREE.AmbientLight(0xffffff,0.6));
-  const dl=new THREE.DirectionalLight(0xffffff,0.75);dl.position.set(0.2,1,0.6);scene.add(dl);
-  const FOV=14,cam=new THREE.PerspectiveCamera(FOV,2,1,100*W); /* mild perspective so the turn direction reads clearly */
+  const cam=new THREE.OrthographicCamera(-1,1,1,-1,-10*W,10*W);cam.position.z=5*W;
   const cv=renderer.domElement;cv.className="logo-gl";cv.setAttribute("aria-hidden","true");h1.appendChild(cv);h1.classList.add("gl");
-  /* flat vector version of the same outlines, shown when the rotation is stopped */
-  const fw=P.bb[2]-P.bb[0],fh=P.bb[3]-P.bb[1];const flatBox=document.createElement("div");flatBox.className="logo-flat";flatBox.setAttribute("aria-hidden","true");
-  flatBox.innerHTML=`<svg viewBox="${P.bb[0]} ${P.bb[1]} ${fw} ${fh}" width="98.5%" preserveAspectRatio="xMidYMid meet"><path d="${P.d}" fill="#24045B"/></svg>`;h1.appendChild(flatBox);
   function size(){
-    const w=h1.clientWidth||800,s=w*0.985/W,h=Math.ceil(2*R*s*1.04);
-    renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.setSize(w,h,true);h1.style.setProperty('--glh',h+'px');
-    const vh=h/s*0.94;cam.aspect=w/h;cam.position.set(0,0,(vh/2)/Math.tan(FOV*Math.PI/360)+R);cam.lookAt(0,0,0);cam.updateProjectionMatrix();draw();
+    const w=h1.clientWidth||800,s=w*0.97/W,h=Math.ceil(2*R*s*1.02);
+    renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.setSize(w,h,true);
+    cam.left=-w/2/s;cam.right=w/2/s;cam.top=h/2/s;cam.bottom=-h/2/s;cam.updateProjectionMatrix();draw();
   }
-  let angle=0,last=performance.now(),visible=true,raf=0;
-  const TURN=14000; /* ms per full turn */
-  function draw(){mesh.rotation.x=angle;renderer.render(scene,cam)}
+  const TURN=14000,EASE_MS=800,TAU=2*Math.PI;
+  let angle=0,last=performance.now(),visible=true,tween=null,wasOff=SPIN_OFF;
+  const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  function draw(){mesh.rotation.x=-angle;renderer.render(scene,cam)}
   function tick(t){
     const dt=Math.min(64,t-last);last=t;
-    if(!SPIN_OFF)angle+=dt*2*Math.PI/TURN;
-    else{const target=Math.round(angle/(2*Math.PI))*2*Math.PI;angle+=(target-angle)*Math.min(1,dt/180);if(Math.abs(target-angle)<1e-3)angle=target}
-    const flat=SPIN_OFF&&angle===Math.round(angle/(2*Math.PI))*2*Math.PI;if(flat!==h1.classList.contains('flat')){h1.classList.toggle('flat',flat);if(flat)fitTitle()}
-    if(visible)draw();raf=requestAnimationFrame(tick);
+    if(SPIN_OFF&&!wasOff){let a=((angle%TAU)+TAU)%TAU;if(a>Math.PI)a-=TAU;tween={from:a,start:t}} /* ease the shortest way back to the front */
+    wasOff=SPIN_OFF;
+    if(!SPIN_OFF){tween=null;angle=(angle+dt*TAU/TURN)%TAU}
+    else if(tween){const p=Math.min(1,(t-tween.start)/EASE_MS);angle=tween.from*(1-ease(p));if(p>=1){angle=0;tween=null}}
+    if(visible)draw();requestAnimationFrame(tick);
   }
   if("IntersectionObserver" in window)new IntersectionObserver(es=>{visible=es[0].isIntersecting}).observe(h1);
-  window.addEventListener("resize",size);size();raf=requestAnimationFrame(tick);
+  window.addEventListener("resize",size);size();requestAnimationFrame(tick);
   return true;
 }
 
