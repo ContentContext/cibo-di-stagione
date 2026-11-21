@@ -304,6 +304,8 @@ footer p,footer li{color:var(--navy);opacity:.75}
 .logo3d.stopped{animation:none;transform:rotateX(0deg);transition:transform .8s ease}
 
 .topbar .brand .logo3d b,.topbar .brand .logo3d .dl{letter-spacing:0;word-spacing:0;font-family:"Vampiro One","DM Sans",system-ui,sans-serif;font-weight:400;line-height:.95;font-size:inherit;margin:0;padding:0}
+
+.mso-all{border-bottom:1px solid var(--line);margin-bottom:4px;padding-bottom:10px;font-weight:600}
 </style>
 </head>
 <body>
@@ -322,7 +324,7 @@ footer p,footer li{color:var(--navy);opacity:.75}
       <div class="f"><span id="lRegion"></span><div class="ms" id="region"></div></div>
       <label class="f"><span id="lSort"></span><select id="sort"></select></label>
       <label class="ck"><input type="checkbox" id="spec"><span id="lSpec"></span></label>
-      <label class="ck"><input type="checkbox" id="yr" checked><span id="lYr"></span></label>
+      <label class="ck"><input type="checkbox" id="yr"><span id="lYr"></span></label>
       <div class="btns"><button class="pill" id="now" type="button"></button><button class="pill" id="reset" type="button"></button></div>
     </section>
   </aside>
@@ -735,7 +737,7 @@ const ITEMS=RAW.trim().split("\n").map(l=>{
 });
 const label=it=>EN?it.en:it.name, other=it=>EN?it.name:"";
 
-const state={q:"",months:new Set(),cats:new Set(),regions:new Set(),spec:false,yr:true,group:"cat"};
+const state={q:"",months:new Set(),cats:new Set(),regions:new Set(),spec:false,yr:false,group:"cat"};
 const $=id=>document.getElementById(id);
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const nowMonth=new Date().getMonth()+1;
@@ -768,10 +770,10 @@ function selLabel(){
 /* ---- archive layout ---- */
 const PHOTO_DIR=null; /* e.g. "img/" -> img/<slug>.jpg ; leave null until photos exist */
 const X={en:{sortBy:"Sort by",az:"Name A–Z",cat:"Food group",reg:"Region",len:"Longest season",start:"Season start",shuffle:"Shuffle",
-  selected:"selected",custom:"By month",items:"foods",inSeason:"in season",all:"All",allGroups:"All food groups",more:"More in",close:"Close",months:"Best months",where:"Where",
+  selected:"selected",custom:"By month",items:"foods",inSeason:"in season",all:"All",allSeasons:"All seasons",allMonths:"All months",allGroups:"All food groups",more:"More in",close:"Close",months:"Best months",where:"Where",
   fsFilters:"Filters",none:"Nothing matches these filters.",lbl:"Group"},
  it:{sortBy:"Ordina per",az:"Nome A–Z",cat:"Gruppo alimentare",reg:"Regione",len:"Stagione più lunga",start:"Inizio stagione",shuffle:"Casuale",
-  selected:"selezionati",custom:"Per mese",items:"alimenti",inSeason:"di stagione",all:"Tutti",allGroups:"Tutti i gruppi",more:"Altri in",close:"Chiudi",months:"Mesi migliori",where:"Dove",
+  selected:"selezionati",custom:"Per mese",items:"alimenti",inSeason:"di stagione",all:"Tutti",allSeasons:"Tutte le stagioni",allMonths:"Tutti i mesi",allGroups:"Tutti i gruppi",more:"Altri in",close:"Chiudi",months:"Mesi migliori",where:"Dove",
   fsFilters:"Filtri",none:"Nessun risultato con questi filtri.",lbl:"Gruppo"}}[LANG];
 state.sort="cat";
 const slug=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
@@ -925,9 +927,9 @@ syncPanel();mq.addEventListener("change",syncPanel);
 
 /* multi-select dropdowns */
 const MSCFG={
-  season:{all:()=>X.all,opts:()=>SEASONS.map(s=>({v:s.k,t:s.n+" ("+s.sub+")",short:s.n,on:s.m.every(m=>state.months.has(m))})),
+  season:{all:()=>X.allSeasons,opts:()=>SEASONS.map(s=>({v:s.k,t:s.n+" ("+s.sub+")",short:s.n,on:s.m.every(m=>state.months.has(m))})),
     toggle:(v,on)=>{const s=SEASONS.find(x=>x.k===v);s.m.forEach(m=>on?state.months.add(m):state.months.delete(m))}},
-  month:{all:()=>X.all,opts:()=>MON.map((n,i)=>({v:String(i+1),t:MONFULL[i]+(i+1===nowMonth?" ·":""),short:n,on:state.months.has(i+1)})),
+  month:{all:()=>X.allMonths,opts:()=>MON.map((n,i)=>({v:String(i+1),t:MONFULL[i]+(i+1===nowMonth?" ·":""),short:n,on:state.months.has(i+1)})),
     toggle:(v,on)=>{on?state.months.add(+v):state.months.delete(+v)}},
   cat:{all:()=>X.allGroups,opts:()=>CATS.map(c=>({v:c.k,t:catName(c)+" ("+ITEMS.filter(it=>it.cat===c.k&&matches(it,true)).length+")",short:catName(c),on:state.cats.has(c.k)})),
     toggle:(v,on)=>{on?state.cats.add(v):state.cats.delete(v)}},
@@ -944,7 +946,7 @@ function renderMS(){
     else if(sel.length>2)sum=sel.length+" "+X.selected;
     else if(id==="season"&&state.months.size)sum=X.custom;
     el.innerHTML=`<button type="button" class="msbtn" aria-haspopup="true" aria-expanded="${open}"><span>${esc(sum)}</span></button><div class="mspanel" ${open?"":"hidden"}>`+
-      opts.map(o=>`<label class="mso"><input type="checkbox" data-v="${o.v}" ${o.on?"checked":""}><span>${esc(o.t)}</span></label>`).join("")+`</div>`;
+      `<label class="mso mso-all"><input type="checkbox" data-v="__all" ${(id==="season"||id==="month")?(state.months.size?"":"checked"):(sel.length?"":"checked")}><span>${esc(cfg.all())}</span></label>`+opts.map(o=>`<label class="mso"><input type="checkbox" data-v="${o.v}" ${o.on?"checked":""}><span>${esc(o.t)}</span></label>`).join("")+`</div>`;
     const p=el.querySelector(".mspanel");p.scrollTop=st;
     if(fo){const c=p.querySelector(`[data-v="${fo}"]`);if(c)c.focus()}
   });
@@ -956,7 +958,10 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("change",e=>{
   const c=e.target.closest(".ms input");if(!c)return;
-  MSCFG[c.closest(".ms").id].toggle(c.dataset.v,c.checked);render();
+  const id=c.closest(".ms").id;
+  if(c.dataset.v==="__all"){if(id==="season"||id==="month")state.months.clear();else if(id==="cat")state.cats.clear();else state.regions.clear()}
+  else MSCFG[id].toggle(c.dataset.v,c.checked);
+  render();
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){const m=document.querySelector(".ms.open");if(m){m.classList.remove("open");m.querySelector(".mspanel").hidden=true;m.querySelector(".msbtn").focus()}}});
 state.months=new Set([nowMonth]);
