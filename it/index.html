@@ -427,6 +427,16 @@ body>.wrap,body>.band{position:relative;z-index:1}
 .ill .bk{display:none}
 .ph.drw .ill .bk{display:inline}
 .ill .bk *{fill:url(#paper)!important;stroke:url(#paper)!important;stroke-width:13px!important;stroke-linejoin:round!important;stroke-linecap:round!important;opacity:1!important}
+/* back-to-top: floats bottom left once you have scrolled down */
+.totop{position:fixed;z-index:20;left:max(16px,calc(env(safe-area-inset-left,0px) + 12px));bottom:max(16px,calc(env(safe-area-inset-bottom,0px) + 12px));
+  display:inline-flex;align-items:center;gap:10px;padding:10px 16px 10px 14px;border:1px solid var(--navy);border-radius:999px;background:#fff;color:var(--navy);
+  font:inherit;font-weight:500;cursor:pointer;box-shadow:var(--sh-sm);opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s,transform .2s,background .12s}
+.totop.show{opacity:1;transform:none;pointer-events:auto}
+.totop:hover{background:var(--navy);color:#fff}
+.totop:focus-visible{outline:2px solid var(--navy);outline-offset:3px}
+.totop i{width:9px;height:9px;border-left:2px solid currentColor;border-top:2px solid currentColor;transform:translateY(2px) rotate(45deg)}
+@media (max-width:600px){.totop{padding:0;width:46px;height:46px;justify-content:center}.totop span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
+@media (prefers-reduced-motion:reduce){.totop{transition:none}}
 .rrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .viewsw{font:inherit;cursor:pointer;background:#fff;border:1px solid var(--navy)}
 @media (max-width:520px){.langlink span{padding:0 11px}.rbar{flex-wrap:wrap;gap:10px}.rtools{width:100%;flex-direction:row-reverse;justify-content:space-between;align-items:center}}
@@ -1849,6 +1859,15 @@ if(!initLogo3D()){$("spinbtn").hidden=true}
     layers.forEach(L=>{const r=RM?1:L.r;L.el.style.transform=`translate3d(0,${-((y*r)%L.T).toFixed(1)}px,0)`})}
   addEventListener("scroll",()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});
   addEventListener("resize",build);build();
+})();
+
+/* back to top */
+(function(){const b=document.createElement("button");b.type="button";b.className="totop";b.setAttribute("aria-label",EN?"Back to top":"Torna su");
+  b.innerHTML=`<i aria-hidden="true"></i><span>${EN?"Back to top":"Torna su"}</span>`;document.body.appendChild(b);
+  const RM=matchMedia("(prefers-reduced-motion: reduce)");
+  let on=false;const chk=()=>{const v=scrollY>innerHeight*.8;if(v!==on){on=v;b.classList.toggle("show",v);b.tabIndex=v?0:-1}};
+  addEventListener("scroll",chk,{passive:true});chk();
+  b.addEventListener("click",()=>{scrollTo({top:0,behavior:RM.matches?"auto":"smooth"});const t=document.querySelector(".search");if(t)setTimeout(()=>t.focus({preventScroll:true}),RM.matches?0:500)});
 })();
 </script>
 </body>
