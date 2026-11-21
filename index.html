@@ -1267,7 +1267,7 @@ function initLogo3D(){
   const TURN=14000,EASE_MS=800,TAU=2*Math.PI;
   let angle=0,last=performance.now(),visible=true,tween=null,wasOff=SPIN_OFF;
   const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
-  function draw(){mesh.rotation.x=-angle;renderer.render(scene,cam)}
+  function draw(){mesh.rotation.x=angle;renderer.render(scene,cam)}
   function tick(t){
     const dt=Math.min(64,t-last);last=t;
     if(SPIN_OFF&&!wasOff){let a=((angle%TAU)+TAU)%TAU;if(a>Math.PI)a-=TAU;tween={from:a,start:t}} /* ease the shortest way back to the front */
