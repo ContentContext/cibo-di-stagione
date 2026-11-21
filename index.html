@@ -389,6 +389,16 @@ footer{display:block}
 .brand .logo-gl{display:block;width:100%;height:auto}
 .brand.gl .stage{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
+
+/* mobile: sticky filter bar, always reachable */
+@media (max-width:860px){
+  .tagline{grid-column:1/-1;margin:2px 0 6px}
+  .side{position:sticky!important;top:0;z-index:40;background:#fff;padding:10px 0!important;margin:0 -16px;padding-left:16px!important;padding-right:16px!important;border-bottom:1px solid transparent;transition:border-color .2s,box-shadow .2s}
+  .side.stuck{border-bottom-color:var(--line);box-shadow:0 6px 14px -8px rgba(0,0,0,.25)}
+  .side .filters:not([hidden]){max-height:calc(100vh - 80px);max-height:calc(100dvh - 80px);overflow-y:auto;overscroll-behavior:contain;padding:12px 2px 6px}
+  .side .filter-toggle{margin-top:0}
+  .mspanel{position:static;max-height:none;margin-top:6px;box-shadow:none}
+}
 </style>
 </head>
 <body>
@@ -1170,8 +1180,14 @@ $("foot").innerHTML=`<details class="fdet"><summary>${EN?"About this guide and s
 const lk=$("lang");lk.innerHTML=`<span class="${EN?"on":""}" ${EN?'aria-current="true"':""}>EN</span><span class="${EN?"":"on"}" ${EN?"":'aria-current="true"'}>IT</span>`;lk.href=T.otherHref;lk.setAttribute("aria-label",EN?"Switch to Italian":"Passa all'inglese");
 if(typeof SAMPLE!=="undefined"){lk.href=EN?"#it":"#en";lk.addEventListener("click",()=>setTimeout(()=>location.reload(),0))}
 const mq=window.matchMedia("(max-width:860px)");
-function syncPanel(){$("filters").hidden=mq.matches;$("ftoggle").setAttribute("aria-expanded","false")}
+function syncPanel(){$("filters").hidden=mq.matches;$("ftoggle").setAttribute("aria-expanded","false");
+  /* on small screens the description sits above the sticky filter bar instead of inside it */
+  const tag=$("tag"),side=$("side");if(mq.matches){if(tag.parentElement===side)side.before(tag)}else if(tag.parentElement!==side)side.prepend(tag)}
 syncPanel();mq.addEventListener("change",syncPanel);
+/* mark the mobile filter bar once it is stuck to the top, for its shadow */
+(function(){const side=$("side");const s=document.createElement("div");s.style.height="1px";side.before(s);
+  if("IntersectionObserver" in window)new IntersectionObserver(es=>side.classList.toggle("stuck",!es[0].isIntersecting&&mq.matches)).observe(s)})();
+
 
 /* multi-select dropdowns */
 const MSCFG={
