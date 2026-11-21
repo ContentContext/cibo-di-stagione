@@ -436,6 +436,11 @@ body>.wrap,body>.band{position:relative;z-index:1}
 .totop i{width:9px;height:9px;border-left:2px solid currentColor;border-top:2px solid currentColor;transform:translateY(2px) rotate(45deg)}
 @media (max-width:600px){.totop{padding:0;width:46px;height:46px;justify-content:center}.totop span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
 @media (prefers-reduced-motion:reduce){.totop{transition:none}}
+/* photos/drawings and language live at the top of the menu */
+.prefs{display:flex;flex-wrap:wrap;gap:12px 18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.prefs .f{display:flex;flex-direction:column;gap:6px;margin:0}
+.prefs .langlink{margin-left:0;align-self:flex-start}
+.prefs .langlink{min-height:36px;font-size:14px}.prefs .langlink span{min-height:34px;padding:0 12px;font-size:14px}
 .rrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .viewsw{font:inherit;cursor:pointer;background:#fff;border:1px solid var(--navy)}
 @media (max-width:520px){.langlink span{padding:0 11px}.rbar{flex-wrap:wrap;gap:10px}.rtools{width:100%;flex-direction:row-reverse;justify-content:space-between;align-items:center}}
@@ -726,6 +731,10 @@ body>.wrap,body>.band{position:relative;z-index:1}
     <p class="tagline" id="tag"></p>
     <button class="filter-toggle" id="ftoggle" type="button" aria-expanded="false" aria-controls="filters"><span id="ftLabel"></span><span id="fsum"></span></button>
     <section class="filters" id="filters" aria-label="Filters">
+      <div class="prefs">
+        <div class="f"><span id="lView"></span><button type="button" class="pill langlink viewsw" id="viewsw"></button></div>
+        <div class="f"><span id="lLang"></span><a class="pill langlink" id="lang" href="#"></a></div>
+      </div>
       <input id="q" class="search" type="search" autocomplete="off">
       <div class="f"><span id="lSeason"></span><div class="ms" id="season"></div></div>
       <div class="f"><span id="lMonth"></span><div class="ms" id="month"></div></div>
@@ -738,7 +747,7 @@ body>.wrap,body>.band{position:relative;z-index:1}
     </section>
   </aside>
   <main class="content">
-    <div class="rbar"><h2 id="count" aria-live="polite"></h2><div class="rtools"><button type="button" class="spinbtn" id="spinbtn" aria-pressed="false"></button><div class="rrow"><button type="button" class="pill langlink viewsw" id="viewsw"></button><a class="pill langlink" id="lang" href="#"></a></div></div></div>
+    <div class="rbar"><h2 id="count" aria-live="polite"></h2><div class="rtools"><button type="button" class="spinbtn" id="spinbtn" aria-pressed="false"></button></div></div>
     <div id="grid"></div>
     <footer id="foot"></footer>
   </main>
@@ -1676,7 +1685,7 @@ $("brand").textContent=T.h1;$("tag").textContent=T.sub;document.title=T.h1;
 $("q").placeholder=T.ph;$("q").setAttribute("aria-label",T.search);
 $("lSort").textContent=X.sortBy;$("lSeason").textContent=T.season;$("lMonth").textContent=T.month;$("lGroup").textContent=T.group;$("lRegion").textContent=T.region;
 $("lSpec").textContent=T.spec;$("lYr").textContent=T.yr;$("now").textContent=T.today;$("reset").textContent=T.clear;
-$("ftLabel").textContent=X.fsFilters;
+$("ftLabel").textContent=X.fsFilters;$("lView").textContent=EN?"Show":"Mostra";$("lLang").textContent=EN?"Language":"Lingua";
 $("foot").innerHTML=`<details class="fdet"><summary>${EN?"About this guide and sources":"Informazioni sulla guida e fonti"}</summary><div class="fgrid">${FOOT[LANG]}</div></details>`;
 const lk=$("lang");lk.innerHTML=`<span class="${EN?"on":""}" ${EN?'aria-current="true"':""}>EN</span><span class="${EN?"":"on"}" ${EN?"":'aria-current="true"'}>IT</span>`;lk.href=T.otherHref;lk.setAttribute("aria-label",EN?"Switch to Italian":"Passa all'inglese");
 if(typeof SAMPLE!=="undefined"){lk.href=EN?"#it":"#en";lk.addEventListener("click",()=>setTimeout(()=>location.reload(),0))}
