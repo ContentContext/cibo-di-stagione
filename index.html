@@ -316,6 +316,17 @@ footer{display:block}
 .fdet>summary:focus-visible{outline:2px solid var(--navy);outline-offset:4px}
 .fgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:24px 56px;padding-top:18px}
 @media (max-width:760px){.fgrid{grid-template-columns:minmax(0,1fr)}}
+
+/* collapsible group sections */
+.gsec{margin-bottom:36px}
+.gsec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;margin:0 0 14px}
+.gsec>summary::-webkit-details-marker{display:none}
+.gsec>summary h3{margin:0;font-size:1.05rem;font-weight:700;letter-spacing:-.01em;color:var(--navy);display:inline}
+.gsec>summary .gn{color:var(--muted);font-weight:400;font-size:13px}
+.gsec>summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--navy);border-bottom:2px solid var(--navy);transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s;margin-left:2px}
+.gsec:not([open])>summary::after{transform:rotate(-45deg)}
+.gsec:not([open]){margin-bottom:18px}
+.gsec>summary:focus-visible{outline:2px solid var(--navy);outline-offset:4px}
 </style>
 </head>
 <body>
@@ -873,6 +884,9 @@ function renderControls2(){
   const modes=[["cat",X.cat],["reg",X.reg],["az",X.az],["start",X.start],["len",X.len],["shuffle",X.shuffle]];
   $("sort").innerHTML=modes.map(([k,n])=>`<option value="${k}" ${state.sort===k?"selected":""}>${n}</option>`).join("");
 }
+/* group sections are collapsible and open by default; remember which ones a visitor closed */
+const CLOSED=new Set();
+document.addEventListener("toggle",e=>{const d=e.target;if(!d.classList||!d.classList.contains("gsec"))return;d.open?CLOSED.delete(d.dataset.k):CLOSED.add(d.dataset.k)},true);
 function render(){
   renderControls2();
   const list=ITEMS.filter(it=>matches(it,false));
@@ -880,7 +894,7 @@ function render(){
   const bits=[];
   $("fsum").textContent=selLabel()+(state.regions.size?" · "+[...state.regions].map(r=>RNAME[r]).join(", "):"");
   let html="";
-  const sec=(title,items)=>`<section style="margin-bottom:36px"><h3 style="margin:0 0 14px;font-size:1.05rem;font-weight:700;letter-spacing:-.01em">${title} <span style="color:var(--muted);font-weight:400;font-size:13px">${items.length}</span></h3><div class="grid">${sorted(items).map(cardHTML).join("")}</div></section>`;
+  const sec=(title,items)=>`<details class="gsec" data-k="${esc(title)}" ${CLOSED.has(title)?"":"open"}><summary><h3>${title} <span class="gn">${items.length}</span></h3></summary><div class="grid">${sorted(items).map(cardHTML).join("")}</div></details>`;
   if(!list.length)html=`<div class="empty"><p>${X.none}</p><button class="pill" id="reset2" type="button">${T.clearF}</button></div>`;
   else if(state.sort==="cat"){CATS.forEach(c=>{const g=list.filter(it=>it.cat===c.k);if(g.length)html+=sec(catName(c),g)})}
   else if(state.sort==="reg"){
