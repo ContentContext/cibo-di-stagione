@@ -885,7 +885,7 @@ return {draw,M,T};
 /* each clipping gets its own scissor-cut outline and tilt, the same on every visit */
 function nameSeed(n){let h=2166136261;for(const ch of n){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 function clipRot(n){return ((nameSeed(n)%700)/100-3.5).toFixed(2)}
-/* card grounds for the drawings: off-white with a faint dither, varied card by card.
+/* card grounds for the drawings: warm cream (#FBF7EC) with a faint purple (#5A35B0) dither, toned to the same lightness as before, varied card by card.
    Error diffusion rather than an ordered grid, so the dots never fall into a repeating pattern;
    each texture is made at roughly card size so it fills the card in one piece instead of tiling. */
 (function(){
@@ -900,11 +900,11 @@ function clipRot(n){return ((nameSeed(n)%700)/100-3.5).toFixed(2)}
       const blob=Math.max(0,1-Math.hypot(x-bx,y-by)/br);
       f[y*W+x]=Math.min(.3,lo+(hi-lo)*t+blob*.06)}
     for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=y*W+x,v=f[i],on=v>.5*(.85+r()*.3),e=v-(on?1:0);
-      if(on){const o=i*4;d[o]=36;d[o+1]=4;d[o+2]=91;d[o+3]=24}
+      if(on){const o=i*4;d[o]=90;d[o+1]=53;d[o+2]=176;d[o+3]=31}
       if(x+1<W)f[i+1]+=e*7/16;if(y+1<H){if(x>0)f[i+W-1]+=e*3/16;f[i+W]+=e*5/16;if(x+1<W)f[i+W+1]+=e/16}}
     g.putImageData(im,0,0);
     css.push(`.ph.drw.tx${k}{background-image:url(${c.toDataURL()})}`)}
-  const st=document.createElement("style");st.textContent=css.join("\n")+"\n.ph.drw{background-color:#FAF8F2;background-size:cover;background-position:center;background-repeat:no-repeat}";document.head.appendChild(st);
+  const st=document.createElement("style");st.textContent=css.join("\n")+"\n.ph.drw{background-color:#FBF7EC;background-size:cover;background-position:center;background-repeat:no-repeat}";document.head.appendChild(st);
 })();
 let VIEW="photo";try{if(localStorage.getItem("view")==="draw")VIEW="draw"}catch(e){}
 /* name|English|group|months|regions|tags (D=DOP, I=IGP, S=Presidio)|English note|Italian note */
