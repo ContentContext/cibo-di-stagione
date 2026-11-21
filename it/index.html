@@ -964,7 +964,6 @@ document.addEventListener("change",e=>{
   render();
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){const m=document.querySelector(".ms.open");if(m){m.classList.remove("open");m.querySelector(".mspanel").hidden=true;m.querySelector(".msbtn").focus()}}});
-state.months=new Set([nowMonth]);
 render();
 /* fit "Eat the seasons" to the width of the filter column */
 function fitTitle(){
