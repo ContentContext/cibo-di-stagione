@@ -388,6 +388,12 @@ footer{display:block}
 .topbar .brand .logo3d b{transform:none!important}
 .brand .logo-gl{display:block;width:100%;height:auto}
 .brand.gl .stage{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* stopped: show the flat typeset title in place of the 3D object */
+.brand.gl.flat .logo-gl{display:none!important}
+.logo-flat{display:none}
+.brand.gl.flat .logo-flat{display:flex;align-items:center;justify-content:center;height:var(--glh,auto)}
+.logo-flat svg{display:block;height:auto}
 </style>
 </head>
 <body>
@@ -1254,9 +1260,12 @@ function initLogo3D(){
   const dl=new THREE.DirectionalLight(0xffffff,0.75);dl.position.set(0.2,1,0.6);scene.add(dl);
   const FOV=14,cam=new THREE.PerspectiveCamera(FOV,2,1,100*W); /* mild perspective so the turn direction reads clearly */
   const cv=renderer.domElement;cv.className="logo-gl";cv.setAttribute("aria-hidden","true");h1.appendChild(cv);h1.classList.add("gl");
+  /* flat vector version of the same outlines, shown when the rotation is stopped */
+  const fw=P.bb[2]-P.bb[0],fh=P.bb[3]-P.bb[1];const flatBox=document.createElement("div");flatBox.className="logo-flat";flatBox.setAttribute("aria-hidden","true");
+  flatBox.innerHTML=`<svg viewBox="${P.bb[0]} ${P.bb[1]} ${fw} ${fh}" width="98.5%" preserveAspectRatio="xMidYMid meet"><path d="${P.d}" fill="#24045B"/></svg>`;h1.appendChild(flatBox);
   function size(){
     const w=h1.clientWidth||800,s=w*0.985/W,h=Math.ceil(2*R*s*1.04);
-    renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.setSize(w,h,true);
+    renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.setSize(w,h,true);h1.style.setProperty('--glh',h+'px');
     const vh=h/s*0.94;cam.aspect=w/h;cam.position.set(0,0,(vh/2)/Math.tan(FOV*Math.PI/360)+R);cam.lookAt(0,0,0);cam.updateProjectionMatrix();draw();
   }
   let angle=0,last=performance.now(),visible=true,raf=0;
@@ -1265,7 +1274,8 @@ function initLogo3D(){
   function tick(t){
     const dt=Math.min(64,t-last);last=t;
     if(!SPIN_OFF)angle+=dt*2*Math.PI/TURN;
-    else{const target=Math.round(angle/(2*Math.PI))*2*Math.PI;angle+=(target-angle)*Math.min(1,dt/180);if(Math.abs(target-angle)<1e-4)angle=target}
+    else{const target=Math.round(angle/(2*Math.PI))*2*Math.PI;angle+=(target-angle)*Math.min(1,dt/180);if(Math.abs(target-angle)<1e-3)angle=target}
+    const flat=SPIN_OFF&&angle===Math.round(angle/(2*Math.PI))*2*Math.PI;if(flat!==h1.classList.contains('flat')){h1.classList.toggle('flat',flat);if(flat)fitTitle()}
     if(visible)draw();raf=requestAnimationFrame(tick);
   }
   if("IntersectionObserver" in window)new IntersectionObserver(es=>{visible=es[0].isIntersecting}).observe(h1);
