@@ -418,11 +418,12 @@ body>.wrap,body>.band{position:relative;z-index:1}
 .band-row .ico:nth-child(3n){transform:rotate(9deg) translateY(4px)}
 @media (prefers-reduced-motion:no-preference){.band-row{animation:drift 50s linear infinite}}
 @keyframes drift{to{transform:translateX(-50%)}}
-.ph.drw{display:grid;place-items:center;background-color:#FBF7EC}
+.ph.drw{display:block;background-color:#E6E2D8}
 .ill .ht *{fill:url(#news)!important}
 .ill .ht [fill="none"]{fill:none!important}
-.ph.drw .clipw{display:block;width:80.5%;position:relative;z-index:1;transform:rotate(var(--rot))}
-.ph.drw .clipw .ill{width:100%;height:auto}
+/* the drawing fills the card as far as it can in both directions and stays centred, whatever the card's shape */
+.ph.drw .clipw{position:absolute;inset:7%;z-index:1;display:block;transform:rotate(var(--rot))}
+.ph.drw .clipw .ill{position:absolute;inset:0;width:100%;height:100%}
 .ill .bk{display:none}
 .ph.drw .ill .bk{display:inline}
 .ill .bk *{fill:url(#paper)!important;stroke:url(#paper)!important;stroke-width:13px!important;stroke-linejoin:round!important;stroke-linecap:round!important;opacity:1!important}
@@ -451,7 +452,7 @@ body>.wrap,body>.band{position:relative;z-index:1}
       <feDisplacementMap in="SourceGraphic" in2="w" scale="5" result="c"/>
       <feDropShadow in="c" dx=".8" dy="1.6" stdDeviation="1.1" flood-color="#1A1A1A" flood-opacity=".3"/>
     </filter>
-    <pattern id="paper" width="3" height="3" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="#EEE8D8"/><circle cx="1" cy="1" r=".45" fill="#1A1A1A" opacity=".08"/></pattern>
+    <pattern id="paper" width="3" height="3" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="#F8F5EE"/><circle cx="1" cy="1" r=".45" fill="#1A1A1A" opacity=".08"/></pattern>
     <pattern id="news" width="4.2" height="4.2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="2.1" cy="2.1" r="1.15" fill="#1A1A1A" opacity=".3"/></pattern>
     <pattern id="dots" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(15)"><circle cx="2" cy="2" r="1.6" fill="#fff" opacity=".45"/></pattern>
 
@@ -885,7 +886,7 @@ return {draw,M,T};
 /* each clipping gets its own scissor-cut outline and tilt, the same on every visit */
 function nameSeed(n){let h=2166136261;for(const ch of n){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 function clipRot(n){return ((nameSeed(n)%700)/100-3.5).toFixed(2)}
-/* card grounds for the drawings: warm cream (#FBF7EC) with a faint purple (#5A35B0) dither, toned to the same lightness as before, varied card by card.
+/* card grounds for the drawings: recycled-newsprint grey (#E6E2D8) with a faint purple (#5A35B0) dither, toned to the same lightness as before, varied card by card.
    Error diffusion rather than an ordered grid, so the dots never fall into a repeating pattern;
    each texture is made at roughly card size so it fills the card in one piece instead of tiling. */
 (function(){
@@ -904,7 +905,7 @@ function clipRot(n){return ((nameSeed(n)%700)/100-3.5).toFixed(2)}
       if(x+1<W)f[i+1]+=e*7/16;if(y+1<H){if(x>0)f[i+W-1]+=e*3/16;f[i+W]+=e*5/16;if(x+1<W)f[i+W+1]+=e/16}}
     g.putImageData(im,0,0);
     css.push(`.ph.drw.tx${k}{background-image:url(${c.toDataURL()})}`)}
-  const st=document.createElement("style");st.textContent=css.join("\n")+"\n.ph.drw{background-color:#FBF7EC;background-size:cover;background-position:center;background-repeat:no-repeat}";document.head.appendChild(st);
+  const st=document.createElement("style");st.textContent=css.join("\n")+"\n.ph.drw{background-color:#E6E2D8;background-size:cover;background-position:center;background-repeat:no-repeat}";document.head.appendChild(st);
 })();
 let VIEW="photo";try{if(localStorage.getItem("view")==="draw")VIEW="draw"}catch(e){}
 /* name|English|group|months|regions|tags (D=DOP, I=IGP, S=Presidio)|English note|Italian note */
