@@ -414,6 +414,7 @@ body>.wrap,body>.band{position:relative;z-index:1}
 .band{border-bottom:1px solid var(--navy);background:rgba(255,255,255,.85);padding:12px 0;overflow:hidden}
 .band-row{display:flex;gap:26px;align-items:center;width:max-content;padding-left:18px}
 .band-row .ico{display:block;overflow:visible;width:42px;height:42px;flex:none}
+.band-row .ico.folk{width:40px;height:58px;margin-block:-8px;transform:none}
 .band-row .ico:nth-child(odd){transform:rotate(-8deg)}
 .band-row .ico:nth-child(3n){transform:rotate(9deg) translateY(4px)}
 @media (prefers-reduced-motion:no-preference){.band-row{animation:drift 50s linear infinite}}
@@ -680,6 +681,44 @@ body>.wrap,body>.band{position:relative;z-index:1}
       </g>
     </symbol>
     <!-- an original market-stall character: flat cap, apron, a crate of tomatoes -->
+    <!-- his partner at the stall: polka-dot headscarf knotted under the chin, green dress, white apron, a crate of lemons -->
+    <symbol id="i-vendora" viewBox="0 0 160 230">
+      <g filter="url(#rough)">
+        <g transform="translate(3 2.5)">
+          <path style="fill:var(--leaf)" d="M50 104C46 108 46 114 50 118L36 214H124L110 118C114 114 114 108 110 104C100 100 60 100 50 104Z"/>
+          <path style="fill:var(--red)" d="M48 70C44 40 60 26 80 26C100 26 116 40 112 70C110 84 104 92 96 96L80 100L64 96C56 92 50 84 48 70Z"/>
+        </g>
+        <g style="fill:#fff;opacity:.9"><circle cx="58" cy="44" r="2.6"/><circle cx="72" cy="34" r="2.6"/><circle cx="90" cy="33" r="2.6"/><circle cx="104" cy="44" r="2.6"/><circle cx="52" cy="62" r="2.6"/><circle cx="108" cy="62" r="2.6"/><circle cx="56" cy="82" r="2.6"/><circle cx="104" cy="82" r="2.6"/><circle cx="80" cy="30" r="2.6"/></g>
+        <path style="fill:#fff" d="M60 118H100L106 204H54Z"/>
+        <circle cx="80" cy="68" r="24" style="fill:#fff"/>
+        <g style="fill:none;stroke:var(--ink);stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M48 70C44 40 60 26 80 26C100 26 116 40 112 70C110 84 104 92 96 96L80 100L64 96C56 92 50 84 48 70Z"/>
+          <path style="fill:var(--red)" d="M80 98L68 114L78 111ZM80 98L92 114L82 111Z"/>
+          <circle cx="80" cy="68" r="24"/>
+          <path style="fill:#3B2A2A" d="M58 58C62 48 72 45 80 47C88 45 98 48 102 58C94 54 86 54 80 56C74 54 66 54 58 58Z"/>
+          <path d="M68 66C70 63 74 63 76 66M84 66C86 63 90 63 92 66"/>
+          <path d="M80 68C78 73 79 75 82 75"/>
+          <path style="fill:var(--red)" d="M74 81C78 85 82 85 86 81C82 83 78 83 74 81Z"/>
+          <path d="M50 104C46 108 46 114 50 118L36 214H124L110 118C114 114 114 108 110 104C100 100 60 100 50 104Z"/>
+          <path d="M60 118H100L106 204H54Z"/><path style="stroke:var(--red);stroke-width:4" d="M56 196H104"/>
+          <path d="M66 118V104M94 118V104"/>
+          <path d="M64 214V224M96 214V224"/>
+          <path d="M48 106C30 116 26 134 34 146M112 106C130 116 134 134 126 146"/>
+        </g>
+        <g style="fill:var(--red);opacity:.35"><ellipse cx="66" cy="74" rx="5" ry="3.5"/><ellipse cx="94" cy="74" rx="5" ry="3.5"/></g>
+        <g style="fill:#fff;opacity:.85"><circle cx="44" cy="190" r="2.4"/><circle cx="116" cy="188" r="2.4"/><circle cx="46" cy="160" r="2.4"/><circle cx="114" cy="158" r="2.4"/></g>
+        <g transform="translate(18 132)">
+          <path transform="translate(3 2)" style="fill:#C08A4A" d="M6 22H118L110 64H14Z"/>
+          <g style="fill:var(--yellow)"><ellipse cx="30" cy="15" rx="13" ry="10"/><ellipse cx="56" cy="11" rx="14" ry="10"/><ellipse cx="84" cy="14" rx="13" ry="10"/><ellipse cx="104" cy="18" rx="10" ry="8"/></g>
+          <g style="fill:var(--leaf)"><path d="M40 6C46 -2 56 -2 60 2C54 8 46 8 40 6Z"/><path d="M90 8C96 0 106 0 110 4C104 10 96 10 90 8Z"/></g>
+          <g style="fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linejoin:round">
+            <ellipse cx="30" cy="15" rx="13" ry="10"/><ellipse cx="56" cy="11" rx="14" ry="10"/><ellipse cx="84" cy="14" rx="13" ry="10"/><ellipse cx="104" cy="18" rx="10" ry="8"/>
+            <path d="M40 6C46 -2 56 -2 60 2C54 8 46 8 40 6ZM90 8C96 0 106 0 110 4C104 10 96 10 90 8Z"/>
+            <path d="M6 22H118L110 64H14Z"/><path d="M10 36H116M13 50H113M40 22V64M84 22V64"/>
+          </g>
+        </g>
+      </g>
+    </symbol>
     <symbol id="i-vendor" viewBox="0 0 160 230">
       <g filter="url(#rough)">
         <path style="fill:var(--red)" d="M60 90L100 90L80 112Z"/>
@@ -1896,7 +1935,8 @@ if(!initLogo3D()){$("spinbtn").hidden=true}
 })();
 /* band of drawings across the top */
 (function(){const ids=["tomato","fork","knife","spoon","lemon","pear","cheese","wheel","carrot","eggplant","garlic","cherries","pea","fish","apple","artichoke","chilli","mushroom","sprig"];
-  const one=ids.map(i=>`<svg class="ico" viewBox="0 0 100 100"><use href="#i-${i}"/></svg>`).join("");$("bandRow").innerHTML=one+one})();
+  const ppl=i=>`<svg class="ico folk" viewBox="0 0 160 230"><use href="#i-${i}"/></svg>`;
+  const one=ids.map((i,k)=>(k===6?ppl("vendor"):k===14?ppl("vendora"):"")+`<svg class="ico" viewBox="0 0 100 100"><use href="#i-${i}"/></svg>`).join("");$("bandRow").innerHTML=one+one})();
 /* background drawings: one layer moves with the page, three drift more slowly, plus the market-stall character.
    Each layer repeats every T pixels, so it stays a fixed size however long the list gets. */
 (function(){
@@ -1919,7 +1959,7 @@ if(!initLogo3D()){$("spinbtn").hidden=true}
     const G=Math.max(3200,innerHeight+300),h=W>860?420:230,w=Math.round(h*160/230);
     const spots=[[W-w*(W>860?1:.65)-(W>860?30:0),260,-4,1],[W>860?40:-w*.3,G*.58,5,-1]];
     const gl=document.createElement("div");gl.className="layer kg";gl.style.height=2*G+"px";
-    gl.innerHTML=[0,G].map(off=>spots.map(([x,y,r,fl])=>`<svg class="guy" viewBox="0 0 160 230" style="width:${w}px;left:${Math.round(x)}px;top:${Math.round(y+off)}px;transform:rotate(${r}deg) scaleX(${fl})"><use href="#i-vendor"/></svg>`).join("")).join("");
+    gl.innerHTML=[0,G].map(off=>spots.map(([x,y,r,fl],k)=>`<svg class="guy" viewBox="0 0 160 230" style="width:${w}px;left:${Math.round(x)}px;top:${Math.round(y+off)}px;transform:rotate(${r}deg) scaleX(${fl})"><use href="#i-vendor${k?"a":""}"/></svg>`).join("")).join("");
     host.appendChild(gl);layers.push({el:gl,r:.8,T:G});
     update()}
   let ticking=false;
