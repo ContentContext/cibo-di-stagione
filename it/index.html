@@ -418,12 +418,14 @@ body>.wrap,body>.band{position:relative;z-index:1}
 .band-row .ico:nth-child(3n){transform:rotate(9deg) translateY(4px)}
 @media (prefers-reduced-motion:no-preference){.band-row{animation:drift 50s linear infinite}}
 @keyframes drift{to{transform:translateX(-50%)}}
-.ph.drw{display:grid;place-items:center;background:#FBF7EC}
+.ph.drw{display:grid;place-items:center;background:#FFFFFF}
 .ill .ht *{fill:url(#news)!important}
 .ill .ht [fill="none"]{fill:none!important}
-.ph.drw .clipw{display:block;width:76%;position:relative;z-index:1;transform:rotate(var(--rot));filter:drop-shadow(1px 2px 1.5px rgba(26,26,26,.28))}
-.ph.drw .clip{display:block;aspect-ratio:1;padding:9%;background:#EEE8D8 radial-gradient(rgba(26,26,26,.07) 0.6px,transparent 0.9px) 0 0/3px 3px}
-.ph.drw .clip .ill{width:100%;height:100%}
+.ph.drw .clipw{display:block;width:70%;position:relative;z-index:1;transform:rotate(var(--rot))}
+.ph.drw .clipw .ill{width:100%;height:auto}
+.ill .bk{display:none}
+.ph.drw .ill .bk{display:inline}
+.ill .bk *{fill:url(#paper)!important;stroke:url(#paper)!important;stroke-width:13px!important;stroke-linejoin:round!important;stroke-linecap:round!important;opacity:1!important}
 .rrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .viewsw{font:inherit;cursor:pointer;background:#fff;border:1px solid var(--navy)}
 @media (max-width:520px){.langlink span{padding:0 11px}.rbar{flex-wrap:wrap;gap:10px}.rtools{width:100%;flex-direction:row-reverse;justify-content:space-between;align-items:center}}
@@ -443,6 +445,13 @@ body>.wrap,body>.band{position:relative;z-index:1}
       <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -12 0 0 0 8.9" result="m"/>
       <feComposite in="b" in2="m" operator="in"/>
     </filter>
+    <!-- the newsprint the drawing is cut from: an outline grown around the drawing, cut in short scissor strokes, with a small shadow -->
+    <filter id="cut" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="1" seed="21" result="w"/>
+      <feDisplacementMap in="SourceGraphic" in2="w" scale="5" result="c"/>
+      <feDropShadow in="c" dx=".8" dy="1.6" stdDeviation="1.1" flood-color="#1A1A1A" flood-opacity=".3"/>
+    </filter>
+    <pattern id="paper" width="3" height="3" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="#EEE8D8"/><circle cx="1" cy="1" r=".45" fill="#1A1A1A" opacity=".08"/></pattern>
     <pattern id="news" width="4.2" height="4.2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="2.1" cy="2.1" r="1.15" fill="#1A1A1A" opacity=".3"/></pattern>
     <pattern id="dots" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(15)"><circle cx="2" cy="2" r="1.6" fill="#fff" opacity=".45"/></pattern>
 
@@ -734,7 +743,7 @@ const e=(x,y,rx,ry,col)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fil
 const el=(x,y,rx,ry)=>`<ellipse class="ln" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"/>`;
 const dots=d=>`<path d="${d}" fill="url(#dots)"/>`;
 const leafAt=(x,y,s=1,col=LF)=>{const p=`M${x} ${y}C${x+8*s} ${y-10*s} ${x+22*s} ${y-10*s} ${x+26*s} ${y-4*s}C${x+18*s} ${y+4*s} ${x+8*s} ${y+4*s} ${x} ${y}Z`;return [f(p,col),l(p)]};
-const svg=(fill,line,top="")=>`<svg viewBox="0 0 100 100" class="ill" aria-hidden="true"><g filter="url(#rough)"><g transform="translate(3 2.5)">${fill}</g><g class="ht" transform="translate(3 2.5)">${fill}</g>${line}${top}</g></svg>`;
+const svg=(fill,line,top="")=>`<svg viewBox="0 0 100 100" class="ill" aria-hidden="true"><g class="bk" filter="url(#cut)"><g transform="translate(1.5 1.2)">${fill}</g>${line}${top}</g><g filter="url(#rough)"><g transform="translate(3 2.5)">${fill}</g><g class="ht" transform="translate(3 2.5)">${fill}</g>${line}${top}</g></svg>`;
 
 const ROUND="M50 26C74 24 88 40 88 60C88 80 70 92 50 92C30 92 12 80 12 60C12 40 26 24 50 26Z";
 const T={
@@ -869,10 +878,6 @@ return {draw,M,T};
 /* each clipping gets its own scissor-cut outline and tilt, the same on every visit */
 function nameSeed(n){let h=2166136261;for(const ch of n){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 function clipRot(n){return ((nameSeed(n)%700)/100-3.5).toFixed(2)}
-function clipPath(n){let s=nameSeed(n)||1;const r=()=>(s=(s*16807)%2147483647)/2147483647;const pts=[];
-  const edge=(x0,y0,x1,y1,k,ix,iy)=>{for(let i=0;i<k;i++){const t=i/k,j=r()*3.4;pts.push([x0+(x1-x0)*t+ix*j,y0+(y1-y0)*t+iy*j])}};
-  edge(1,2,99,1,7,0,1);edge(99,1,98,99,8,-1,0);edge(98,99,2,98,7,0,-1);edge(2,98,1,2,8,1,0);
-  return "polygon("+pts.map(([x,y])=>x.toFixed(1)+"% "+y.toFixed(1)+"%").join(",")+")"}
 let VIEW="photo";try{if(localStorage.getItem("view")==="draw")VIEW="draw"}catch(e){}
 /* name|English|group|months|regions|tags (D=DOP, I=IGP, S=Presidio)|English note|Italian note */
 const RAW = `
@@ -1351,7 +1356,7 @@ const thumbUrl=p=>{const f=encodeURIComponent(p[0].replace(/ /g,"_"));return WM+
 const origUrl=p=>WM+p[5]+"/"+encodeURIComponent(p[0].replace(/ /g,"_"));
 function photo(it,big){
   const L=esc(label(it).charAt(0).toUpperCase());
-  if(VIEW==="draw")return `<span class="ph drw pp" data-c="${it.cat}"><span class="clipw" style="--rot:${clipRot(it.name)}deg"><span class="clip" style="clip-path:${clipPath(it.name)}">${ILL.draw(it.name,it.cat)}</span></span></span>`;
+  if(VIEW==="draw")return `<span class="ph drw pp" data-c="${it.cat}"><span class="clipw" style="--rot:${clipRot(it.name)}deg">${ILL.draw(it.name,it.cat)}</span></span>`;
   const p=PHOTOS[it.name];
   const img=p?`<img src="${thumbUrl(p)}" data-orig="${origUrl(p)}" crossorigin="anonymous" alt="${esc(label(it))}" ${big?"":'loading="lazy"'} decoding="async" referrerpolicy="no-referrer" onload="ditherImg(this)" onerror="imgFail(this)">`:"";
   return `<span class="ph" data-c="${it.cat}"><span class="l" aria-hidden="true">${L}</span>${img}</span>`;
