@@ -1756,27 +1756,12 @@ function initLogo3D(){
   const geo=new THREE.ExtrudeGeometry(shapes,{depth:D,bevelEnabled:false,curveSegments:12});
   geo.computeBoundingBox();const bb=geo.boundingBox;
   geo.translate(-(bb.min.x+bb.max.x)/2,-(bb.min.y+bb.max.y)/2,-D/2);
-  const HH0=bb.max.y-bb.min.y;
   /* side colour runs from lighter purple at the front to deeper purple at the back, like the old layers */
   const pos=geo.attributes.position,col=new Float32Array(pos.count*3),A=[92,56,176],B=[66,34,140];
   for(let i=0;i<pos.count;i++){const t=(D/2-pos.getZ(i))/D;for(let k=0;k<3;k++)col[i*3+k]=(A[k]+(B[k]-A[k])*t)/255}
   geo.setAttribute("color",new THREE.BufferAttribute(col,3));
   const W=bb.max.x-bb.min.x,HH=bb.max.y-bb.min.y,R=Math.sqrt(HH*HH+D*D)/2;
-  /* front and back faces: navy with a light stipple in the lighter purple, thickest along the foot of the letters and
-     thinning out upwards, after the shaded lettering of 1930s Italian posters. The sides stay plain. */
-  const face=new THREE.ShaderMaterial({
-    uniforms:{cell:{value:1},y0:{value:-HH0/2},hh:{value:HH0},ink:{value:new THREE.Color(0x24045B)},dotc:{value:new THREE.Color(0x5C38B0)}},
-    vertexShader:"varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}",
-    fragmentShader:[
-      "uniform float cell;uniform float y0;uniform float hh;uniform vec3 ink;uniform vec3 dotc;varying vec3 vP;",
-      "float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}",
-      "void main(){",
-      " vec2 p=vP.xy/cell;vec2 c=floor(p);",
-      " float t=clamp((vP.y-y0)/hh,0.0,1.0);",
-      " float dens=0.5*(1.0-smoothstep(0.0,0.62,t));",
-      " vec2 o=0.5+(vec2(hash(c+17.0),hash(c+41.0))-0.5)*0.4;",
-      " float on=step(hash(c),dens)*step(length(fract(p)-o),0.36);",
-      " gl_FragColor=vec4(mix(ink,dotc,on),1.0);}"].join("\n")});
+  const face=new THREE.MeshBasicMaterial({color:0x24045B});
   const side=new THREE.MeshBasicMaterial({vertexColors:true});
   const mesh=new THREE.Mesh(geo,[face,side]);
   const scene=new THREE.Scene();scene.add(mesh);
@@ -1785,9 +1770,7 @@ function initLogo3D(){
   function size(){
     const w=h1.clientWidth||800,s=w*0.97/W,h=Math.ceil(2*R*s*1.02);
     renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.setSize(w,h,true);
-    cam.left=-w/2/s;cam.right=w/2/s;cam.top=h/2/s;cam.bottom=-h/2/s;cam.updateProjectionMatrix();
-    face.uniforms.cell.value=Math.max(2.4,w/480)/s; /* dots about 2-3 css px across, fixed to the letters */
-    draw();
+    cam.left=-w/2/s;cam.right=w/2/s;cam.top=h/2/s;cam.bottom=-h/2/s;cam.updateProjectionMatrix();draw();
   }
   const TURN=14000,EASE_MS=800,TAU=2*Math.PI;
   let angle=0,last=performance.now(),visible=true,tween=null,wasOff=SPIN_OFF;
