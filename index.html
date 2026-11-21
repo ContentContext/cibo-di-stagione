@@ -1261,7 +1261,7 @@ function initLogo3D(){
   }
   let angle=0,last=performance.now(),visible=true,raf=0;
   const TURN=14000; /* ms per full turn */
-  function draw(){mesh.rotation.x=-angle;renderer.render(scene,cam)}
+  function draw(){mesh.rotation.x=angle;renderer.render(scene,cam)}
   function tick(t){
     const dt=Math.min(64,t-last);last=t;
     if(!SPIN_OFF)angle+=dt*2*Math.PI/TURN;
