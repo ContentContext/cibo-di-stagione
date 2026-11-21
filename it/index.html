@@ -422,6 +422,7 @@ body>.wrap,body>.band{position:relative;z-index:1}
 .band{border-bottom:1px solid var(--navy);background:rgba(255,255,255,.85);padding:12px 0;overflow:hidden}
 .band-row{display:flex;gap:26px;align-items:center;width:max-content;padding-left:18px}
 .band-row .ico{display:block;overflow:visible;width:42px;height:42px;flex:none}
+.band-row span.ico .ill{width:100%;height:100%}
 .band-row .ico.folk{width:40px;height:58px;margin-block:-8px;transform:none}
 .band-row .ico:nth-child(odd){transform:rotate(-8deg)}
 .band-row .ico:nth-child(3n){transform:rotate(9deg) translateY(4px)}
@@ -446,12 +447,8 @@ body>.wrap,body>.band{position:relative;z-index:1}
 @media (max-width:600px){.totop{padding:0;width:46px;height:46px;justify-content:center}.totop span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
 @media (prefers-reduced-motion:reduce){.totop{transition:none}}
 /* photos/drawings and language live at the top of the menu */
-/* the two stallholders stand either side of the title */
-.topbar{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto;align-items:end;column-gap:clamp(6px,1.4vw,20px)}
+
 .topbar .brand{min-width:0}
-.folkhd{display:block;width:clamp(34px,7.5vw,112px);height:auto;overflow:visible;margin-bottom:.3em}
-.folkhd:first-child{transform:rotate(-3deg)}
-.folkhd:last-child{transform:rotate(3deg)}
 .prefs{display:flex;flex-wrap:wrap;gap:12px 18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
 .prefs .f{display:flex;flex-direction:column;gap:6px;margin:0}
 .prefs .langlink{margin-left:0;align-self:flex-start}
@@ -778,9 +775,7 @@ body>.wrap,body>.band{position:relative;z-index:1}
 <div class="band pp" aria-hidden="true"><div class="band-row" id="bandRow"></div></div>
 <div class="wrap layout">
   <header class="topbar">
-    <svg class="folkhd pp" viewBox="0 0 160 230" aria-hidden="true"><use href="#i-vendora"/></svg>
     <h1 class="brand"><span class="stage"><span class="logo3d" id="logo"><b id="brand"></b></span></span></h1>
-    <svg class="folkhd pp" viewBox="0 0 160 230" aria-hidden="true"><use href="#i-vendor"/></svg>
   </header>
   <aside class="side" id="side">
     <p class="tagline" id="tag"></p>
@@ -1972,10 +1967,13 @@ if(!initLogo3D()){$("spinbtn").hidden=true}
   b.addEventListener("click",()=>{VIEW=VIEW==="photo"?"draw":"photo";try{localStorage.setItem("view",VIEW)}catch(e){}paint();render()});
   paint();
 })();
-/* band of drawings across the top */
-(function(){const ids=["tomato","fork","knife","spoon","lemon","pear","cheese","wheel","carrot","eggplant","garlic","cherries","pea","fish","apple","artichoke","chilli","mushroom","sprig"];
-  const ppl=i=>`<svg class="ico folk" viewBox="0 0 160 230"><use href="#i-${i}"/></svg>`;
-  const one=ids.map((i,k)=>(k===6?ppl("vendor"):k===14?ppl("vendora"):"")+`<svg class="ico" viewBox="0 0 100 100"><use href="#i-${i}"/></svg>`).join("");$("bandRow").innerHTML=one+one})();
+/* band of drawings across the top: the same food drawings as the cards (so the same colours), with cutlery and the two stallholders */
+(function(){
+  const seq=[["Pomodori"],["fork"],["Limoni"],["Parmigiano Reggiano"],["knife"],["Carote"],["vendor"],["Melanzane"],["Ciliegie"],["spoon"],["Carciofi"],["Mozzarella di bufala"],["Peperoncino"],["Funghi porcini"],["vendora"],["Piselli freschi"],["Fichi"],["Alici e acciughe"],["Mele"],["Aglio fresco"],["Basilico genovese"],["Gorgonzola"]];
+  const item=([n])=>n==="vendor"||n==="vendora"?`<svg class="ico folk" viewBox="0 0 160 230"><use href="#i-${n}"/></svg>`
+    :["fork","knife","spoon"].includes(n)?`<svg class="ico" viewBox="0 0 100 100"><use href="#i-${n}"/></svg>`
+    :`<span class="ico">${ILL.draw(n)}</span>`;
+  const one=seq.map(item).join("");$("bandRow").innerHTML=one+one})();
 /* background drawings: one layer moves with the page, three drift more slowly, plus the market-stall character.
    Each layer repeats every T pixels, so it stays a fixed size however long the list gets. */
 (function(){
