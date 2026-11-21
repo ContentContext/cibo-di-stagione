@@ -438,6 +438,12 @@ body>.wrap,body>.band{position:relative;z-index:1}
 @media (max-width:600px){.totop{padding:0;width:46px;height:46px;justify-content:center}.totop span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
 @media (prefers-reduced-motion:reduce){.totop{transition:none}}
 /* photos/drawings and language live at the top of the menu */
+/* the two stallholders stand either side of the title */
+.topbar{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto;align-items:end;column-gap:clamp(6px,1.4vw,20px)}
+.topbar .brand{min-width:0}
+.folkhd{display:block;width:clamp(34px,7.5vw,112px);height:auto;overflow:visible;margin-bottom:.3em}
+.folkhd:first-child{transform:rotate(-3deg)}
+.folkhd:last-child{transform:rotate(3deg)}
 .prefs{display:flex;flex-wrap:wrap;gap:12px 18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
 .prefs .f{display:flex;flex-direction:column;gap:6px;margin:0}
 .prefs .langlink{margin-left:0;align-self:flex-start}
@@ -764,7 +770,9 @@ body>.wrap,body>.band{position:relative;z-index:1}
 <div class="band pp" aria-hidden="true"><div class="band-row" id="bandRow"></div></div>
 <div class="wrap layout">
   <header class="topbar">
+    <svg class="folkhd pp" viewBox="0 0 160 230" aria-hidden="true"><use href="#i-vendora"/></svg>
     <h1 class="brand"><span class="stage"><span class="logo3d" id="logo"><b id="brand"></b></span></span></h1>
+    <svg class="folkhd pp" viewBox="0 0 160 230" aria-hidden="true"><use href="#i-vendor"/></svg>
   </header>
   <aside class="side" id="side">
     <p class="tagline" id="tag"></p>
