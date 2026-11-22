@@ -798,8 +798,7 @@ body>.wrap,body>.band{position:relative;z-index:1}
       <div class="f"><span id="lRegion"></span><div class="ms" id="region"></div></div>
       <label class="f"><span id="lSort"></span><select id="sort"></select></label>
       <label class="ck"><input type="checkbox" id="spec"><span id="lSpec"></span></label>
-      <label class="ck"><input type="checkbox" id="yr" aria-describedby="yrHint"><span id="lYr"></span></label>
-      <p class="hint" id="yrHint"></p>
+      <label class="ck"><input type="checkbox" id="yr"><span id="lYr"></span></label>
       <button class="pill fxbtn" id="fxbtn" type="button" aria-pressed="false" aria-describedby="fxHint"></button>
       <p class="hint fxhint" id="fxHint"></p>
       <div class="btns"><button class="pill" id="now" type="button"></button><button class="pill" id="reset" type="button"></button></div>
@@ -1842,7 +1841,7 @@ document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;
 $("brand").textContent=T.h1;$("tag").textContent=T.sub;document.title=T.h1;
 $("q").placeholder=T.ph;$("q").setAttribute("aria-label",T.search);
 $("lSort").textContent=X.sortBy;$("lSeason").textContent=T.season;$("lMonth").textContent=T.month;$("lGroup").textContent=T.group;$("lRegion").textContent=T.region;
-$("lSpec").textContent=T.spec;$("lYr").textContent=T.yr;$("yrHint").textContent=T.yrHint;$("filters").setAttribute("aria-label",T.filters);$("fxHint").textContent=X.fxHint;$("now").textContent=T.today;$("reset").textContent=T.clear;
+$("lSpec").textContent=T.spec;$("lYr").textContent=T.yr;$("filters").setAttribute("aria-label",T.filters);$("fxHint").textContent=X.fxHint;$("now").textContent=T.today;$("reset").textContent=T.clear;
 $("ftLabel").textContent=X.fsFilters;$("lView").textContent=EN?"Show":"Mostra";$("lLang").textContent=EN?"Language":"Lingua";
 $("foot").innerHTML=`<details class="fdet"><summary>${EN?"About this guide and sources":"Informazioni sulla guida e fonti"}</summary><div class="fgrid">${FOOT[LANG]}</div></details>`;
 $("langsw").innerHTML=EN?`<span class="seg on" aria-current="true" lang="en">EN</span><a class="seg" id="lang" href="${T.otherHref}" lang="it" hreflang="it">IT</a>`
