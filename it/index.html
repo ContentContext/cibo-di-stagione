@@ -2054,11 +2054,13 @@ function initLogo3D(){
   const btn=$("spinbtn");
   const L=EN?{stop:"Pause animation",start:"Play animation"}:{stop:"Ferma animazione",start:"Avvia animazione"};
   let stopped=false;
-  try{stopped=localStorage.getItem("spin")==="off"}catch(e){}
+  /* everything moves by default on every new visit; a pause lasts for this visit only (it survives the EN/IT switch).
+     The old saved "spin" setting is ignored and cleared, so earlier pauses no longer stop the page. */
+  try{localStorage.removeItem("spin");stopped=sessionStorage.getItem("anim")==="off"}catch(e){}
   const rm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   function set(v,save){stopped=v;SPIN_OFF=v;document.documentElement.classList.toggle("anim-off",v);
     btn.textContent=v?L.start:L.stop;btn.setAttribute("aria-pressed",String(v));
-    if(save)try{localStorage.setItem("spin",v?"off":"on")}catch(e){} /* only a real choice is remembered, not reduced motion */
+    if(save)try{sessionStorage.setItem("anim",v?"off":"on")}catch(e){} /* only a real choice is remembered, not reduced motion */
     if(window.kickTitle)kickTitle()}
   btn.addEventListener("click",()=>set(!stopped,true));
   set(stopped||rm,false);
