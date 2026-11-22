@@ -247,8 +247,9 @@ footer p,footer li{color:var(--navy);opacity:.75}
 .langlink{display:inline-flex;padding:0;overflow:hidden;min-height:40px;gap:0;border-radius:6px}
 .langlink span{display:inline-flex;align-items:center;padding:0 16px;font-weight:500;color:var(--navy);min-height:38px}
 .langlink span.on{background:var(--navy);color:#fff;font-weight:700}
-.langlink:hover{background:#fff}
-.langlink:hover span:not(.on){background:var(--chip-hover)}
+/* hover tint only where there is a real pointer: on phones a tap leaves a "hover" behind, which made the unselected side look selected */
+@media (hover:hover){.langlink:hover{background:#fff}.langlink:hover span:not(.on){background:var(--chip-hover)}}
+@media (hover:none){.pill.langlink:hover,.pill.langlink:active{background:#fff}.pill.langlink:hover span:not(.on),.pill.langlink:active span:not(.on){background:transparent}}
 
 .rbar{display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;gap:16px;margin:0 0 20px}
 .rbar h2{min-width:0;flex:1 1 auto}
@@ -1229,7 +1230,7 @@ Alborella|Bleak|P|6-8|LOM||Small lake fish, fried whole|Piccolo pesce di lago, f
 `;
 
 /* Language comes from <html lang>. The English page is index.html, the Italian page is it/index.html (see build.sh). */
-if(typeof SAMPLE!=="undefined"&&location.hash==="#it")document.documentElement.lang="it";
+if(typeof SAMPLE!=="undefined"&&location.hash.split("&")[0]==="#it")document.documentElement.lang="it";
 const EN = document.documentElement.lang !== "it";
 const LANG = EN ? "en" : "it";
 
@@ -1856,7 +1857,7 @@ writeHash();
    so the person can carry on choosing before they close it */
 if(MENU){const f=$("filters");f.hidden=false;$("ftoggle").setAttribute("aria-expanded","true");
   const put=()=>{f.scrollTop=MENU.top};requestAnimationFrame(put);setTimeout(put,300);
-  const l=$("lang");if(l)setTimeout(()=>l.focus({preventScroll:true}),50)}
+  const l=$("lang");if(l&&matchMedia("(hover:hover)").matches)setTimeout(()=>l.focus({preventScroll:true}),50)}
 /* arriving from the other language: put the same card back where it was on screen */
 if(ARRIVE){const go=()=>{const el=$("grid").querySelector(`.card[data-i="${ARRIVE.i}"]`);if(el)window.scrollTo(0,Math.max(0,el.getBoundingClientRect().top+scrollY-ARRIVE.y))};
   requestAnimationFrame(go);setTimeout(go,350)}
