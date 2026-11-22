@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Eat the seasons</title>
+<meta name="description" content="What is in season in Italy, month by month: vegetables, fruit, cheese, fish, meat and more, by season, food group and region.">
+<link rel="canonical" href="https://contentcontext.github.io/cibo-di-stagione/">
+<link rel="alternate" hreflang="en" href="https://contentcontext.github.io/cibo-di-stagione/">
+<link rel="alternate" hreflang="it" href="https://contentcontext.github.io/cibo-di-stagione/it/">
+<link rel="alternate" hreflang="x-default" href="https://contentcontext.github.io/cibo-di-stagione/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 18c14-1 24 9 24 21S46 58 32 58 8 51 8 39s10-22 24-21z' fill='%23E4572E' stroke='%2324045B' stroke-width='3'/%3E%3Cpath d='M32 12l4 8 9-2-6 7 4 7-11-5-11 5 4-7-6-7 9 2z' fill='%235A35B0' stroke='%2324045B' stroke-width='2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Vampiro+One&display=swap">
@@ -465,6 +471,64 @@ body>.wrap,body>.band{position:relative;z-index:1}
 .rrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .viewsw{font:inherit;cursor:pointer;background:#fff;border:1px solid var(--navy)}
 @media (max-width:520px){.langlink span{padding:0 11px}.rbar{flex-wrap:wrap;gap:10px}.rtools{width:100%;flex-direction:row-reverse;justify-content:space-between;align-items:center}}
+
+/* ===== fixes from the debug and user-testing reviews (22 Nov 2026) ===== */
+/* contrast: muted text reaches 4.5:1 on white and on the drawing cards; focus rings are navy */
+:root{--muted:rgba(36,4,91,.72);--autumn:#C2421C}
+:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+.f select:focus,.search:focus{outline:3px solid var(--navy);outline-offset:1px}
+.f select:focus-visible,.search:focus-visible{box-shadow:0 0 0 6px rgba(116,255,67,.55)}
+.big i{color:rgba(36,4,91,.78)}
+.mini i.on.s-sp{background:#2C9B17}.mini i.on.s-su{background:#B07F00}
+/* one breakpoint for the phone/tablet menu: below 861px the Filters bar is always there */
+@media (max-width:860px){
+  .filter-toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;margin-top:4px;padding:11px 16px;font-weight:700;cursor:pointer;min-height:46px}
+  .filter-toggle #fsum{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
+  .filters[hidden]{display:none}
+  body.menu-open .content{min-height:100vh;min-height:100dvh} /* enough page under the bar that it can stay at the top */
+  .grid{padding-bottom:8px}
+  .card.open{scroll-margin-top:84px}
+}
+/* desktop: the menu column scrolls on its own when the screen is short, and dropdown lists open in place
+   (they push the controls below down rather than covering them) */
+@media (min-width:861px){
+  .side{max-height:100vh;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain;padding-bottom:16px}
+  .mspanel{position:static;max-height:none;margin-top:6px;box-shadow:none}
+  /* Back to top floats at the bottom-left of the results column, clear of the menu */
+  .totop{left:calc(max(16px, (100vw - 1480px) / 2) + 312px)}
+}
+.mshint{margin:2px 8px 6px;font-size:12px;color:var(--muted)}
+.hint{margin:-6px 0 0 25px;font-size:12px;line-height:1.35;color:var(--muted)}
+/* bigger tap targets */
+.ck{min-height:44px;align-items:center}
+.ck input{margin-top:0}
+.spinbtn{min-height:44px;padding:0 4px;font-size:13px;opacity:1}
+.mso{min-height:40px}
+/* two-part switches (Photos | Drawings, EN | IT): each half is its own button or link */
+.langlink .seg{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:0 14px;font-weight:500;color:var(--navy);cursor:pointer;text-decoration:none}
+.prefs .langlink .seg{min-height:34px;padding:0 12px;font-size:14px}
+.langlink .seg.on{background:var(--navy);color:#fff;font-weight:700;cursor:default}
+.langlink .seg:focus-visible{outline:2px solid var(--navy);outline-offset:-4px;box-shadow:inset 0 0 0 4px #fff}
+.langlink .seg.on:focus-visible{box-shadow:inset 0 0 0 4px var(--navy);outline-color:#fff}
+@media (hover:hover){.langlink .seg:not(.on):hover{background:var(--chip-hover)}}
+/* opened card */
+.xback{all:unset;box-sizing:border-box;align-self:flex-start;font-size:14px;font-weight:600;color:var(--navy);text-decoration:underline;text-underline-offset:3px;cursor:pointer;min-height:32px}
+.xback:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+.xp-info h3:focus{outline:none}
+.xp-info h3:focus-visible{outline:2px solid var(--navy);outline-offset:4px}
+.pairnone{margin:0;font-size:14px;color:var(--muted)}
+/* narrow screens and big zoom: name and months first, photo kept to a sensible height */
+@media (max-width:760px){
+  .xp-info{order:-1;padding-right:48px}
+  .xp-ph .ph{aspect-ratio:auto;height:min(42vh,78vw)}
+}
+/* pause: the band stops drifting too */
+.anim-off .band-row{animation:none!important}
+/* drawings shared through <symbol>: the newsprint cut-out shows on card drawings only */
+.ill.bkon .bk{display:inline}
+/* sections far down the page are not laid out until they come near the screen */
+.gsec{content-visibility:auto;contain-intrinsic-size:auto 900px}
+.gsec:has(.card.open){content-visibility:visible}
 </style>
 </head>
 <body>
@@ -789,10 +853,10 @@ body>.wrap,body>.band{position:relative;z-index:1}
   <aside class="side" id="side">
     <p class="tagline" id="tag"></p>
     <button class="filter-toggle" id="ftoggle" type="button" aria-expanded="false" aria-controls="filters"><span id="ftLabel"></span><span id="fsum"></span><span class="fclose" id="fclose"></span></button>
-    <section class="filters" id="filters" aria-label="Filters">
+    <section class="filters" id="filters">
       <div class="prefs">
-        <div class="f"><span id="lView"></span><button type="button" class="pill langlink viewsw" id="viewsw"></button></div>
-        <div class="f"><span id="lLang"></span><a class="pill langlink" id="lang" href="#"></a></div>
+        <div class="f"><span id="lView"></span><div class="pill langlink viewsw" id="viewsw" role="group" aria-labelledby="lView"></div></div>
+        <div class="f"><span id="lLang"></span><div class="pill langlink" id="langsw" role="group" aria-labelledby="lLang"></div></div>
       </div>
       <input id="q" class="search" type="search" autocomplete="off">
       <div class="f"><span id="lSeason"></span><div class="ms" id="season"></div></div>
@@ -801,7 +865,8 @@ body>.wrap,body>.band{position:relative;z-index:1}
       <div class="f"><span id="lRegion"></span><div class="ms" id="region"></div></div>
       <label class="f"><span id="lSort"></span><select id="sort"></select></label>
       <label class="ck"><input type="checkbox" id="spec"><span id="lSpec"></span></label>
-      <label class="ck"><input type="checkbox" id="yr"><span id="lYr"></span></label>
+      <label class="ck"><input type="checkbox" id="yr" aria-describedby="yrHint"><span id="lYr"></span></label>
+      <p class="hint" id="yrHint"></p>
       <div class="btns"><button class="pill" id="now" type="button"></button><button class="pill" id="reset" type="button"></button></div>
       <button class="fdone" id="fdone" type="button"></button>
     </section>
@@ -812,7 +877,6 @@ body>.wrap,body>.band{position:relative;z-index:1}
     <footer id="foot"></footer>
   </main>
 </div>
-<dialog id="dlg" aria-label="Details"></dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -974,13 +1038,28 @@ function draw(name,cat){const m=M[name];if(m&&T[m[0]])return T[m[0]](...m.slice(
 return {draw,M,T};
 })();
 
+/* Each food's drawing is written once into a hidden <symbol> and every card, band icon or background copy points at it
+   with <use>, instead of repeating the whole drawing (about ten times fewer elements in the Drawings view).
+   "backed" adds the newsprint cut-out behind the drawing, used on the cards. */
+const DSYM=new Set();let DDEFS=null;
+function drawUse(name,cat,backed){
+  const id="d"+nameSeed(name).toString(36)+(backed?"b":"");
+  if(!DSYM.has(id)){DSYM.add(id);
+    if(!DDEFS){const sv=document.createElementNS("http://www.w3.org/2000/svg","svg");sv.setAttribute("width","0");sv.setAttribute("height","0");sv.setAttribute("aria-hidden","true");sv.style.position="absolute";
+      DDEFS=document.createElementNS("http://www.w3.org/2000/svg","defs");sv.appendChild(DDEFS);document.body.prepend(sv)}
+    let inner=ILL.draw(name,cat).replace(/^<svg[^>]*>/,"").replace(/<\/svg>$/,"");
+    if(!backed)inner=inner.slice(inner.indexOf('<g filter="url(#rough)">'));
+    const sym=document.createElementNS("http://www.w3.org/2000/svg","symbol");sym.id=id;sym.setAttribute("viewBox","0 0 100 100");sym.setAttribute("class","ill"+(backed?" bkon":""));
+    sym.innerHTML=inner;DDEFS.appendChild(sym)}
+  return `<svg class="ill" viewBox="0 0 100 100" aria-hidden="true"><use href="#${id}"/></svg>`}
 /* each clipping gets its own scissor-cut outline and tilt, the same on every visit */
 function nameSeed(n){let h=2166136261;for(const ch of n){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 function clipRot(n){return ((nameSeed(n)%700)/100-3.5).toFixed(2)}
 /* card grounds for the drawings: recycled-newsprint grey (#F3F1EB) with a faint purple (#5A35B0) dither, toned to the same lightness as before, varied card by card.
    Error diffusion rather than an ordered grid, so the dots never fall into a repeating pattern;
    each texture is made at roughly card size so it fills the card in one piece instead of tiling. */
-(function(){
+let TEXDONE=false;
+function makeTextures(){if(TEXDONE)return;TEXDONE=true;
   const W=240,H=300,css=[];
   let sd=97;const r=()=>(sd=(sd*16807)%2147483647)/2147483647;
   for(let k=0;k<12;k++){
@@ -997,134 +1076,134 @@ function clipRot(n){return ((nameSeed(n)%700)/100-3.5).toFixed(2)}
     g.putImageData(im,0,0);
     css.push(`.ph.drw.tx${k}{background-image:url(${c.toDataURL()})}`)}
   const st=document.createElement("style");st.textContent=css.join("\n")+"\n.ph.drw{background-color:#F3F1EB;background-size:cover;background-position:center;background-repeat:no-repeat}";document.head.appendChild(st);
-})();
+}
 let VIEW="photo";try{if(localStorage.getItem("view")==="draw")VIEW="draw"}catch(e){}
 /* name|English|group|months|regions|tags (D=DOP, I=IGP, S=Presidio)|English note|Italian note */
 const RAW = `
 Asparagi|Asparagus|V|4-6|VEN,EMR,LOM|DI|White from Bassano, green from Altedo, pink from Mezzago|Bianchi di Bassano, verdi di Altedo, rosa di Mezzago
 Castraure|Baby violet artichokes|V|4-5|VEN||First tiny buds of the Sant'Erasmo artichoke in the Venice lagoon|I primi piccoli capolini del carciofo di Sant'Erasmo, nella laguna di Venezia
 Carciofi|Artichokes|V|2-5,10-11|LAZ,SIC,PUG,SAR,LIG,CAM|DI|Romanesco IGP and spinoso sardo DOP in spring; rifiorenti again in autumn|Romanesco IGP e spinoso sardo DOP in primavera; i rifiorenti tornano in autunno
-Fagiolini|Green beans|V|6-9|*|||
-Zucchine|Courgettes|V|5-9|*|||
+Fagiolini|Green beans|V|6-9|*||Summer pods eaten whole, often boiled and dressed with oil, or stewed with tomato|Baccelli estivi da mangiare interi, lessati e conditi con olio o in umido col pomodoro
+Zucchine|Courgettes|V|5-9|*||Summer squash for frying, grilling, frittate and pasta|Ortaggio estivo da friggere, grigliare, per frittate e pasta
 Fiori di zucca|Courgette flowers|V|5-9|LAZ,CAM,PUG||Fried, or in risotto|Fritti o nel risotto
-Melanzane|Aubergines|V|6-9|SIC,CAL,PUG,CAM,BAS|||
+Melanzane|Aubergines|V|6-9|SIC,CAL,PUG,CAM,BAS||Summer staple of the south: parmigiana, caponata, pasta alla Norma|Protagonista dell'estate al Sud: parmigiana, caponata, pasta alla Norma
 Peperoni|Peppers|V|6-10|PIE,CAL,PUG,BAS,CAM|I|Carmagnola in Piedmont, Senise IGP in Basilicata|Carmagnola in Piemonte, Senise IGP in Basilicata
-Peperoncino|Chilli|V|7-10|CAL,PUG,ABR|||
-Pomodori|Tomatoes|V|6-9|*|||
+Peperoncino|Chilli|V|7-10|CAL,PUG,ABR||Hot chilli, dried in strings for the year; central to Calabrian cooking|Piccante, essiccato in trecce per tutto l'anno; centrale nella cucina calabrese
+Pomodori|Tomatoes|V|6-9|*||Summer tomatoes for salads, sauces and preserves for the winter|Pomodori estivi per insalate, sughi e conserve per l'inverno
 Pomodoro San Marzano|San Marzano tomato|V|7-9|CAM|D|Agro Sarnese-Nocerino DOP, the sauce tomato|DOP dell'Agro Sarnese-Nocerino, il pomodoro da salsa
-Cetrioli|Cucumbers|V|6-8|*|||
-Cipolla rossa di Tropea|Tropea red onion|V|6-9|CAL|I||
-Aglio fresco|Fresh garlic|V|5-7|*|||
-Aglio rosso di Sulmona|Sulmona red garlic|V|7-8|ABR|S||
+Cetrioli|Cucumbers|V|6-8|*||Crisp summer cucumbers for salads|Cetrioli croccanti per le insalate estive
+Cipolla rossa di Tropea|Tropea red onion|V|6-9|CAL|I|Sweet red onion from the Calabrian coast, good raw|Cipolla rossa dolce della costa calabra, ottima cruda
+Aglio fresco|Fresh garlic|V|5-7|*||New-season garlic with soft skin and a milder taste|Aglio novello dalla buccia morbida e dal gusto più delicato
+Aglio rosso di Sulmona|Sulmona red garlic|V|7-8|ABR|S|Red-skinned garlic from Abruzzo; its flower stems are eaten too|Aglio dalla buccia rossa d'Abruzzo; se ne mangiano anche gli scapi
 Cipolla di Giarratana|Giarratana onion|V|8-12|SIC|S|Very large, sweet, keeps through autumn|Molto grande e dolce, si conserva per tutto l'autunno
 Radicchio rosso di Treviso tardivo|Late Treviso radicchio|V|11-3|VEN|I|Forced and blanched in cold water, hence the spidery shape|Imbianchito in acqua fredda dopo la forzatura, da cui la forma a ragno
-Radicchio di Chioggia|Chioggia radicchio|V|10-4|VEN|I||
-Radicchio di Verona|Verona radicchio|V|10-3|VEN|I||
+Radicchio di Chioggia|Chioggia radicchio|V|10-4|VEN|I|Round red radicchio from the Venetian lagoon|Radicchio rosso a palla della laguna veneta
+Radicchio di Verona|Verona radicchio|V|10-3|VEN|I|Compact, elongated red radicchio, good grilled or in risotto|Radicchio rosso compatto e allungato, ottimo alla griglia o nel risotto
 Radicchio di Castelfranco|Castelfranco radicchio|V|11-2|VEN|I|The winter rose, cream and speckled red|La rosa d'inverno, crema con macchie rosse
 Cavolo nero|Tuscan kale|V|11-3|TOS||Sweeter after the first frost|Più dolce dopo le prime gelate
-Cavolfiore|Cauliflower|V|10-3|*|||
-Cavolfiore violetto|Purple cauliflower|V|11-3|SIC|||
-Broccolo romanesco|Romanesco|V|10-3|LAZ|||
-Broccoli|Broccoli|V|10-3|*|||
+Cavolfiore|Cauliflower|V|10-3|*||Winter cauliflower, often baked, fried or with pasta|Cavolfiore invernale, al forno, fritto o con la pasta
+Cavolfiore violetto|Purple cauliflower|V|11-3|SIC||Purple Sicilian cauliflower, called broccolo in Sicily|Cavolfiore viola siciliano, in Sicilia chiamato broccolo
+Broccolo romanesco|Romanesco|V|10-3|LAZ||Lime-green spiralled head from around Rome|Infiorescenza verde a spirale tipica dei dintorni di Roma
+Broccoli|Broccoli|V|10-3|*||Winter broccoli for pasta, soups and side dishes|Broccoli invernali per pasta, minestre e contorni
 Cime di rapa|Turnip tops|V|10-3|PUG,CAM,BAS||Orecchiette con le cime di rapa; friarielli in Naples|Per le orecchiette con le cime di rapa; a Napoli si chiamano friarielli
-Cavolo verza|Savoy cabbage|V|11-3|*|||
-Cavolini di Bruxelles|Brussels sprouts|V|11-2|*|||
+Cavolo verza|Savoy cabbage|V|11-3|*||Crinkly winter cabbage for soups and stuffed leaves|Cavolo invernale dalle foglie increspate, per minestre e involtini
+Cavolini di Bruxelles|Brussels sprouts|V|11-2|*||Small winter sprouts, sweetest after the first frosts|Piccoli cavoli invernali, più dolci dopo le prime gelate
 Cardo gobbo|Hunchback cardoon|V|10-12|PIE|S|Cardo gobbo di Nizza Monferrato, eaten raw with bagna cauda|Cardo gobbo di Nizza Monferrato, da mangiare crudo con la bagna cauda
-Finocchi|Fennel|V|10-3|*|||
-Spinaci|Spinach|V|10-4|*|||
-Bietole|Chard|V|10-6|*|||
-Cicoria|Chicory|V|10-4|PUG,LAZ,CAM|||
+Finocchi|Fennel|V|10-3|*||Crisp winter fennel, eaten raw in salads or baked|Finocchio croccante d'inverno, crudo in insalata o al forno
+Spinaci|Spinach|V|10-4|*||Cool-season greens, eaten raw young or cooked|Verdura della stagione fresca, cruda da giovane o cotta
+Bietole|Chard|V|10-6|*||Chard for fillings, soups and sautéed greens|Bietole per ripieni, minestre e verdure ripassate
+Cicoria|Chicory|V|10-4|PUG,LAZ,CAM||Bitter wild and cultivated chicory, often boiled and sautéed|Cicoria amara, selvatica o coltivata, spesso lessata e ripassata
 Puntarelle|Puntarelle|V|11-3|LAZ||Catalogna chicory shoots, dressed with anchovy and garlic|Germogli di cicoria catalogna, conditi con acciughe e aglio
-Agretti|Agretti|V|3-5|LAZ,TOS|||
-Lattuga e insalate|Lettuce and salad leaves|V|3-6,9-11|*|||
-Porri|Leeks|V|10-3|*|||
-Porro di Cervere|Cervere leek|V|10-3|PIE|S||
-Sedano rosso di Orbassano|Orbassano red celery|V|10-3|PIE|S||
-Carote|Carrots|V|6-11|*|||
-Patate novelle|New potatoes|V|3-6|SIC,CAM|||
-Patata di Bologna|Bologna potato|V|6-9|EMR|D||
-Patata della Sila|Sila potato|V|9-4|CAL|I||
-Ravanelli|Radishes|V|3-6,9-10|*|||
-Topinambur|Jerusalem artichoke|V|10-3|*|||
-Barbabietole|Beetroot|V|10-3|*|||
-Zucca|Pumpkin and squash|V|9-1|*|||
+Agretti|Agretti|V|3-5|LAZ,TOS||Thin spring shoots, also called barba di frate, boiled and dressed with lemon|Germogli sottili di primavera, detti anche barba di frate, lessati con limone
+Lattuga e insalate|Lettuce and salad leaves|V|3-6,9-11|*||Lettuces and salad leaves, best in spring and autumn|Lattughe e insalate, al meglio in primavera e autunno
+Porri|Leeks|V|10-3|*||Winter leeks for soups and savoury tarts|Porri invernali per minestre e torte salate
+Porro di Cervere|Cervere leek|V|10-3|PIE|S|Long, tender leek from Cervere in Piedmont|Porro lungo e tenero di Cervere, in Piemonte
+Sedano rosso di Orbassano|Orbassano red celery|V|10-3|PIE|S|Red-stalked celery from near Turin, used in bagna cauda|Sedano dalle coste rosse dei dintorni di Torino, per la bagna cauda
+Carote|Carrots|V|6-11|*||Sweet carrots, from summer into autumn|Carote dolci, dall'estate all'autunno
+Patate novelle|New potatoes|V|3-6|SIC,CAM||Thin-skinned new potatoes, the first of the year|Patate novelle dalla buccia sottile, le prime dell'anno
+Patata di Bologna|Bologna potato|V|6-9|EMR|D|Pale-fleshed potato from the Bologna plain|Patata a pasta chiara della pianura bolognese
+Patata della Sila|Sila potato|V|9-4|CAL|I|Mountain potato grown on the Sila plateau in Calabria|Patata di montagna coltivata sull'altopiano della Sila
+Ravanelli|Radishes|V|3-6,9-10|*||Peppery radishes, eaten raw|Ravanelli piccanti, da mangiare crudi
+Topinambur|Jerusalem artichoke|V|10-3|*||Knobbly tubers with a nutty, artichoke-like taste|Tuberi nodosi dal gusto che ricorda il carciofo
+Barbabietole|Beetroot|V|10-3|*||Earthy beetroot, often sold ready-cooked|Barbabietole dal gusto terroso, spesso vendute già cotte
+Zucca|Pumpkin and squash|V|9-1|*||Autumn pumpkins for risotto, gnocchi and tortelli di zucca|Zucche d'autunno per risotto, gnocchi e tortelli di zucca
 Zucca mantovana|Mantuan pumpkin|V|9-1|LOM||For tortelli di zucca|Per i tortelli di zucca
 Funghi porcini|Porcini|V|9-11|TAA,PIE,TOS,EMR,LOM,UMB,CAL|I|Porcino di Borgotaro IGP in Emilia|Porcino di Borgotaro IGP, in Emilia
 Tartufo bianco|White truffle|V|10-12|PIE,MAR,TOS||Alba, Acqualagna and San Miniato|Alba, Acqualagna e San Miniato
 Tartufo nero pregiato|Black winter truffle|V|12-3|UMB,MAR,ABR||Norcia and the Apennines|Norcia e l'Appennino
 Tartufo estivo|Summer truffle|V|5-8|UMB,MAR,PIE,TOS||Scorzone|Lo scorzone
-Basilico genovese|Genovese basil|V|5-9|LIG|D||
+Basilico genovese|Genovese basil|V|5-9|LIG|D|Small-leaved basil from Liguria, the base of pesto|Basilico a foglia piccola della Liguria, base del pesto
 Arance|Oranges|F|12-4|SIC,CAL,PUG,BAS|I|Arancia rossa di Sicilia IGP: Tarocco, Moro, Sanguinello|Arancia rossa di Sicilia IGP: Tarocco, Moro, Sanguinello
 Clementine|Clementines|F|11-1|CAL,PUG,BAS,SIC|I|Clementine di Calabria IGP|Clementine di Calabria IGP
-Mandarini|Mandarins|F|11-2|SIC,CAL|||
-Mandarino tardivo di Ciaculli|Ciaculli late mandarin|F|1-3|SIC|S||
+Mandarini|Mandarins|F|11-2|SIC,CAL||Fragrant winter mandarins, many with seeds|Mandarini profumati d'inverno, spesso con semi
+Mandarino tardivo di Ciaculli|Ciaculli late mandarin|F|1-3|SIC|S|Late mandarin from the Conca d'Oro near Palermo|Mandarino tardivo della Conca d'Oro, vicino a Palermo
 Limoni|Lemons|F|11-5|SIC,CAL|I|Limone di Siracusa IGP|Limone di Siracusa IGP
 Limone Costa d'Amalfi|Amalfi Coast lemon|F|3-10|CAM|I|Also Limone di Sorrento IGP|Anche il Limone di Sorrento IGP
 Bergamotto|Bergamot|F|11-3|CAL|D|Grown almost only around Reggio Calabria|Coltivato quasi solo nell'area di Reggio Calabria
 Cedro|Citron|F|9-12|CAL|I|Cedro di Santa Maria del Cedro|Cedro di Santa Maria del Cedro
-Pompelmi|Grapefruit|F|11-3|*|||
+Pompelmi|Grapefruit|F|11-3|*||Winter grapefruit|Pompelmi invernali
 Kiwi|Kiwi|F|11-4|LAZ,PIE,EMR,VEN|I|Kiwi di Latina IGP|Kiwi di Latina IGP
 Mele|Apples|F|9-3|TAA,PIE,VEN,EMR,LOM|DI|Val di Non DOP, Alto Adige IGP, Rossa Cuneo IGP|Val di Non DOP, Alto Adige IGP, Rossa Cuneo IGP
 Melannurca|Annurca apple|F|10-1|CAM|I|Ripened on beds of straw|Fatta maturare sui letti di paglia
-Mele cotogne|Quince|F|10-12|*|||
+Mele cotogne|Quince|F|10-12|*||Hard, fragrant quinces, cooked into jam and cotognata|Mele cotogne dure e profumate, cotte in confettura e cotognata
 Pere|Pears|F|8-2|EMR,VEN,TAA,LOM,PIE|I|Pera dell'Emilia-Romagna IGP|Pera dell'Emilia-Romagna IGP
 Uva da tavola|Table grapes|F|8-11|PUG,SIC,BAS|I|Uva di Puglia IGP|Uva di Puglia IGP
 Fichi|Figs|F|7-10|CAM,CAL,PUG,SIC|D|Cilento DOP and Cosenza DOP|Cilento DOP e Cosenza DOP
 Fichi d'India|Prickly pears|F|8-11|SIC,SAR,PUG|D|Ficodindia dell'Etna DOP|Ficodindia dell'Etna DOP
-Cachi|Persimmons|F|10-12|CAM,EMR,SIC|||
-Melagrane|Pomegranates|F|9-12|*|||
-Corbezzoli|Strawberry-tree fruit|F|10-12|SAR,LAZ,TOS,CAL|||
-Fragole|Strawberries|F|3-6|BAS,CAM,EMR,VEN,PIE|||
+Cachi|Persimmons|F|10-12|CAM,EMR,SIC||Soft autumn persimmons, eaten ripe with a spoon|Cachi d'autunno, da mangiare maturi col cucchiaino
+Melagrane|Pomegranates|F|9-12|*||Autumn pomegranates, the seeds eaten fresh or as juice|Melagrane d'autunno, chicchi freschi o in succo
+Corbezzoli|Strawberry-tree fruit|F|10-12|SAR,LAZ,TOS,CAL||Red strawberry-tree fruit from the Mediterranean scrub, eaten fresh or in jam|Frutti rossi della macchia mediterranea, freschi o in confettura
+Fragole|Strawberries|F|3-6|BAS,CAM,EMR,VEN,PIE||Spring strawberries, from Basilicata and Campania to the north|Fragole primaverili, dalla Basilicata e Campania fino al Nord
 Ciliegie|Cherries|F|5-7|PUG,EMR,VEN,PIE,CAM|I|Vignola, Marostica and Turi|Vignola, Marostica e Turi
 Albicocche|Apricots|F|6-7|CAM,EMR,BAS,SIC|S|Albicocca vesuviana is a Presidio|L'albicocca vesuviana è un Presidio
 Pesche e nettarine|Peaches and nectarines|F|6-9|EMR,VEN,PIE,CAM,SIC|I|Romagna IGP, Verona IGP|Romagna IGP, Verona IGP
-Pesca Bella di Borgo d'Ale|Borgo d'Ale peach|F|8-9|PIE|S||
-Susine|Plums|F|6-9|*|||
-Susina di Dro|Dro plum|F|7-8|TAA|D||
+Pesca Bella di Borgo d'Ale|Borgo d'Ale peach|F|8-9|PIE|S|Large late-summer peach from Borgo d'Ale, in the province of Vercelli|Grande pesca di fine estate di Borgo d'Ale, in provincia di Vercelli
+Susine|Plums|F|6-9|*||Summer plums in many colours, fresh or in jam|Susine estive di molti colori, fresche o in confettura
+Susina di Dro|Dro plum|F|7-8|TAA|D|Dark plum from Trentino, eaten fresh or dried|Susina scura del Trentino, fresca o essiccata
 Meloni|Melons|F|6-9|LOM,EMR,LAZ,SIC|I|Melone mantovano IGP|Melone mantovano IGP
 Angurie|Watermelon|F|6-8|*||Anguria reggiana IGP in Emilia|Anguria reggiana IGP, in Emilia
-Nespole|Loquats|F|4-6|SIC,CAL|||
-Mirtilli e lamponi|Blueberries and raspberries|F|6-9|TAA,PIE,VEN,LOM,VDA|||
-More e frutti di bosco|Blackberries and wild berries|F|7-9|*|||
+Nespole|Loquats|F|4-6|SIC,CAL||Spring loquats with soft orange flesh|Nespole primaverili dalla polpa arancione e morbida
+Mirtilli e lamponi|Blueberries and raspberries|F|6-9|TAA,PIE,VEN,LOM,VDA||Mountain berries from summer woods and gardens|Frutti di bosco di montagna, da orti e boschi estivi
+More e frutti di bosco|Blackberries and wild berries|F|7-9|*||Late-summer blackberries from hedgerows|More di fine estate dalle siepi
 Castagne e marroni|Chestnuts|N|9-11|PIE,TOS,EMR,CAM,LAZ,VEN,CAL|DI|Marrone di Castel del Rio IGP, Montella IGP, Mugello IGP, San Zeno DOP; ripe when burrs open and fall|Marrone di Castel del Rio IGP, Castagna di Montella IGP, Marrone del Mugello IGP, Marrone di San Zeno DOP; mature quando i ricci si aprono e cadono
 Noci|Walnuts|N|9-11|CAM,TAA,EMR,PIE,VEN||Gathered once the husk dries, then sun-dried to keep all winter|Raccolte quando il mallo si secca, poi asciugate al sole per durare tutto l'inverno
 Nocciole|Hazelnuts|N|8-10|PIE,CAM,LAZ,SIC|DI|Piemonte IGP, Giffoni IGP, Romana DOP; harvested late summer when nuts drop|Piemonte IGP, Giffoni IGP, Romana DOP; si raccolgono a fine estate, quando cadono a terra
 Mandorle|Almonds|N|8-9|SIC,PUG,SAR|S|Harvest begins in August in the south; Mandorla di Avola|In agosto inizia la raccolta al sud; mandorla di Avola
 Pistacchio verde di Bronte|Bronte pistachio|N|8-9|SIC|DS|DOP since 2009 and a Presidio; bears heavily every other year|DOP dal 2009 e Presidio; la produzione abbondante si ha ad anni alterni
 Pinoli|Pine nuts|N|11-3|TOS,LAZ,SAR||Cones gathered in winter|Le pigne si raccolgono in inverno
-Piselli freschi|Fresh peas|G|4-6|*|||
+Piselli freschi|Fresh peas|G|4-6|*||Spring peas, best shelled and cooked the same day|Piselli primaverili, migliori sgranati e cotti in giornata
 Fave fresche|Fresh broad beans|G|4-6|PUG,SIC,LAZ,SAR||Eaten raw with pecorino in Lazio|Nel Lazio si mangiano crude con il pecorino
 Fave secche|Dried broad beans|G|6-8|PUG,SIC,UMB,MAR|S|Presìdi: Carpino, Leonforte, cottòra dell'Amerino, Fratte Rosse|Presìdi: Carpino, Leonforte, cottòra dell'Amerino, Fratte Rosse
 Fagioli borlotti freschi|Fresh borlotti beans|G|7-9|VEN,LOM,PIE|I|Fagiolo di Lamon IGP|Fagiolo di Lamon IGP
 Fagioli secchi|Dried beans|G|9-11|LIG,TOS,VEN,MAR,CAM,UMB|S|Presìdi: Badalucco-Conio-Pigna, zolfino, gialèt, Laverino, quarantino; keep all year|Presìdi: Badalucco-Conio-Pigna, zolfino, gialèt, Laverino, quarantino; si conservano tutto l'anno
-Fagiolina del Trasimeno|Trasimeno small bean|G|9-11|UMB|S||
-Fagiolo poverello bianco|Poverello bean|G|9-11|CAL|S||
+Fagiolina del Trasimeno|Trasimeno small bean|G|9-11|UMB|S|Tiny multi-coloured bean grown by Lake Trasimeno|Piccolo fagiolo multicolore coltivato sul lago Trasimeno
+Fagiolo poverello bianco|Poverello bean|G|9-11|CAL|S|Small white bean from the Pollino area of Calabria|Piccolo fagiolo bianco dell'area del Pollino, in Calabria
 Lenticchie|Lentils|G|7-9|UMB,ABR,SIC,LAZ|IS|Castelluccio di Norcia IGP; Presìdi: Santo Stefano di Sessanio, Villalba, Ustica, Rascino|Castelluccio di Norcia IGP; Presìdi: Santo Stefano di Sessanio, Villalba, Ustica, Rascino
 Ceci|Chickpeas|G|7-8|TOS,LAZ,CAM,PUG,SIC,UMB|S|Cece di Cicerale is a Presidio|Il cece di Cicerale è un Presidio
 Cicerchia|Grass pea|G|8-9|MAR,UMB,PUG,ABR|S|Cicerchia di Serra de' Conti|Cicerchia di Serra de' Conti
 Roveja|Roveja|G|7-8|UMB,MAR|S|Wild-pea relative of Civita di Cascia|Parente selvatico del pisello, di Civita di Cascia
-Lupino gigante di Vairano|Giant lupini|G|9-11|CAM|S||
+Lupino gigante di Vairano|Giant lupini|G|9-11|CAM|S|Large lupin beans, brined and eaten as a snack|Lupini grandi, messi in salamoia e mangiati come stuzzichino
 Agnello da latte|Milk-fed lamb|C|3-4|LAZ,SAR,ABR,PUG,CAM,BAS|I|Easter; Abbacchio Romano IGP, Agnello di Sardegna IGP|Per Pasqua; Abbacchio Romano IGP, Agnello di Sardegna IGP
 Capretto|Kid goat|C|3-4|ABR,BAS,MAR,CAL,SAR,LAZ||Easter|Per Pasqua
 Cinghiale|Wild boar|C|10-1|TOS,UMB,LAZ,SAR,MAR||Hunting season runs roughly October to January; regions set the dates|La stagione venatoria va grosso modo da ottobre a gennaio; le date le fissano le regioni
 Lepre|Hare|C|10-12|TOS,UMB,MAR,PIE,EMR||Pappardelle alla lepre|Pappardelle alla lepre
-Fagiano|Pheasant|C|10-1|*|||
-Anatra selvatica|Wild duck|C|10-1|VEN,EMR,TOS|||
-Cervo e capriolo|Venison|C|9-1|TAA,FVG,PIE,VDA|||
+Fagiano|Pheasant|C|10-1|*||Game bird of the autumn hunting season|Selvaggina da piuma della stagione di caccia autunnale
+Anatra selvatica|Wild duck|C|10-1|VEN,EMR,TOS||Wild duck from wetlands, in the autumn hunting season|Anatra delle zone umide, nella stagione di caccia autunnale
+Cervo e capriolo|Venison|C|9-1|TAA,FVG,PIE,VDA||Red and roe deer from the Alps, often stewed with polenta|Cervo e capriolo delle Alpi, spesso in salmì con la polenta
 Maiale fresco|Fresh pork|C|11-2|*||Traditional slaughter in the cold months, around Sant'Antonio Abate on 17 January|Macellazione tradizionale nei mesi freddi, intorno a Sant'Antonio Abate, il 17 gennaio
 Cappone|Capon|C|11-12|PIE,VEN,EMR||Christmas bird|Il protagonista del Natale
 Oca|Goose|C|11-12|LOM,FVG,VEN||San Martino, 11 November|San Martino, 11 novembre
 Bue grasso di Carrù|Fat ox of Carrù|C|12|PIE||The Fiera del Bue Grasso is held in mid-December|La Fiera del Bue Grasso si tiene a metà dicembre
-Latte d'alpeggio|Alpine summer milk|L|6-9|TAA,VDA,LOM,PIE,FVG,VEN|||
-Burro di malga|Mountain-hut butter|L|6-9|TAA,LOM,VEN,FVG,VDA|||
+Latte d'alpeggio|Alpine summer milk|L|6-9|TAA,VDA,LOM,PIE,FVG,VEN||Milk from cows grazing high pastures in summer|Latte di vacche al pascolo in alta quota d'estate
+Burro di malga|Mountain-hut butter|L|6-9|TAA,LOM,VEN,FVG,VDA||Butter churned in mountain huts during summer grazing|Burro fatto nelle malghe durante l'alpeggio estivo
 Ricotta di pecora|Sheep's ricotta|L|2-6|LAZ,TOS,SAR,SIC,BAS||Follows the sheep's spring lactation|Segue la lattazione primaverile delle pecore
 Raveggiolo|Raveggiolo|L|3-6|TOS||Fresh sheep or cow cheese, eaten within days|Formaggio fresco di pecora o di vacca, da consumare in pochi giorni
 Mascarpone|Mascarpone|L|10-3|LOM||Traditionally a cold-weather cream cheese from Lodi|Tradizionalmente un formaggio a crema della stagione fredda, del Lodigiano
-Caprino fresco|Fresh goat cheese|L|3-9|*|||
+Caprino fresco|Fresh goat cheese|L|3-9|*||Fresh, soft goat cheese|Formaggio di capra fresco e morbido
 Mozzarella di bufala|Buffalo mozzarella|L|1-12|CAM,LAZ,PUG|D|Mozzarella di Bufala Campana DOP, made all year|Mozzarella di Bufala Campana DOP, prodotta tutto l'anno
 Burrata|Burrata|L|1-12|PUG|I|Burrata di Andria IGP|Burrata di Andria IGP
 Bitto Storico|Bitto Storico|Q|6-9|LOM|S|Made only at high alpine huts in summer, then aged up to 10 years|Prodotto solo negli alpeggi in estate, poi stagionato fino a 10 anni
-Fontina d'alpeggio|Alpine Fontina|Q|6-9|VDA|D||
+Fontina d'alpeggio|Alpine Fontina|Q|6-9|VDA|D|Fontina made in summer from milk of high pastures|Fontina prodotta d'estate col latte degli alpeggi
 Formaggio di malga|Malga cheeses|Q|6-9|TAA,VEN,FVG,LOM,PIE||Summer milk from mountain pastures|Latte estivo dei pascoli di montagna
 Formai de Mut|Formai de Mut|Q|6-10|LOM|D|Alta Valle Brembana|Alta Valle Brembana
 Castelmagno|Castelmagno|Q|9-12|PIE|D|Matured cheese from summer-pasture milk|Formaggio stagionato da latte dei pascoli estivi
@@ -1136,46 +1215,46 @@ Pecorino della Montagna Pistoiese|Pistoia mountain pecorino|Q|3-7|TOS|S|Raw milk
 Caciocavallo podolico del Gargano|Podolico caciocavallo|Q|10-3|PUG|S|From Podolica cows at pasture; matures for many months|Da vacche podoliche al pascolo; matura per molti mesi
 Formaggio di fossa|Pit-aged cheese|Q|11-12|EMR,MAR|D|Ripened in pits from August, opened around Santa Caterina, 25 November|Affinato in fossa da agosto, si apre intorno a Santa Caterina, il 25 novembre
 Parmigiano Reggiano|Parmigiano Reggiano|Q|1-12|EMR,LOM|D|Aged 12 to 36 months|Stagionato da 12 a 36 mesi
-Grana Padano|Grana Padano|Q|1-12|LOM,PIE,VEN,EMR,TAA|D||
-Gorgonzola|Gorgonzola|Q|1-12|PIE,LOM|D||
+Grana Padano|Grana Padano|Q|1-12|LOM,PIE,VEN,EMR,TAA|D|Hard cheese from the Po valley, aged at least 9 months|Formaggio duro della pianura padana, stagionato almeno 9 mesi
+Gorgonzola|Gorgonzola|Q|1-12|PIE,LOM|D|Blue cheese from Piedmont and Lombardy, sweet (dolce) or sharp (piccante)|Erborinato di Piemonte e Lombardia, dolce o piccante
 Culatello di Zibello|Culatello|S|10-2|EMR|DS|Pigs salted in the cold months; ages 12 to 40 months in the foggy Po lowlands|Salato nei mesi freddi; stagiona da 12 a 40 mesi nella nebbiosa Bassa padana
 Zampone e cotechino|Zampone and cotechino|S|11-2|EMR,LOM,VEN|I|Modena IGP; the Christmas and New Year dish|Modena IGP; il piatto di Natale e Capodanno
 Salama da sugo|Salama da sugo|S|11-2|EMR|I|Ferrara; matured about a year and eaten at Christmas|Di Ferrara; matura circa un anno e si mangia a Natale
 Ciccioli|Pork cracklings|S|11-2|EMR,LOM,FVG||A by-product of the winter pig slaughter|Nascono dalla macellazione invernale del maiale
 Mariola|Mariola salami|S|10-3|EMR,LOM|S|Bassa Parmense and Piacentino; called ciota around Cremona|Bassa Parmense e Piacentino; nel Cremonese si chiama ciota
-Spalla cotta di San Secondo|San Secondo cooked shoulder|S|10-3|EMR|S||
+Spalla cotta di San Secondo|San Secondo cooked shoulder|S|10-3|EMR|S|Cooked pork shoulder from near Parma, served warm|Spalla di maiale cotta del Parmense, servita tiepida
 Violino di capra|Goat violin|S|10-12|LOM|S|Valchiavenna; goat leg cured as flocks return from summer pasture|Valchiavenna; la coscia di capra si cura quando le greggi tornano dall'alpeggio
 Ciauscolo|Ciauscolo|S|11-3|MAR,UMB|I|Soft spreadable salami|Salame morbido e spalmabile
-Susianella di Viterbo|Susianella|S|11-3|LAZ|S||
-Capocollo di Martina Franca|Martina Franca capocollo|S|11-3|PUG|S||
+Susianella di Viterbo|Susianella|S|11-3|LAZ|S|Cured pork sausage from Viterbo, seasoned with fennel and chilli|Salume di maiale di Viterbo, insaporito con finocchio e peperoncino
+Capocollo di Martina Franca|Martina Franca capocollo|S|11-3|PUG|S|Cured pork neck from Apulia, lightly smoked|Coppa di maiale pugliese, leggermente affumicata
 Sacchiettu di Longobucco|Sacchiettu|S|12-3|CAL|S|Front-leg muscles ground and stuffed back into the pork rind|Muscoli delle zampe anteriori macinati e insaccati nella cotenna
-Prosciutto di Parma e San Daniele|Parma and San Daniele ham|S|1-12|EMR,FVG|D||
-Mortadella Bologna|Mortadella|S|1-12|EMR|I||
-Bresaola della Valtellina|Bresaola|S|1-12|LOM|I||
+Prosciutto di Parma e San Daniele|Parma and San Daniele ham|S|1-12|EMR,FVG|D|Air-dried hams from Emilia and Friuli|Prosciutti crudi stagionati di Emilia e Friuli
+Mortadella Bologna|Mortadella|S|1-12|EMR|I|Large cooked pork sausage from Bologna|Grande insaccato cotto di maiale di Bologna
+Bresaola della Valtellina|Bresaola|S|1-12|LOM|I|Air-dried, lean salted beef from Valtellina|Manzo magro salato e stagionato della Valtellina
 Alici di menaica|Menaica anchovies|P|4-7|CAM|S|Cilento; drift-net fishing, April to July|Cilento; pesca con la menaica, da aprile a luglio
-Alici e acciughe|Anchovies|P|3-10|*|||
-Sardine|Sardines|P|4-10|*|||
-Sgombro|Mackerel|P|4-10|*|||
-Sugarello|Horse mackerel|P|6-8|*|||
-Aguglia|Garfish|P|6-8|*|||
+Alici e acciughe|Anchovies|P|3-10|*||Anchovies, eaten fresh, fried, marinated or salted|Acciughe fresche, fritte, marinate o sotto sale
+Sardine|Sardines|P|4-10|*||Oily fish for grilling and pasta con le sarde|Pesce azzurro da griglia e per la pasta con le sarde
+Sgombro|Mackerel|P|4-10|*||Oily mackerel, good grilled or preserved in oil|Pesce azzurro, ottimo alla griglia o sott'olio
+Sugarello|Horse mackerel|P|6-8|*||Horse mackerel, an inexpensive oily fish|Pesce azzurro economico
+Aguglia|Garfish|P|6-8|*||Slender garfish with green bones, fried or stewed|Pesce sottile dalle lische verdi, fritto o in umido
 Pesce spada|Swordfish|P|5-8|SIC,CAL||Strait of Messina|Stretto di Messina
 Tonno rosso|Bluefin tuna|P|5-7|SIC,SAR||Favignana and Carloforte; fishing is quota-regulated|Favignana e Carloforte; la pesca è regolata da quote
-Orata|Sea bream|P|6-10|*|||
-Spigola|Sea bass|P|6-3|*|||
-Triglia|Red mullet|P|8-3|*|||
-Scorfano|Scorpionfish|P|11-3|*|||
-Rombo|Turbot|P|11-3|*|||
-Sogliola|Sole|P|10-3|*|||
-Nasello|Hake|P|11-3|*|||
-Dentice|Dentex|P|10-4|*|||
-Seppie|Cuttlefish|P|10-5|VEN,TOS,LIG,SAR,MAR|||
-Calamari e calamaretti|Squid|P|9-2|*|||
-Polpo|Octopus|P|5-11|*|||
-Mazzancolle|Mazzancolle prawns|P|4-10|*|||
-Scampi|Langoustines|P|4-8|VEN,FVG,MAR,PUG,TOS|||
-Canocchie|Mantis shrimp|P|10-3|VEN,EMR,MAR,FVG|||
+Orata|Sea bream|P|6-10|*||Sea bream, baked or grilled whole|Orata, al forno o alla griglia intera
+Spigola|Sea bass|P|6-3|*||Sea bass, also called branzino, baked or in salt crust|Spigola, detta anche branzino, al forno o al sale
+Triglia|Red mullet|P|8-3|*||Red mullet, fried or cooked alla livornese|Triglie fritte o alla livornese
+Scorfano|Scorpionfish|P|11-3|*||Scorpionfish, prized for fish soups|Scorfano, pregiato per le zuppe di pesce
+Rombo|Turbot|P|11-3|*||Turbot, a flat fish with firm white flesh|Rombo, pesce piatto dalla carne bianca e soda
+Sogliola|Sole|P|10-3|*||Sole, delicate flat fish, often pan-fried|Sogliola, pesce piatto delicato, spesso alla mugnaia
+Nasello|Hake|P|11-3|*||Hake, mild white fish, often poached or fried|Nasello, pesce bianco delicato, lesso o fritto
+Dentice|Dentex|P|10-4|*||Dentex, a firm white fish, baked or eaten raw|Dentice, pesce bianco sodo, al forno o crudo
+Seppie|Cuttlefish|P|10-5|VEN,TOS,LIG,SAR,MAR||Cuttlefish, stewed, grilled, or with its ink|Seppie in umido, alla griglia o al nero
+Calamari e calamaretti|Squid|P|9-2|*||Squid, fried, grilled or stuffed|Calamari fritti, alla griglia o ripieni
+Polpo|Octopus|P|5-11|*||Octopus, boiled for salads or stewed|Polpo lesso in insalata o in umido
+Mazzancolle|Mazzancolle prawns|P|4-10|*||Large Mediterranean prawns, grilled or with pasta|Grandi gamberi mediterranei, alla griglia o con la pasta
+Scampi|Langoustines|P|4-8|VEN,FVG,MAR,PUG,TOS||Langoustines, raw, grilled or in pasta|Scampi crudi, alla griglia o nella pasta
+Canocchie|Mantis shrimp|P|10-3|VEN,EMR,MAR,FVG||Mantis shrimp of the Adriatic, best in the cold months|Canocchie dell'Adriatico, migliori nei mesi freddi
 Moeche|Venetian soft-shell crabs|P|3-5,10-11|VEN||Caught as they moult, in spring and autumn|Si pescano durante la muta, in primavera e in autunno
-Granseola|Spider crab|P|11-3|VEN,FVG|||
+Granseola|Spider crab|P|11-3|VEN,FVG||Spider crab of the upper Adriatic, often served in its shell|Granseola dell'alto Adriatico, spesso servita nel suo guscio
 Ricci di mare|Sea urchins|P|2-4|PUG,SIC,SAR||From February|Da febbraio
 Baccalà e stoccafisso|Salt cod and stockfish|P|11-3|VEN,LIG,CAL||Christmas Eve and Lent|Vigilia di Natale e Quaresima
 Anguilla marinata di Comacchio|Marinated Comacchio eel|P|10-12|EMR|S|Christmas Eve; eel stocks are under an EU recovery plan, so check local rules|Vigilia di Natale; gli stock di anguilla sono sotto un piano di recupero UE, quindi verifica le regole locali
@@ -1187,7 +1266,7 @@ Chiodini|Honey fungus|V|9-11|LOM,PIE,VEN,TAA||Must be cooked well; classic with 
 Cardoncelli|King oyster mushrooms|V|10-12,3-5|PUG,BAS||Mushroom of the Murge, grilled or roasted|Fungo delle Murge, alla brace o al forno
 Tartufo bianchetto|Bianchetto truffle|V|1-4|TOS,MAR,EMR,UMB||Late-winter white truffle with a garlicky note|Tartufo bianco di fine inverno, più agliaceo
 Asparagi selvatici|Wild asparagus|V|3-5|LAZ,TOS,PUG,SAR,SIC||Thin foraged shoots, often in frittatas|Getti sottili raccolti nei campi, spesso in frittata
-Scarola|Escarole|V|10-3|CAM,LAZ,*||For pizza di scarola and stuffed escarole in Naples|Per la pizza di scarola e la scarola imbottita napoletane
+Scarola|Escarole|V|10-3|CAM,LAZ||For pizza di scarola and stuffed escarole in Naples|Per la pizza di scarola e la scarola imbottita napoletane
 Indivia riccia|Frisée|V|10-3|*||Bitter winter salad leaf|Insalata amarognola d'inverno
 Cavolo cappuccio|White and red cabbage|V|10-3|*||Braised, in salads, or as Friuli's sauerkraut|Stufato, in insalata o come crauti friulani
 Rape|Turnips|V|10-3|PIE,LOM,FVG||Friuli's brovada is turnip fermented in grape pomace|La brovada friulana è rapa fermentata nelle vinacce
@@ -1250,6 +1329,7 @@ const FOOT = {
       <h2>How to read this</h2>
       <p>Coloured months show when a product is at its best, freshest, or traditionally made or released in Italy. Dried goods, cured meats and aged cheeses keep much longer, so their months mark the harvest, the curing season or the moment they are traditionally eaten.</p>
       <p>Timing shifts by weeks between the Alps and Sicily, and by altitude and weather year to year. Region tags mark places with a notable tradition or protected origin, not the only places a product grows. Hunting and fishing seasons are set locally; check your regional calendario venatorio or ittico, and the fermo pesca (closed fishing periods), which differ between the Adriatic and Tyrrhenian seas.</p>
+      <p><b>All year</b>: some foods, mostly cheeses and cured meats, are good in every month. They are left out of the month lists unless you tick "Include foods available all year"; search always finds them.</p>
       <p><b>DOP</b> and <b>IGP</b> are EU protected designations. <b>Presìdio</b> marks a Slow Food Presidium protecting a small traditional production.</p>
     </div>
     <div>
@@ -1279,12 +1359,13 @@ const FOOT = {
         <li>Legumes: <a href="https://tg24.sky.it/salute-e-benessere/approfondimenti/elenco-legumi-calorie-valori-nutrizionali" target="_blank" rel="noopener">Sky TG24, list of legumes and Presìdi</a>. Nuts: <a href="https://www.mondomacchina.it/rivista-flip/4340/92" target="_blank" rel="noopener">Mondo Macchina</a>, <a href="https://www.lasicilia.it/news/archivio-storico/941631/frutta-secca-la-regina-della-tavola-d-autunno.html" target="_blank" rel="noopener">La Sicilia</a></li>
         <li>Pork and winter curing: <a href="https://www.visittuscany.com/it/idee/la-tradizione-del-maiale-in-lunigiana-origini-e-prodotti-tipici/" target="_blank" rel="noopener">Visit Tuscany</a>, <a href="https://www.editorialedomani.it/fatti/dalla-maialatura-allindustria-il-sacrificio-del-maiale-non-va-sprecato-jwnlsinm" target="_blank" rel="noopener">Domani</a></li>
       </ul>
-      <p>Il Cucchiaio d'Argento (cucchiaio.it) blocked automated access, so it is not cited. Entries combine these sources with general knowledge of Italian produce; treat the months as a guide and check a local market.</p>
+      <p>Entries combine these sources with general knowledge of Italian produce; treat the months as a guide and check a local market.</p>
     </div>`,
   it:`<div>
       <h2>Come leggere questa pagina</h2>
       <p>I mesi colorati indicano quando un prodotto è al meglio, più fresco, o tradizionalmente prodotto o messo in commercio in Italia. Secchi, salumi e formaggi stagionati si conservano molto più a lungo, quindi i loro mesi segnano la raccolta, la stagione della salatura o il momento in cui tradizionalmente si mangiano.</p>
       <p>I tempi cambiano di settimane tra le Alpi e la Sicilia, e con l'altitudine e l'andamento dell'anno. Le etichette di regione indicano luoghi con una tradizione notevole o un'origine protetta, non gli unici posti dove il prodotto cresce. Le stagioni di caccia e di pesca sono fissate a livello locale: consulta il calendario venatorio o ittico della tua regione e i periodi di fermo pesca, che differiscono tra Adriatico e Tirreno.</p>
+      <p><b>Tutto l'anno</b>: alcuni prodotti, soprattutto formaggi e salumi, sono buoni in ogni mese. Restano fuori dagli elenchi per mese se non spunti «Includi i prodotti di tutto l'anno»; la ricerca li trova sempre.</p>
       <p><b>DOP</b> e <b>IGP</b> sono denominazioni protette dell'UE. <b>Presìdio</b> indica un Presidio Slow Food, che tutela una piccola produzione tradizionale.</p>
     </div>
     <div>
@@ -1314,38 +1395,38 @@ const FOOT = {
         <li>Legumi: <a href="https://tg24.sky.it/salute-e-benessere/approfondimenti/elenco-legumi-calorie-valori-nutrizionali" target="_blank" rel="noopener">Sky TG24, elenco dei legumi e dei Presìdi</a>. Frutta secca: <a href="https://www.mondomacchina.it/rivista-flip/4340/92" target="_blank" rel="noopener">Mondo Macchina</a>, <a href="https://www.lasicilia.it/news/archivio-storico/941631/frutta-secca-la-regina-della-tavola-d-autunno.html" target="_blank" rel="noopener">La Sicilia</a></li>
         <li>Maiale e salatura invernale: <a href="https://www.visittuscany.com/it/idee/la-tradizione-del-maiale-in-lunigiana-origini-e-prodotti-tipici/" target="_blank" rel="noopener">Visit Tuscany</a>, <a href="https://www.editorialedomani.it/fatti/dalla-maialatura-allindustria-il-sacrificio-del-maiale-non-va-sprecato-jwnlsinm" target="_blank" rel="noopener">Domani</a></li>
       </ul>
-      <p>Il Cucchiaio d'Argento (cucchiaio.it) ha bloccato l'accesso automatico, quindi non è citato. Le voci uniscono queste fonti alla conoscenza generale dei prodotti italiani; considera i mesi una guida e verifica al mercato di zona.</p>
+      <p>Le voci uniscono queste fonti alla conoscenza generale dei prodotti italiani; considera i mesi una guida e verifica al mercato di zona.</p>
     </div>`
 };
 
 const TX = {
   en:{
     h1:"Eat the seasons",
-    sub:"What is at its best in Italy, by month, season, food group and region. Pick a month or let it open on today.",
+    sub:"What is at its best in Italy, by month, season, food group and region. Pick a month, or press This month.",
     shown:"foods shown", filters:"Filters", search:"Search", ph:"Artichokes, bitto, tuna…",
     season:"Season", month:"Month", group:"Food group", region:"Region", allRegions:"All regions",
-    spec:"Regional specialties only", specHint:"Hide items grown widely across Italy",
-    yr:"Include year-round staples", groupBy:"Group results by", gCat:"Food group", gReg:"Region",
-    today:"Today's month", clear:"Clear all", legOff:"Not at its best",
-    allYear:"All year", allFilters:"All regions and food groups",
+    spec:"Regional specialties only", specHint:"Hide foods found all over Italy",
+    yr:"Include foods available all year", yrHint:"Mostly cheeses and cured meats. Search always includes them.", groupBy:"Group results by", gCat:"Food group", gReg:"Region",
+    today:"This month", clear:"Clear all", legOff:"Not at its best",
+    allYear:"Any month", allFilters:"All regions and food groups",
     empty:"Nothing matches these filters.", clearF:"Clear all filters",
-    yearRound:"Year-round", atBest:"At its best: ", wideLine:"Widely grown across Italy",
-    wideHead:"Widely grown", wideSub:"Across all regions",
+    yearRound:"All year", atBest:"At its best: ", wideLine:"Found all over Italy",
+    wideHead:"Found all over Italy", wideSub:"Across all regions",
     bD:"Protected Designation of Origin", bI:"Protected Geographical Indication", bS:"Slow Food Presidium",
     otherName:"Italiano", otherHref:"it/index.html", legendLabel:"Legend", filtersLabel:"Filters"
   },
   it:{
     h1:"Mangia le stagioni",
-    sub:"Cosa è al meglio in Italia, per mese, stagione, gruppo alimentare e regione. Scegli un mese o parti da quello di oggi.",
+    sub:"Cosa è al meglio in Italia, per mese, stagione, gruppo alimentare e regione. Scegli un mese o premi Questo mese.",
     shown:"alimenti mostrati", filters:"Filtri", search:"Cerca", ph:"Carciofi, bitto, tonno…",
     season:"Stagione", month:"Mese", group:"Gruppo alimentare", region:"Regione", allRegions:"Tutte le regioni",
     spec:"Solo specialità regionali", specHint:"Nascondi i prodotti diffusi in tutta Italia",
-    yr:"Includi i prodotti di tutto l'anno", groupBy:"Raggruppa per", gCat:"Gruppo alimentare", gReg:"Regione",
-    today:"Mese di oggi", clear:"Azzera tutto", legOff:"Fuori stagione",
-    allYear:"Tutto l'anno", allFilters:"Tutte le regioni e i gruppi",
+    yr:"Includi i prodotti di tutto l'anno", yrHint:"Soprattutto formaggi e salumi. La ricerca li include sempre.", groupBy:"Raggruppa per", gCat:"Gruppo alimentare", gReg:"Regione",
+    today:"Questo mese", clear:"Azzera tutto", legOff:"Fuori stagione",
+    allYear:"Tutti i mesi", allFilters:"Tutte le regioni e i gruppi",
     empty:"Nessun risultato con questi filtri.", clearF:"Azzera i filtri",
     yearRound:"Tutto l'anno", atBest:"Al meglio: ", wideLine:"Diffuso in tutta Italia",
-    wideHead:"Diffusi ovunque", wideSub:"",
+    wideHead:"Diffusi in tutta Italia", wideSub:"",
     bD:"Denominazione di Origine Protetta", bI:"Indicazione Geografica Protetta", bS:"Presidio Slow Food",
     otherName:"English", otherHref:"../index.html", legendLabel:"Legenda", filtersLabel:"Filtri"
   }
@@ -1377,7 +1458,7 @@ const CATS=[
   {k:"P",it:"Pesce e frutti di mare",en:"Fish and seafood"}
 ];
 const catName=c=>EN?c.en:c.it, catAlt=c=>EN?c.it:c.en;
-const REGIONS=[["VDA","Valle d'Aosta","Aosta Valley"],["PIE","Piemonte","Piedmont"],["LIG","Liguria","Liguria"],["LOM","Lombardia","Lombardy"],["TAA","Trentino-Alto Adige","Trentino-South Tyrol"],["VEN","Veneto","Veneto"],["FVG","Friuli-Venezia Giulia","Friuli-Venezia Giulia"],["EMR","Emilia-Romagna","Emilia-Romagna"],["TOS","Toscana","Tuscany"],["UMB","Umbria","Umbria"],["MAR","Marche","Marche"],["LAZ","Lazio","Lazio"],["ABR","Abruzzo","Abruzzo"],["MOL","Molise","Molise"],["CAM","Campania","Campania"],["PUG","Puglia","Apulia"],["BAS","Basilicata","Basilicata"],["CAL","Calabria","Calabria"],["SIC","Sicilia","Sicily"],["SAR","Sardegna","Sardinia"]];
+const REGIONS=[["VDA","Valle d'Aosta","Aosta Valley"],["PIE","Piemonte","Piedmont"],["LIG","Liguria","Liguria"],["LOM","Lombardia","Lombardy"],["TAA","Trentino-Alto Adige","Trentino-South Tyrol"],["VEN","Veneto","Veneto"],["FVG","Friuli-Venezia Giulia","Friuli-Venezia Giulia"],["EMR","Emilia-Romagna","Emilia-Romagna"],["TOS","Toscana","Tuscany"],["UMB","Umbria","Umbria"],["MAR","Marche","Marche"],["LAZ","Lazio","Lazio"],["ABR","Abruzzo","Abruzzo"],["MOL","Molise","Molise"],["CAM","Campania","Campania"],["PUG","Puglia","Apulia (Puglia)"],["BAS","Basilicata","Basilicata"],["CAL","Calabria","Calabria"],["SIC","Sicilia","Sicily"],["SAR","Sardegna","Sardinia"]];
 const RNAME=Object.fromEntries(REGIONS.map(r=>[r[0],EN?r[2]:r[1]]));
 
 function parseMonths(s){
@@ -1411,19 +1492,42 @@ const state={q:"",months:new Set(),cats:new Set(),regions:new Set(),spec:false,y
 const $=id=>document.getElementById(id);
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const nowMonth=new Date().getMonth()+1;
+/* search: ignores accents and case, matches word stems (melanzana/melanzane, cherry/cherries), common other names
+   (eggplant, zucchini, branzino, parmesan…) and one slip of the keyboard in longer words (caciocavalo, truffel) */
+const norm=s=>(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const SYN=[["aubergine","eggplant melanzana brinjal"],["courgette","zucchini zucchina"],["spigola","branzino sea bass seabass"],["parmigiano","parmesan"],
+  ["prawn","shrimp gambero gamberi"],["chickpea","garbanzo"],["cachi","kaki persimmon"],["persimmon","kaki cachi"],["broad bean","fava"],["cuttlefish","seppia"],
+  ["squid","calamaro"],["sea bream","dorade"],["sea urchin","riccio"],["peppers","bell pepper capsicum"],["grana padano","parmesan"],["octopus","polipo"],
+  ["prickly pear","cactus pear"],["courgette flower","zucchini flower squash blossom"],["mussel","muscoli"],["clam","vongola"],["anchov","alice acciuga"]];
+const TAGW={D:"dop pdo",I:"igp pgi",S:"presidio slow food"};
+const SIDX=new Map();
+function sidx(it){let x=SIDX.get(it);if(x)return x;
+  let h=norm([it.name,it.en,it.note,catName(catOf(it.cat)),...(it.tags||"").split("").map(t=>TAGW[t]||"")].join(" "));
+  SYN.forEach(([k,v])=>{if(h.includes(k))h+=" "+v});
+  x={h,words:[...new Set(h.split(/[^a-z0-9]+/).filter(w=>w.length>2))]};SIDX.set(it,x);return x}
+const stem=w=>w.length>4?w.replace(/(ies|es|s|e|a|i|o|y)$/,""):w;
+function near(a,b){ /* true if a and b differ by at most one edit (insert, delete, change, or swap of two letters) */
+  if(a===b)return true;const la=a.length,lb=b.length;if(Math.abs(la-lb)>1)return false;
+  let i=0;while(i<la&&i<lb&&a[i]===b[i])i++;
+  if(la===lb)return a.slice(i+1)===b.slice(i+1)||(a[i]===b[i+1]&&a[i+1]===b[i]&&a.slice(i+2)===b.slice(i+2));
+  return la>lb?a.slice(i+1)===b.slice(i):a.slice(i)===b.slice(i+1)}
+function wordHit(x,w){
+  if(x.h.includes(w))return true;
+  const st=stem(w);if(st.length>=4&&x.h.includes(st))return true;
+  if(w.length===4&&/[aeiouy]$/.test(w)&&x.words.some(v=>v.length<=5&&v.startsWith(w.slice(0,3))))return true; /* caco → cachi */
+  if(w.length>=5)return x.words.some(v=>near(w,v)||(v.length>w.length&&near(w,v.slice(0,w.length+1))&&v.startsWith(w.slice(0,3))));
+  return false}
+function qHit(it){const ws=norm(state.q).split(/\s+/).filter(Boolean);if(!ws.length)return true;const x=sidx(it);return ws.every(w=>wordHit(x,w))}
 function matches(it,ignoreCat){
   if(!ignoreCat&&state.cats.size&&!state.cats.has(it.cat))return false;
   if(state.months.size){let ok=false;state.months.forEach(m=>{if(it.mo[m-1])ok=true});if(!ok)return false}
-  if(!state.yr&&it.year)return false;
+  if(!state.yr&&it.year&&!state.q)return false; /* foods available all year are always found by search */
   if(state.regions.size){
     const direct=it.reg.some(r=>state.regions.has(r));
     const wide=it.reg.includes("*");
     if(!(direct||(wide&&!state.spec)))return false;
   }else if(state.spec&&it.reg.includes("*"))return false;
-  if(state.q){
-    const q=state.q.toLowerCase();
-    if(!(it.name.toLowerCase().includes(q)||it.en.toLowerCase().includes(q)||it.note.toLowerCase().includes(q)))return false;
-  }
+  if(state.q&&!qHit(it))return false;
   return true;
 }
 
@@ -1438,22 +1542,22 @@ function selLabel(){
 }
 
 /* ---- archive layout ---- */
-const PHOTO_DIR=null; /* e.g. "img/" -> img/<slug>.jpg ; leave null until photos exist */
 const X={en:{sortBy:"Sort by",az:"Name A–Z",cat:"Food group",reg:"Region",len:"Longest season",start:"Season start",shuffle:"Shuffle",
-  selected:"selected",pairT:"Pair it with",pairHas:"Rich in",pairN:"These four in-season foods from other groups are rich in what it lacks, judged per 100 g against EU reference values. A guide, not a diet plan.",nutT:"Nutrition per 100 g",nutRich:"Rich in",nutSrc:"Source:",nutProxy:"closest entry available",nutEst:"No matching entry in the Italian food composition database; pairings use an estimate.",custom:"By month",items:"foods",inSeason:"in season",all:"All",allSeasons:"All seasons",allMonths:"All months",allGroups:"All food groups",more:"More in",close:"Close",months:"Best months",where:"Where",
+  selected:"selected",pairT:"Pair it with",pairHas:"Rich in",pairN:"Foods from other groups, in season at the same time, that are rich in what it lacks, judged per 100 g against EU reference values. A guide, not a diet plan.",back:"Back to",nutT:"Nutrition per 100 g",nutRich:"Rich in",nutSrc:"Source:",nutProxy:"closest entry available",nutEst:"No matching entry in the Italian food composition database; pairings use an estimate.",custom:"Chosen months",items:"foods",item1:"food",inSeason:"in season",all:"All",allSeasons:"All seasons",allMonths:"All months",allGroups:"All food groups",more:"More in",close:"Close",months:"Best months",where:"Where",
   fsFilters:"Filters",none:"Nothing matches these filters.",lbl:"Group"},
  it:{sortBy:"Ordina per",az:"Nome A–Z",cat:"Gruppo alimentare",reg:"Regione",len:"Stagione più lunga",start:"Inizio stagione",shuffle:"Casuale",
-  selected:"selezionati",pairT:"Da abbinare a",pairHas:"Ricco di",pairN:"Questi quattro alimenti di stagione di altri gruppi sono ricchi di ciò che gli manca, valutati per 100 g rispetto ai valori di riferimento UE. Una guida, non un piano alimentare.",nutT:"Valori nutrizionali per 100 g",nutRich:"Ricco di",nutSrc:"Fonte:",nutProxy:"voce più vicina disponibile",nutEst:"Nessuna voce corrispondente nella banca dati di composizione degli alimenti; gli abbinamenti usano una stima.",custom:"Per mese",items:"alimenti",inSeason:"di stagione",all:"Tutti",allSeasons:"Tutte le stagioni",allMonths:"Tutti i mesi",allGroups:"Tutti i gruppi",more:"Altri in",close:"Chiudi",months:"Mesi migliori",where:"Dove",
+  selected:"selezionati",pairT:"Da abbinare a",pairHas:"Ricco di",pairN:"Alimenti di altri gruppi, di stagione negli stessi mesi, ricchi di ciò che gli manca, valutati per 100 g rispetto ai valori di riferimento UE. Una guida, non un piano alimentare.",back:"Torna a",nutT:"Valori nutrizionali per 100 g",nutRich:"Ricco di",nutSrc:"Fonte:",nutProxy:"voce più vicina disponibile",nutEst:"Nessuna voce corrispondente nella banca dati di composizione degli alimenti; gli abbinamenti usano una stima.",custom:"Mesi scelti",items:"alimenti",item1:"alimento",inSeason:"di stagione",all:"Tutti",allSeasons:"Tutte le stagioni",allMonths:"Tutti i mesi",allGroups:"Tutti i gruppi",more:"Altri in",close:"Chiudi",months:"Mesi migliori",where:"Dove",
   fsFilters:"Filtri",none:"Nessun risultato con questi filtri.",lbl:"Gruppo"}}[LANG];
 state.sort="cat";
 const slug=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 const seasonDot=k=>`var(${SEASONS.find(s=>s.k===k).c})`;
 const catOf=k=>CATS.find(c=>c.k===k);
-let shuffleSeed=Math.random();
+let shuffleSeed=1+Math.floor(Math.random()*999999);
 const rnd=(s,i)=>{const x=Math.sin(s*9301+i*49297)*233280;return x-Math.floor(x)};
 function monthLen(it){return it.mo.filter(Boolean).length}
 function startMonth(it){
-  const ref=state.months.size?[...state.months][0]:nowMonth;
+  let ref=nowMonth;
+  if(state.months.size){const ms=[...state.months].sort((a,b)=>a-b);ref=ms.find(m=>!state.months.has(m===1?12:m-1))||ms[0]}
   for(let d=0;d<12;d++){if(it.mo[(ref-1+d)%12])return d}
   return 12;
 }
@@ -1462,7 +1566,7 @@ function sorted(list){
   const nm=(x,y)=>label(x).localeCompare(label(y),LANG);
   if(state.sort==="len")a.sort((x,y)=>monthLen(x)-monthLen(y)||nm(x,y));
   else if(state.sort==="start")a.sort((x,y)=>startMonth(x)-startMonth(y)||nm(x,y));
-  else if(state.sort==="shuffle"){const idx=new Map(ITEMS.map((it,i)=>[it,i]));a.sort((x,y)=>rnd(shuffleSeed,idx.get(x))-rnd(shuffleSeed,idx.get(y)))}
+  else if(state.sort==="shuffle"){const idx=new Map(ITEMS.map((it,i)=>[it,i]));a.sort((x,y)=>rnd(shuffleSeed/1e6,idx.get(x))-rnd(shuffleSeed/1e6,idx.get(y)))}
   else a.sort(nm);
   return a;
 }
@@ -1476,14 +1580,19 @@ const thumbUrl=p=>{const f=encodeURIComponent(p[0].replace(/ /g,"_"));return WM+
 const origUrl=p=>WM+p[5]+"/"+encodeURIComponent(p[0].replace(/ /g,"_"));
 function photo(it,big){
   const L=esc(label(it).charAt(0).toUpperCase());
-  if(VIEW==="draw"){const h=nameSeed(it.name);return `<span class="ph drw pp tn${h%8} tx${(h>>>4)%12}" data-c="${it.cat}"><span class="clipw" style="--rot:${clipRot(it.name)}deg">${ILL.draw(it.name,it.cat)}</span></span>`}
+  if(VIEW==="draw"){makeTextures();const h=nameSeed(it.name);return `<span class="ph drw pp tn${h%8} tx${(h>>>4)%12}" data-c="${it.cat}"><span class="clipw" style="--rot:${clipRot(it.name)}deg">${drawUse(it.name,it.cat,true)}</span></span>`}
   const p=PHOTOS[it.name];
-  const img=p?`<img src="${thumbUrl(p)}" data-orig="${origUrl(p)}" crossorigin="anonymous" alt="${esc(label(it))}" ${big?"":'loading="lazy"'} decoding="async" referrerpolicy="no-referrer" onload="ditherImg(this)" onerror="imgFail(this)">`:"";
+  const img=p?`<img src="${thumbUrl(p)}" data-orig="${origUrl(p)}" crossorigin="anonymous" alt="${esc(label(it))}" ${big?"":'loading="lazy"'} decoding="async" referrerpolicy="no-referrer">`:"";
   return `<span class="ph" data-c="${it.cat}"><span class="l" aria-hidden="true">${L}</span>${img}</span>`;
 }
 /* full-colour ordered dither: 8x8 Bayer threshold map, auto-levels per channel, 3 levels per channel, 1px cells */
 const BAYER=(()=>{let m=[[0,2],[3,1]];while(m.length<8){const n=m.length,o=[];for(let y=0;y<2*n;y++){o.push([]);for(let x=0;x<2*n;x++){const b=m[y%n][x%n]*4,q=[[0,2],[3,1]][(y/n)|0][(x/n)|0];o[y].push(b+q)}}m=o}return m.flat().map(v=>(v+.5)/64)})();
-const DCACHE=new Map();
+const DCACHE=new Map(),DMAX=60;
+document.addEventListener("load",e=>{const t=e.target;if(t.tagName==="IMG"&&t.closest(".ph"))ditherImg(t)},true);
+document.addEventListener("error",e=>{const t=e.target;if(t.tagName==="IMG"&&t.closest(".ph"))imgFail(t)},true);
+/* a dithered photo is made at the card's size; if the card grows or shrinks a lot, make it again */
+const DRO="ResizeObserver" in window?new ResizeObserver(es=>{es.forEach(en=>{const box=en.target,c=box.querySelector("canvas.dith"),img=box.querySelector("img");
+  if(!c||!img||!box.isConnected)return;const w=box.clientWidth;if(Math.abs(w-c.width)/c.width>.12){c.remove();img.classList.remove("done");ditherImg(img)}})}):null;
 function imgFail(img){
   if(img.dataset.orig&&!img.dataset.tried){img.dataset.tried="1";img.src=img.dataset.orig;return}
   img.remove();
@@ -1511,10 +1620,10 @@ function ditherImg(img){
         const t=BAYER[(yy&7)*8+(xx&7)],i=(yy*W+xx)*4;
         for(let k=0;k<3;k++){let v=(a[i+k]-lo[k])/(hi[k]-lo[k]);v=v<0?0:v>1?1:v;let q=Math.floor(v*(L-1)+t);if(q>L-1)q=L-1;a[i+k]=Math.round(q*255/(L-1))}
       }
-      DCACHE.set(key,d);
+      DCACHE.set(key,d);if(DCACHE.size>DMAX)DCACHE.delete(DCACHE.keys().next().value);
     }
     x.putImageData(d,0,0);
-    box.appendChild(c);img.classList.add("done");
+    box.querySelectorAll("canvas.dith").forEach(o=>o.remove());box.appendChild(c);img.classList.add("done");if(DRO)DRO.observe(box);
   }catch(e){/* CORS blocked: leave the plain photo */}
 }
 function creditHTML(it){
@@ -1522,7 +1631,8 @@ function creditHTML(it){
   const p=PHOTOS[it.name];if(!p)return "";
   const wiki=p[2]?(p[1]?"it":"en")+".wikipedia.org/wiki/"+encodeURIComponent(p[2].replace(/ /g,"_")):"";
   const file="https://commons.wikimedia.org/wiki/File:"+encodeURIComponent(p[0].replace(/ /g,"_"));
-  return `<p class="credit">${EN?"Photo":"Foto"}: ${p[4]?esc(p[4])+" · ":""}<a href="${file}" target="_blank" rel="noopener">${esc(p[3]||"Wikimedia Commons")}</a>${wiki?` · <a href="https://${wiki}" target="_blank" rel="noopener">Wikipedia</a>`:" · Wikimedia Commons"}</p>`;
+  const who=p[4]?esc(p[4]):(/public domain|cc0/i.test(p[3]||"")?"":(EN?"Wikimedia Commons contributor (author named on the file page)":"utente di Wikimedia Commons (autore indicato nella pagina del file)"));
+  return `<p class="credit">${EN?"Photo":"Foto"}: ${who?who+" · ":""}<a href="${file}" target="_blank" rel="noopener">${esc(p[3]||"Wikimedia Commons")}</a>${wiki?` · <a href="https://${wiki}" target="_blank" rel="noopener">Wikipedia</a>`:" · Wikimedia Commons"}</p>`;
 }
 function renderControls2(){
   renderMS();
@@ -1536,12 +1646,19 @@ document.addEventListener("toggle",e=>{const d=e.target;if(!d.classList||!d.clas
 function render(){
   renderControls2();
   const list=ITEMS.filter(it=>matches(it,false));
-  $("count").textContent=`${list.length} ${X.items} · ${selLabel()}`;
-  const bits=[];
-  $("fsum").textContent=selLabel()+(state.regions.size?" · "+[...state.regions].map(r=>RNAME[r]).join(", "):"");
+  $("count").textContent=`${list.length} ${list.length===1?X.item1:X.items} · ${selLabel()}`;
+  const sumParts=[selLabel()];
+  if(state.cats.size)sumParts.push(state.cats.size<=2?[...state.cats].map(k=>catName(catOf(k))).join(", "):state.cats.size+" "+X.lbl.toLowerCase());
+  if(state.regions.size)sumParts.push(state.regions.size<=2?[...state.regions].map(r=>RNAME[r]).join(", "):state.regions.size+" "+T.region.toLowerCase());
+  if(state.q)sumParts.push("“"+state.q+"”");
+  $("fsum").textContent=sumParts.join(" · ");
   let html="";
   const sec=(title,items)=>`<details class="gsec" data-k="${esc(title)}" ${CLOSED.has(title)?"":"open"}><summary><h3>${title} <span class="gn">${items.length}</span></h3></summary><div class="grid">${sorted(items).map(x=>cardHTML(x)).join("")}</div></details>`;
-  if(!list.length)html=`<div class="empty"><p>${X.none}</p><button class="pill" id="reset2" type="button">${T.clearF}</button></div>`;
+  if(!list.length){
+    if(state.q){const nf=state.cats.size||state.months.size||state.regions.size||state.spec;
+      html=`<div class="empty"><p>${EN?`No food matches “${esc(state.q)}”${nf?" with these filters":""}.`:`Nessun alimento corrisponde a «${esc(state.q)}»${nf?" con questi filtri":""}.`}</p>`+
+        `<button class="pill" id="clearq" type="button">${EN?"Clear the search":"Cancella la ricerca"}</button>${nf?` <button class="pill" id="reset2" type="button">${T.clearF}</button>`:""}</div>`}
+    else html=`<div class="empty"><p>${X.none}</p><button class="pill" id="reset2" type="button">${T.clearF}</button></div>`}
   else if(state.sort==="cat"){CATS.forEach(c=>{const g=list.filter(it=>it.cat===c.k);if(g.length)html+=sec(catName(c),g)})}
   else if(state.sort==="reg"){
     REGIONS.forEach(([code])=>{if(state.regions.size&&!state.regions.has(code))return;const g=list.filter(it=>it.reg.includes(code));if(g.length)html+=sec(RNAME[code],g)});
@@ -1549,7 +1666,11 @@ function render(){
   }else html=`<div class="grid">${sorted(list).map(x=>cardHTML(x)).join("")}</div>`;
   $("grid").innerHTML=html;
   reopenAfterRender();
+  afterChange();
 }
+/* after every change of view: keep the address and the Show-N button up to date (both defined further down) */
+let READY=false;
+function afterChange(){if(READY){writeHash();paintDone()}}
 /* ---- nutrition profiles (rough, by food group with per-food adjustments) ---- */
 const NUT={prot:["Protein","Proteine"],fib:["Fibre","Fibre"],vc:["Vitamin C","Vitamina C"],va:["Vitamin A","Vitamina A"],fe:["Iron","Ferro"],ca:["Calcium","Calcio"],o3:["Omega-3","Omega-3"],fat:["Good fats","Grassi buoni"],carb:["Complex carbs","Carboidrati complessi"],b12:["Vitamin B12","Vitamina B12"],fol:["Folate","Folati"],vd:["Vitamin D","Vitamina D"],k:["Potassium","Potassio"]};
 const NKEYS=Object.keys(NUT);
@@ -1558,7 +1679,7 @@ const GDEF={V:"fib vc fol",F:"vc fib",N:"fat prot fib",G:"prot fib fe carb fol",
 const NADJ=[
  ["Spinaci|Bietole|Cavolo nero|Cime di rapa|Cicoria|Puntarelle|Agretti|Scarola|Indivia riccia|Cavolo verza|Broccoli|Broccolo romanesco|Asparagi|Asparagi selvatici|Fave fresche|Piselli freschi","+fe +ca +va"],
  ["Carote|Zucca|Zucca mantovana|Albicocche|Cachi|Meloni|Peperoni|Pomodori|Pomodoro San Marzano|Peperoncino|Basilico genovese|Nespole","+va"],
- ["Patate novelle|Patata di Bologna|Patata della Sila|Topinambur|Barbabietole|Pastinaca","+carb"],
+ ["Patate novelle|Patata di Bologna|Patata della Sila|Topinambur|Barbabietole","+carb"],
  ["Castagne e marroni","=carb fib vc"],
  ["Olive|Avocado siciliano","=fat fib"],
  ["Funghi porcini|Finferli|Ovoli|Trombette dei morti|Chiodini|Cardoncelli|Tartufo bianco|Tartufo nero pregiato|Tartufo estivo|Tartufo bianchetto","=fib prot"],
@@ -1598,12 +1719,12 @@ function profile(it){
 function nutHTML(it){
   const r=nrow(it),m=FOODMAP[it.name]||[null,0];
   if(!r)return `<div class="nut est"><b>${X.nutT}</b><span>${X.nutEst}</span></div>`;
-  const f=(v,d=1)=>v==null?"–":(+v).toFixed(d).replace(/\.0$/,"");
+  const f=(v,d=1)=>{if(v==null)return "–";const t=(+v).toFixed(d).replace(/\.0$/,"");return EN?t:t.replace(".",",")};
   const cells=[["kcal",f(r[1],0),"kcal"],[nutName("prot"),f(r[2]),"g"],[EN?"Fat":"Grassi",f(r[3]),"g"],[EN?"Carbs":"Carboidrati",f(r[4]),"g"],[nutName("fib"),f(r[5]),"g"]];
   const strong=[...profile(it)].map(nutName).join(", ");
   return `<div class="nut"><b>${X.nutT}</b><div class="nutgrid">${cells.map(c=>`<span><em>${c[1]}<small>${c[2]==="kcal"?"":" "+c[2]}</small></em>${esc(c[0])}</span>`).join("")}</div>
     ${strong?`<p class="nutstrong">${X.nutRich}: ${esc(strong)}</p>`:""}
-    <p class="nutsrc">${X.nutSrc} <a href="https://bda.ieo.it/" target="_blank" rel="noopener">BDA (IEO)</a>: ${esc(r[0].toLowerCase())}${m[1]?` · ${X.nutProxy}`:""}</p></div>`;
+    <p class="nutsrc">${X.nutSrc} <a href="https://bda.ieo.it/" target="_blank" rel="noopener">BDA (IEO)</a> · ${esc(r[0].toLowerCase())}${m[1]?` · ${X.nutProxy}`:""}</p></div>`;
 }
 function profileH(it){
   const s=new Set((GDEF[it.cat]||"").split(" ").filter(Boolean));
@@ -1619,21 +1740,24 @@ function pairsFor(it){
   const FAM={L:"D",Q:"D",C:"M",S:"M"},fam=k=>FAM[k]||k;
   const fm=it.mo.filter(Boolean).length||12,chosen=[],cats=new Set([fam(it.cat)]);
   const pool=ITEMS.filter(c=>c!==it&&fam(c.cat)!==fam(it.cat)&&profile(c).size>0);
+  const selM=state.months.size?[...state.months].filter(m=>it.mo[m-1]):[]; /* the chosen months this food is in season */
   for(let n=0;n<4;n++){
     let best=null,bs=-1e9;
     for(const c of pool){if(cats.has(fam(c.cat))||chosen.includes(c))continue;
       const pc=profile(c);let cov=0;pc.forEach(k=>{if(remaining.has(k))cov++});
+      if(cov===0)continue; /* a pairing must add at least one nutrient this food lacks */
       let ov=0;for(let m=0;m<12;m++)if(it.mo[m]&&c.mo[m])ov++;
+      const ovSel=selM.filter(m=>c.mo[m-1]).length;
       const reg=(!it.reg.includes("*")&&c.reg.some(r=>it.reg.includes(r)))?1:0;
-      const s=(ov===0?-20:0)+(cov===0?-3:0)+cov*3+(ov/fm)*2.2+reg*.6-(c.year?.4:0)+((hashStr(it.name+c.name)&255)/2550);
+      const s=(ov===0?-20:0)+(selM.length&&!ovSel?-12:0)+(selM.length?ovSel/selM.length*2:0)+cov*3+(ov/fm)*2.2+reg*.6-(c.year?.4:0)+((hashStr(it.name+c.name)&255)/2550);
       if(s>bs){bs=s;best=c}}
     if(!best)break;chosen.push(best);cats.add(fam(best.cat));profile(best).forEach(k=>remaining.delete(k));
   }
-  return chosen.map(c=>({it:c,adds:[...profile(c)].filter(k=>miss.has(k)).slice(0,3)}));
+  return chosen.map(c=>({it:c,adds:[...profile(c)].filter(k=>miss.has(k)).slice(0,3)})).filter(p=>p.adds.length);
 }
 
 /* ---- in-place expanding cards ---- */
-let OPEN=-1,OPENSHOW=-1;
+let OPEN=-1,OPENSHOW=-1,BACK=-1; /* BACK: the food we came from by following a pairing */
 function expandedHTML(it,host){
   const c=catOf(it.cat);
   const badges=(it.tags.includes("D")?`<span class="tag" title="${T.bD}">DOP</span>`:"")+(it.tags.includes("I")?`<span class="tag" title="${T.bI}">IGP</span>`:"")+(it.tags.includes("S")?`<span class="tag sf" title="${T.bS}">Presìdio</span>`:"");
@@ -1641,12 +1765,14 @@ function expandedHTML(it,host){
   const where=it.reg.includes("*")?T.wideLine:it.reg.map(r=>RNAME[r]).join(" · ");
   const pairs=pairsFor(it);
   const has=[...profile(it)].map(nutName).join(", ");
-  return `<div class="xp">
+  const hid="xh-"+ITEMS.indexOf(it);
+  return `<div class="xp" role="region" aria-labelledby="${hid}">
     <div class="xp-ph">${photo(it,true)}</div>
     <div class="xp-info">
-      <button class="xclose" type="button" aria-label="${X.close}">×</button>
+      <button class="xclose" type="button" aria-label="${X.close}: ${esc(label(it))}">×</button>
+      ${BACK>=0&&ITEMS[BACK]&&ITEMS[BACK]!==it?`<button class="xback" type="button" data-back="${BACK}">← ${X.back} ${esc(label(ITEMS[BACK]))}</button>`:""}
       <div class="tagrow"><span class="tag">${esc(catName(c))}</span>${badges}</div>
-      <h3>${esc(label(it))}</h3>${other(it)?`<p class="alt" lang="it">${esc(other(it))}</p>`:""}
+      <h3 id="${hid}" tabindex="-1">${esc(label(it))}</h3>${other(it)?`<p class="alt" lang="it">${esc(other(it))}</p>`:""}
       ${it.note?`<p>${esc(it.note)}</p>`:""}
       <div class="kv"><b>${X.months} · ${rangeLabel(it.mo)}</b><div class="big" role="img" aria-label="${T.atBest}${rangeLabel(it.mo)}">${big}</div></div>
       <div class="kv"><b>${X.where}</b><span>${where}</span></div>
@@ -1656,7 +1782,7 @@ function expandedHTML(it,host){
     </div>
     <div class="pair">
       <div class="pairhead"><h4>${X.pairT}</h4><p>${X.pairN}</p></div>
-      <div class="pairs">${pairs.map(p=>`<button class="pairbtn" type="button" data-j="${ITEMS.indexOf(p.it)}">${photo(p.it)}<span class="pt">${esc(label(p.it))}</span><span class="pc">${esc(catName(catOf(p.it.cat)))} · ${rangeLabel(p.it.mo)}</span>${p.adds.length?`<span class="pa">+ ${p.adds.map(nutName).join(", ")}</span>`:""}</button>`).join("")}</div>
+      <div class="pairs">${pairs.length?"":`<p class="pairnone">${EN?"No pairing adds anything this food lacks.":"Nessun abbinamento aggiunge qualcosa che manca a questo alimento."}</p>`}${pairs.map(p=>`<button class="pairbtn" type="button" data-j="${ITEMS.indexOf(p.it)}">${photo(p.it)}<span class="pt">${esc(label(p.it))}</span><span class="pc">${esc(catName(catOf(p.it.cat)))} · ${rangeLabel(p.it.mo)}</span>${p.adds.length?`<span class="pa">+ ${p.adds.map(nutName).join(", ")}</span>`:""}</button>`).join("")}</div>
     </div>
   </div>`;
 }
@@ -1666,6 +1792,8 @@ function cardHTML(it,expanded){
   return `<article class="card" data-i="${i}"><button class="cardhit" type="button" aria-expanded="false" aria-label="${esc(label(it))}">${photo(it)}<span class="meta"><span class="t">${esc(label(it))}</span><span class="s"><span>${esc(catName(catOf(it.cat)))}</span></span><span class="s"><i>${rangeLabel(it.mo)}</i></span></span>${miniHTML(it)}</button></article>`;
 }
 const RM=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+const topGap=()=>(mq.matches?Math.ceil($("side").getBoundingClientRect().height):0)+16; /* room above an opened card */
+function focusOpen(el){const h=el&&el.querySelector(".xp-info h3");if(h)h.focus({preventScroll:true})}
 let RESTORE=null; /* where the open card sat before it moved to the start of its row */
 const mk=html=>{const t=document.createElement("div");t.innerHTML=html;return t.firstElementChild};
 function expandEl(el){
@@ -1683,7 +1811,8 @@ function collapseOpen(){
   if(RESTORE){if(RESTORE.prev&&RESTORE.prev.isConnected)RESTORE.prev.after(n);else RESTORE.parent.prepend(n)}
   RESTORE=null;return n;
 }
-function setOpen(i,show){
+function setOpen(i,show){setOpenCore(i,show);afterChange()}
+function setOpenCore(i,show){
   const grid=$("grid"),prev=OPEN;
   const key=e=>e.dataset.i??("s"+(e.parentElement.dataset.k||""));
   const els=[...grid.querySelectorAll(".card,.gsec>summary")];
@@ -1691,17 +1820,19 @@ function setOpen(i,show){
   let opened=null,collapsed=null;
   if(prev>=0&&prev===i){ /* same slot, show another food's details in place */
     OPENSHOW=show??-1;const el=grid.querySelector(".card.open");const n=mk(cardHTML(ITEMS[i],true));el.replaceWith(n);opened=n;
+    if(!RM){focusOpen(n);const tp=n.getBoundingClientRect().top;if(tp<topGap()||tp>innerHeight*.45)window.scrollTo({top:tp+scrollY-topGap(),behavior:"smooth"})}
   }else{
     if(prev>=0){collapsed=collapseOpen();}
     OPEN=i;OPENSHOW=show??-1;
     if(i>=0){const el=grid.querySelector(`.card[data-i="${i}"]`);if(el)opened=expandEl(el);else OPEN=-1}
   }
-  if(RM){if(opened)opened.scrollIntoView({block:"start"});return}
+  if(RM){if(opened){window.scrollTo(0,opened.getBoundingClientRect().top+scrollY-topGap());focusOpen(opened)}
+    else if(collapsed){const b=collapsed.querySelector(".cardhit");if(b)b.focus({preventScroll:true})}return}
   const E="cubic-bezier(.2,.8,.2,1)",D=600;let targetY=null;
   [...grid.querySelectorAll(".card,.gsec>summary")].forEach(e=>{
     const a=before.get(key(e));if(!a)return;
     const b=e.getBoundingClientRect();const dx=a.left-b.left,dy=a.top-b.top;
-    if(e===opened){targetY=b.top+scrollY-24;
+    if(e===opened){targetY=b.top+scrollY-topGap();
       e.animate([{transformOrigin:"0 0",transform:`translate(${dx}px,${dy}px) scale(${a.width/b.width},${a.height/b.height})`},{transformOrigin:"0 0",transform:"none"}],{duration:D,easing:E});
       e.querySelectorAll(".xp-info,.pair").forEach((x,n)=>x.animate([{opacity:0,transform:"translateY(14px)"},{opacity:1,transform:"none"}],{duration:420,delay:260+n*110,easing:E,fill:"backwards"}));
       e.querySelectorAll(".pairbtn").forEach((x,n)=>x.animate([{opacity:0,transform:"translateY(18px) scale(.96)"},{opacity:1,transform:"none"}],{duration:420,delay:400+n*70,easing:E,fill:"backwards"}));
@@ -1711,7 +1842,7 @@ function setOpen(i,show){
       e.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:"none"}],{duration:D,easing:E});
     }
   });
-  if(opened&&targetY!==null){const top=targetY-scrollY+24;if(top<70||top>innerHeight*.45)setTimeout(()=>window.scrollTo({top:targetY,behavior:"smooth"}),D*.4)}
+  if(opened&&targetY!==null){const top=targetY-scrollY+topGap();focusOpen(opened);if(top<topGap()+46||top>innerHeight*.45)setTimeout(()=>window.scrollTo({top:targetY,behavior:"smooth"}),D*.4)}
   else if(collapsed&&!opened){const b=collapsed.querySelector(".cardhit");if(b)b.focus({preventScroll:true})}
 }
 /* after a re-render (filters, search, sort) keep the open card in its row */
@@ -1722,23 +1853,29 @@ function reopenAfterRender(){
 }
 $("grid").addEventListener("click",e=>{
   if(e.target.id==="reset2"){resetAll();return}
-  const hit=e.target.closest(".cardhit");if(hit){setOpen(+hit.closest(".card").dataset.i);return}
-  if(e.target.closest(".xclose")){setOpen(-1);return}
-  const pb=e.target.closest(".pairbtn");if(pb){const j=+pb.dataset.j;
+  if(e.target.id==="clearq"){state.q="";$("q").value="";render();$("q").focus();return}
+  const hit=e.target.closest(".cardhit");if(hit){BACK=-1;setOpen(+hit.closest(".card").dataset.i);return}
+  if(e.target.closest(".xclose")){BACK=-1;setOpen(-1);return}
+  const xb=e.target.closest(".xback");if(xb){const j=+xb.dataset.back;BACK=-1;
+    if(j===OPEN)setOpen(OPEN,-1);else if($("grid").querySelector(`.card[data-i="${j}"]`))setOpen(j);else setOpen(OPEN,j);return}
+  const pb=e.target.closest(".pairbtn");if(pb){const j=+pb.dataset.j;BACK=OPENSHOW>=0?OPENSHOW:OPEN;
     if($("grid").querySelector(`.card[data-i="${j}"]`))setOpen(j);else setOpen(OPEN,j);return}
-  const mb=e.target.closest(".morebtn");if(mb){state.cats=new Set([mb.dataset.cat]);OPEN=-1;render();window.scrollTo({top:0,behavior:"smooth"})}
+  const mb=e.target.closest(".morebtn");if(mb){state.cats=new Set([mb.dataset.cat]);OPEN=-1;OPENSHOW=-1;BACK=-1;RESTORE=null;render();window.scrollTo({top:0,behavior:"smooth"})}
 });
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&OPEN>=0&&!document.querySelector(".ms.open"))setOpen(-1)});
 
-$("sort").addEventListener("change",e=>{state.sort=e.target.value;if(state.sort==="shuffle")shuffleSeed=Math.random();render()});
+
+$("sort").addEventListener("change",e=>{state.sort=e.target.value;if(state.sort==="shuffle")shuffleSeed=1+Math.floor(Math.random()*999999);render()});
 $("q").addEventListener("input",e=>{state.q=e.target.value.trim();render()});
 $("spec").addEventListener("change",e=>{state.spec=e.target.checked;render()});
 $("yr").addEventListener("change",e=>{state.yr=e.target.checked;render()});
 const isNow=()=>state.months.size===1&&state.months.has(nowMonth);
 $("now").addEventListener("click",()=>{state.months=isNow()?new Set():new Set([nowMonth]);render()});
-function resetAll(){state.q="";state.months=new Set();state.cats=new Set();state.regions=new Set();state.spec=false;state.yr=true;$("q").value="";$("spec").checked=false;$("yr").checked=true;render()}
+function resetAll(){state.q="";state.months=new Set();state.cats=new Set();state.regions=new Set();state.spec=false;state.yr=false;$("q").value="";$("spec").checked=false;$("yr").checked=false;render()}
 $("reset").addEventListener("click",resetAll);
-$("ftoggle").addEventListener("click",()=>{const p=$("filters");if(p.hidden){p.hidden=false;$("ftoggle").setAttribute("aria-expanded","true")}else closeMenu(false)});
+$("ftoggle").addEventListener("click",()=>{const p=$("filters");
+  if(p.hidden){p.hidden=false;$("ftoggle").setAttribute("aria-expanded","true");
+    const sideTop=$("side").getBoundingClientRect().top;if(sideTop>2)window.scrollTo({top:scrollY+sideTop,behavior:"auto"});fitPanel()}
+  else closeMenu(false)});
 /* Close the phone menu and bring the results into view; on desktop, where the menu is always there, just make sure the results are in view.
    Used by the Close bar, the Show-results button, Enter in the search box and Escape. */
 function closeMenu(toResults){
@@ -1753,21 +1890,26 @@ function closeMenu(toResults){
 $("fdone").addEventListener("click",()=>closeMenu(true));
 /* keep the open menu inside the screen, so its bottom (and the Show-results button) is always reachable */
 function fitPanel(){const p=$("filters");document.body.classList.toggle("menu-open",!p.hidden&&mq.matches);if(p.hidden||!mq.matches){p.style.maxHeight="";return}
-  const vh=window.visualViewport?visualViewport.height:innerHeight;p.style.maxHeight=Math.max(160,Math.floor(vh-p.getBoundingClientRect().top-6))+"px"}
+  const vh=window.visualViewport?visualViewport.height:innerHeight;p.style.maxHeight=Math.max(120,Math.floor(vh-Math.max(0,p.getBoundingClientRect().top)-6))+"px"}
 new MutationObserver(fitPanel).observe($("filters"),{attributes:true,attributeFilter:["hidden"]});
 addEventListener("scroll",fitPanel,{passive:true});addEventListener("resize",fitPanel);
 if(window.visualViewport)visualViewport.addEventListener("resize",fitPanel);
 $("q").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();closeMenu(true)}});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&mq.matches&&!$("filters").hidden&&!document.querySelector(".ms.open")){closeMenu(false);$("ftoggle").focus()}});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;
+  const m=document.querySelector(".ms.open");if(m){closeMS(m,true);return}
+  if(mq.matches&&!$("filters").hidden){closeMenu(false);$("ftoggle").focus();return}
+  if(OPEN>=0)setOpen(-1)});
 
 /* static text */
 $("brand").textContent=T.h1;$("tag").textContent=T.sub;document.title=T.h1;
 $("q").placeholder=T.ph;$("q").setAttribute("aria-label",T.search);
 $("lSort").textContent=X.sortBy;$("lSeason").textContent=T.season;$("lMonth").textContent=T.month;$("lGroup").textContent=T.group;$("lRegion").textContent=T.region;
-$("lSpec").textContent=T.spec;$("lYr").textContent=T.yr;$("now").textContent=T.today;$("reset").textContent=T.clear;
+$("lSpec").textContent=T.spec;$("lYr").textContent=T.yr;$("yrHint").textContent=T.yrHint;$("filters").setAttribute("aria-label",T.filters);$("now").textContent=T.today;$("reset").textContent=T.clear;
 $("ftLabel").textContent=X.fsFilters;$("lView").textContent=EN?"Show":"Mostra";$("lLang").textContent=EN?"Language":"Lingua";
 $("foot").innerHTML=`<details class="fdet"><summary>${EN?"About this guide and sources":"Informazioni sulla guida e fonti"}</summary><div class="fgrid">${FOOT[LANG]}</div></details>`;
-const lk=$("lang");lk.innerHTML=`<span class="${EN?"on":""}" ${EN?'aria-current="true"':""}>EN</span><span class="${EN?"":"on"}" ${EN?"":'aria-current="true"'}>IT</span>`;lk.href=T.otherHref;lk.setAttribute("aria-label",EN?"Switch to Italian":"Passa all'inglese");
+$("langsw").innerHTML=EN?`<span class="seg on" aria-current="true" lang="en">EN</span><a class="seg" id="lang" href="${T.otherHref}" lang="it" hreflang="it">IT</a>`
+  :`<a class="seg" id="lang" href="${T.otherHref}" lang="en" hreflang="en">EN</a><span class="seg on" aria-current="true" lang="it">IT</span>`;
+const lk=$("lang");
 if(typeof SAMPLE!=="undefined"){lk.href=EN?"#it":"#en";lk.addEventListener("click",()=>setTimeout(()=>location.reload(),0))}
 const mq=window.matchMedia("(max-width:860px)");
 function syncPanel(){$("filters").hidden=mq.matches;$("ftoggle").setAttribute("aria-expanded","false");
@@ -1783,13 +1925,15 @@ syncPanel();mq.addEventListener("change",syncPanel);
 const MSCFG={
   season:{all:()=>X.allSeasons,opts:()=>SEASONS.map(s=>({v:s.k,t:s.n+" ("+s.sub+")",short:s.n,on:s.m.every(m=>state.months.has(m))})),
     toggle:(v,on)=>{const s=SEASONS.find(x=>x.k===v);s.m.forEach(m=>on?state.months.add(m):state.months.delete(m))}},
-  month:{all:()=>X.allMonths,opts:()=>MON.map((n,i)=>({v:String(i+1),t:MONFULL[i]+(i+1===nowMonth?" ·":""),short:n,on:state.months.has(i+1)})),
+  month:{all:()=>X.allMonths,opts:()=>MON.map((n,i)=>({v:String(i+1),t:MONFULL[i]+(i+1===nowMonth?(EN?" (this month)":" (questo mese)"):""),short:n,on:state.months.has(i+1)})),
     toggle:(v,on)=>{on?state.months.add(+v):state.months.delete(+v)}},
   cat:{all:()=>X.allGroups,opts:()=>CATS.map(c=>({v:c.k,t:catName(c)+" ("+ITEMS.filter(it=>it.cat===c.k&&matches(it,true)).length+")",short:catName(c),on:state.cats.has(c.k)})),
     toggle:(v,on)=>{on?state.cats.add(v):state.cats.delete(v)}},
   region:{all:()=>T.allRegions,opts:()=>REGIONS.map(([c])=>({v:c,t:RNAME[c],short:RNAME[c],on:state.regions.has(c)})),
     toggle:(v,on)=>{on?state.regions.add(v):state.regions.delete(v)}}
 };
+const MSLAB={season:"lSeason",month:"lMonth",cat:"lGroup",region:"lRegion"};
+function closeMS(m,focusBtn){m.classList.remove("open");m.querySelector(".mspanel").hidden=true;const b=m.querySelector(".msbtn");b.setAttribute("aria-expanded","false");if(focusBtn)b.focus()}
 function renderMS(){
   Object.keys(MSCFG).forEach(id=>{
     const el=$(id),cfg=MSCFG[id],opts=cfg.opts(),sel=opts.filter(o=>o.on);
@@ -1799,7 +1943,8 @@ function renderMS(){
     if(sel.length&&sel.length<=2)sum=sel.map(o=>o.short).join(", ");
     else if(sel.length>2)sum=sel.length+" "+X.selected;
     else if(id==="season"&&state.months.size)sum=X.custom;
-    el.innerHTML=`<button type="button" class="msbtn" aria-haspopup="true" aria-expanded="${open}"><span>${esc(sum)}</span></button><div class="mspanel" ${open?"":"hidden"}>`+
+    const lab=$(MSLAB[id]).textContent;
+    el.innerHTML=`<button type="button" class="msbtn" id="${id}-b" aria-expanded="${open}" aria-controls="${id}-p" aria-label="${esc(lab+": "+sum)}"><span>${esc(sum)}</span></button><div class="mspanel" id="${id}-p" role="group" aria-label="${esc(lab)}" ${open?"":"hidden"}>`+(id==="region"?`<p class="mshint">${EN?"North to south":"Da nord a sud"}</p>`:"")+
       `<label class="mso mso-all"><input type="checkbox" data-v="__all" ${(id==="season"||id==="month")?(state.months.size?"":"checked"):(sel.length?"":"checked")}><span>${esc(cfg.all())}</span></label>`+opts.map(o=>`<label class="mso"><input type="checkbox" data-v="${o.v}" ${o.on?"checked":""}><span>${esc(o.t)}</span></label>`).join("")+`</div>`;
     const p=el.querySelector(".mspanel");p.scrollTop=st;
     if(fo){const c=p.querySelector(`[data-v="${fo}"]`);if(c)c.focus()}
@@ -1817,7 +1962,17 @@ document.addEventListener("change",e=>{
   else MSCFG[id].toggle(c.dataset.v,c.checked);
   render();
 });
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){const m=document.querySelector(".ms.open");if(m){m.classList.remove("open");m.querySelector(".mspanel").hidden=true;m.querySelector(".msbtn").focus()}}});
+/* keyboard: arrow down opens and moves into the list, arrows move between options, Tab away closes it */
+document.addEventListener("keydown",e=>{
+  const ms=e.target.closest&&e.target.closest(".ms");if(!ms)return;
+  const boxes=[...ms.querySelectorAll(".mspanel input")],i=boxes.indexOf(e.target);
+  if(e.target.classList.contains("msbtn")&&(e.key==="ArrowDown"||e.key==="ArrowUp")){e.preventDefault();
+    if(!ms.classList.contains("open"))e.target.click();const bx=[...ms.querySelectorAll(".mspanel input")];(e.key==="ArrowDown"?bx[0]:bx[bx.length-1]).focus()}
+  else if(i>=0&&(e.key==="ArrowDown"||e.key==="ArrowUp")){e.preventDefault();const n=boxes[(i+(e.key==="ArrowDown"?1:-1)+boxes.length)%boxes.length];n.focus()}
+  else if(i>=0&&(e.key==="Home"||e.key==="End")){e.preventDefault();(e.key==="Home"?boxes[0]:boxes[boxes.length-1]).focus()}
+});
+document.addEventListener("focusout",e=>{const ms=e.target.closest&&e.target.closest(".ms.open");if(!ms)return;
+  setTimeout(()=>{if(ms.isConnected&&ms.classList.contains("open")&&!ms.contains(document.activeElement)&&document.activeElement!==document.body)closeMS(ms,false)},0)});
 /* The view lives in the address after the #: search, months, groups, regions, checkboxes, sort, open card.
    Switching language carries it across, plus the card you were looking at, so the other page opens on the same view;
    it also makes any filtered view a link that can be shared. Card numbers are the same in both languages. */
@@ -1830,18 +1985,22 @@ function viewParams(extra){const p=new URLSearchParams();
   if(state.spec)p.set("sp","1");
   if(state.yr)p.set("yr","1");
   if(state.sort&&state.sort!=="cat")p.set("s",state.sort);
-  if(state.sort==="shuffle")p.set("sd",String(Math.round(shuffleSeed*1e6)));
+  if(state.sort==="shuffle")p.set("sd",String(shuffleSeed));
+  if(VIEW==="draw")p.set("v","d");
   if(OPEN>=0)p.set("open",String(OPEN));
   if(OPEN>=0&&OPENSHOW>=0)p.set("show",String(OPENSHOW));
   if(extra)for(const k in extra)p.set(k,extra[k]);
   return p.toString()}
 const SAMPLE_LANG=typeof SAMPLE!=="undefined"&&!EN?"it":"";
-function writeHash(){const h=[SAMPLE_LANG,viewParams()].filter(Boolean).join("&");
-  try{history.replaceState(null,"",location.pathname+location.search+(h?"#"+h:""))}catch(e){}}
+function writeHash(){const vp=viewParams(),h=[SAMPLE_LANG,vp].filter(Boolean).join("&");
+  try{history.replaceState(null,"",location.pathname+location.search+(h?"#"+h:""))}catch(e){}
+  if(typeof SAMPLE==="undefined")lk.href=T.otherHref+(vp?"#"+vp:"")}
 let ARRIVE=null,MENU=null;
-(function readHash(){
-  const raw=location.hash.slice(1).split("&").filter(x=>x&&x!=="it"&&x!=="en").join("&");if(!raw)return;
+const int=v=>/^\d{1,6}$/.test(v||"")?+v:null;
+function readHash(){
+  const raw=location.hash.slice(1).split("&").filter(x=>x&&x!=="it"&&x!=="en").join("&");if(!raw)return false;
   const p=new URLSearchParams(raw),nums=k=>(p.get(k)||"").split(".").filter(Boolean);
+  if(p.get("v")==="d")VIEW="draw";
   if(p.has("q")){state.q=p.get("q");$("q").value=state.q}
   nums("m").map(Number).filter(m=>m>=1&&m<=12).forEach(m=>state.months.add(m));
   nums("c").filter(c=>CATS.some(x=>x.k===c)).forEach(c=>state.cats.add(c));
@@ -1849,26 +2008,33 @@ let ARRIVE=null,MENU=null;
   state.spec=p.get("sp")==="1";$("spec").checked=state.spec;
   state.yr=p.get("yr")==="1";$("yr").checked=state.yr;
   if(SORTS.includes(p.get("s")))state.sort=p.get("s");
-  if(p.has("sd"))shuffleSeed=(+p.get("sd")||0)/1e6;
-  const o=+p.get("open");if(p.has("open")&&ITEMS[o]){OPEN=o;const sh=+p.get("show");OPENSHOW=p.has("show")&&ITEMS[sh]?sh:-1}
-  if(p.get("menu")==="1"&&mq.matches)MENU={top:+p.get("ms")||0};
-  if(p.has("at"))ARRIVE={i:+p.get("at"),y:+p.get("ay")||0};
-  else if(OPEN>=0)ARRIVE={i:OPEN,y:24};
-})();
+  if(/^\d{1,7}$/.test(p.get("sd")||""))shuffleSeed=+p.get("sd");
+  const o=int(p.get("open"));if(o!==null&&ITEMS[o]){OPEN=o;const sh=int(p.get("show"));OPENSHOW=sh!==null&&ITEMS[sh]?sh:-1}
+  if(p.get("menu")==="1"&&mq.matches)MENU={top:int(p.get("ms"))||0};
+  const at=int(p.get("at"));
+  if(at!==null)ARRIVE={i:at,y:int(p.get("ay"))||0};
+  else if(OPEN>=0)ARRIVE={i:OPEN,y:null};
+  return true;
+}
+readHash();
 render();
 function paintDone(){const c=($("count").textContent||"").split(" · ")[0].trim();$("fdone").textContent=(EN?"Show ":"Mostra ")+c;$("fclose").textContent=EN?"Close":"Chiudi"}
 paintDone();
-{const r0=render;render=function(){r0.apply(this,arguments);writeHash();paintDone()};
- const s0=setOpen;setOpen=function(){s0.apply(this,arguments);writeHash()};}
-writeHash();
+READY=true;writeHash();
 /* switched language from the open menu on a phone: the new page arrives with the menu still open, scrolled where it was,
    so the person can carry on choosing before they close it */
 if(MENU){const f=$("filters");f.hidden=false;$("ftoggle").setAttribute("aria-expanded","true");
   const put=()=>{f.scrollTop=MENU.top};requestAnimationFrame(put);setTimeout(put,300);
   const l=$("lang");if(l&&matchMedia("(hover:hover)").matches)setTimeout(()=>l.focus({preventScroll:true}),50)}
 /* arriving from the other language: put the same card back where it was on screen */
-if(ARRIVE){const go=()=>{const el=$("grid").querySelector(`.card[data-i="${ARRIVE.i}"]`);if(el)window.scrollTo(0,Math.max(0,el.getBoundingClientRect().top+scrollY-ARRIVE.y))};
+if(ARRIVE){const go=()=>{const el=$("grid").querySelector(`.card[data-i="${ARRIVE.i}"]`);if(el)window.scrollTo(0,Math.max(0,el.getBoundingClientRect().top+scrollY-(ARRIVE.y==null?topGap():Math.max(ARRIVE.y,topGap()))))};
   requestAnimationFrame(go);setTimeout(go,350)}
+/* someone edits the address by hand (or uses a link to this page while it is open): show that view */
+addEventListener("hashchange",()=>{
+  const sv=VIEW;state.q="";state.months=new Set();state.cats=new Set();state.regions=new Set();state.spec=false;state.yr=false;state.sort="cat";
+  OPEN=-1;OPENSHOW=-1;BACK=-1;RESTORE=null;$("q").value="";$("spec").checked=false;$("yr").checked=false;
+  readHash();render();if(VIEW!==sv&&window.paintView)paintView();
+  if(OPEN>=0){const el=$("grid").querySelector(".card.open");if(el)window.scrollTo(0,el.getBoundingClientRect().top+scrollY-topGap())}});
 /* the EN / IT switch takes the view and the card nearest the top of the screen with it */
 /* fetch the other language ahead of time, so the switch is quick */
 (function(){let done=false;const pf=()=>{if(done||typeof SAMPLE!=="undefined"||location.protocol==="file:")return;done=true;
@@ -1876,6 +2042,7 @@ if(ARRIVE){const go=()=>{const el=$("grid").querySelector(`.card[data-i="${ARRIV
   $("ftoggle").addEventListener("click",pf);lk.addEventListener("pointerenter",pf);lk.addEventListener("focus",pf);
   if(!mq.matches)setTimeout(pf,2500)})();
 lk.addEventListener("click",e=>{
+  if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button>0)return; /* new tab or window: let the browser follow the link */
   const extra={};
   const op=OPEN>=0&&$("grid").querySelector(".card.open");
   if(op||scrollY>40){const cards=[...$("grid").querySelectorAll(".card")];
@@ -1941,44 +2108,53 @@ function initLogo3D(){
   let angle=0,last=performance.now(),visible=true,tween=null,wasOff=SPIN_OFF;
   const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
   function draw(){mesh.rotation.x=angle;renderer.render(scene,cam)}
+  let running=false;
+  function kick(){if(!running&&visible){running=true;last=performance.now();requestAnimationFrame(tick)}}
+  window.kickTitle=kick;
   function tick(t){
     const dt=Math.min(64,t-last);last=t;
+    if(document.body.classList.contains("menu-open")&&!SPIN_OFF){running=false;return} /* paused under the open menu */
     if(SPIN_OFF&&!wasOff){let a=((angle%TAU)+TAU)%TAU;if(a>Math.PI)a-=TAU;tween={from:a,start:t}} /* ease the shortest way back to the front */
     wasOff=SPIN_OFF;
     if(!SPIN_OFF){tween=null;angle=(angle+dt*TAU/TURN)%TAU}
     else if(tween){const p=Math.min(1,(t-tween.start)/EASE_MS);angle=tween.from*(1-ease(p));if(p>=1){angle=0;tween=null}}
-    if(visible)draw();requestAnimationFrame(tick);
+    if(visible)draw();
+    if(!visible||(SPIN_OFF&&!tween&&angle===0)){running=false;return} /* settled or off screen: stop until something changes */
+    requestAnimationFrame(tick);
   }
-  if("IntersectionObserver" in window)new IntersectionObserver(es=>{visible=es[0].isIntersecting}).observe(h1);
-  window.addEventListener("resize",size);size();requestAnimationFrame(tick);
+  if("IntersectionObserver" in window)new IntersectionObserver(es=>{visible=es[0].isIntersecting;kick()}).observe(h1);
+  new MutationObserver(kick).observe(document.body,{attributes:true,attributeFilter:["class"]});
+  window.addEventListener("resize",size);size();kick();
   return true;
 }
 
 /* rotation toggle */
 (function(){
   const btn=$("spinbtn");
-  const L=EN?{stop:"Stop rotation",start:"Start rotation"}:{stop:"Ferma rotazione",start:"Avvia rotazione"};
+  const L=EN?{stop:"Pause animation",start:"Play animation"}:{stop:"Ferma animazione",start:"Avvia animazione"};
   let stopped=false;
   try{stopped=localStorage.getItem("spin")==="off"}catch(e){}
-  if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)stopped=true;
-  function set(v){stopped=v;SPIN_OFF=v;
+  const rm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function set(v,save){stopped=v;SPIN_OFF=v;document.documentElement.classList.toggle("anim-off",v);
     btn.textContent=v?L.start:L.stop;btn.setAttribute("aria-pressed",String(v));
-    try{localStorage.setItem("spin",v?"off":"on")}catch(e){}}
-  btn.addEventListener("click",()=>set(!stopped));
-  set(stopped);
+    if(save)try{localStorage.setItem("spin",v?"off":"on")}catch(e){} /* only a real choice is remembered, not reduced motion */
+    if(window.kickTitle)kickTitle()}
+  btn.addEventListener("click",()=>set(!stopped,true));
+  set(stopped||rm,false);
 })();
-fitTitle();window.addEventListener("resize",fitTitle);
-if(document.fonts){document.fonts.load('400 100px "Vampiro One"',$("brand").textContent).then(fitTitle).catch(()=>{});document.fonts.ready.then(fitTitle)}
-if(!initLogo3D()){$("spinbtn").hidden=true}
+if(!initLogo3D()){ /* no WebGL: fit the plain-text title instead; the pause button still stops the band */
+  fitTitle();window.addEventListener("resize",fitTitle);
+  if(document.fonts){document.fonts.load('400 100px "Vampiro One"',$("brand").textContent).then(fitTitle).catch(()=>{});document.fonts.ready.then(fitTitle)}}
 
 
 
 
 /* photos or drawings */
 (function(){const b=$("viewsw");const L=EN?["Photos","Drawings"]:["Foto","Disegni"];
-  function paint(){b.innerHTML=`<span class="${VIEW==="photo"?"on":""}">${L[0]}</span><span class="${VIEW==="draw"?"on":""}">${L[1]}</span>`;
-    b.setAttribute("aria-label",(EN?"Show ":"Mostra ")+(VIEW==="photo"?L[1]:L[0]).toLowerCase())}
-  b.addEventListener("click",()=>{VIEW=VIEW==="photo"?"draw":"photo";try{localStorage.setItem("view",VIEW)}catch(e){}paint();render()});
+  function paint(){b.innerHTML=[["photo",L[0]],["draw",L[1]]].map(([v,t])=>`<button type="button" class="seg${VIEW===v?" on":""}" data-v="${v}" aria-pressed="${VIEW===v}">${t}</button>`).join("")}
+  window.paintView=paint;
+  b.addEventListener("click",e=>{const x=e.target.closest(".seg");if(!x||x.dataset.v===VIEW)return;VIEW=x.dataset.v;try{localStorage.setItem("view",VIEW)}catch(e){}
+    paint();render();const n=b.querySelector(`[data-v="${VIEW}"]`);if(n)n.focus()});
   paint();
 })();
 /* band of drawings across the top: the same food drawings as the cards (so the same colours), with cutlery and the two stallholders */
@@ -1986,7 +2162,7 @@ if(!initLogo3D()){$("spinbtn").hidden=true}
   const seq=[["Pomodori"],["fork"],["Limoni"],["Parmigiano Reggiano"],["knife"],["Carote"],["vendor"],["Melanzane"],["Ciliegie"],["spoon"],["Carciofi"],["Mozzarella di bufala"],["Peperoncino"],["Funghi porcini"],["vendora"],["Piselli freschi"],["Fichi"],["Alici e acciughe"],["Mele"],["Aglio fresco"],["Basilico genovese"],["Gorgonzola"]];
   const item=([n])=>n==="vendor"||n==="vendora"?`<svg class="ico folk" viewBox="0 0 160 230"><use href="#i-${n}"/></svg>`
     :["fork","knife","spoon"].includes(n)?`<svg class="ico" viewBox="0 0 100 100"><use href="#i-${n}"/></svg>`
-    :`<span class="ico">${ILL.draw(n)}</span>`;
+    :`<span class="ico">${drawUse(n,"",false)}</span>`;
   const one=seq.map(item).join("");$("bandRow").innerHTML=one+one})();
 /* background drawings: one layer moves with the page, three drift more slowly, plus the market-stall character.
    Each layer repeats every T pixels, so it stays a fixed size however long the list gets. */
@@ -2004,7 +2180,7 @@ if(!initLogo3D()){$("spinbtn").hidden=true}
         items.push({x:Math.round(rnd()*(W-s*.6)-s*.2),y:Math.round((i+rnd())*(T/n)),s:Math.round(s),r:Math.round(rnd()*120-60),fl:rnd()<.3?-1:1,
           tool:i%6===0?tools[(i/6|0)%3]:null,f:pool[Math.floor(rnd()*pool.length)]})}
       const html=off=>items.map(o=>o.tool?`<svg class="ico" viewBox="0 0 100 100" style="--s:${o.s}px;--r:${o.r}deg;left:${o.x}px;top:${o.y+off}px"><use href="#i-${o.tool}"/></svg>`
-        :`<div class="ico" style="--s:${o.s}px;--r:${o.r}deg;left:${o.x}px;top:${o.y+off}px;scale:${o.fl} 1">${ILL.draw(o.f[0],o.f[1])}</div>`).join("");
+        :`<div class="ico" style="--s:${o.s}px;--r:${o.r}deg;left:${o.x}px;top:${o.y+off}px;scale:${o.fl} 1">${drawUse(o.f[0],o.f[1],false)}</div>`).join("");
       const el=document.createElement("div");el.className="layer "+c.k;el.style.height=2*T+"px";el.innerHTML=html(0)+html(T);host.appendChild(el);layers.push({el,r:c.r,T})});
     /* the character, twice per repeat, once on each side */
     const G=Math.max(3200,innerHeight+300),h=W>860?420:230,w=Math.round(h*160/230);
@@ -2017,12 +2193,14 @@ if(!initLogo3D()){$("spinbtn").hidden=true}
   function update(){ticking=false;const y=scrollY;
     layers.forEach(L=>{const r=RM?1:L.r;L.el.style.transform=`translate3d(0,${-((y*r)%L.T).toFixed(1)}px,0)`})}
   addEventListener("scroll",()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});
-  addEventListener("resize",build);build();
+  addEventListener("resize",build);
+  (window.requestIdleCallback||(f=>setTimeout(f,200)))(build,{timeout:1200});
 })();
 
 /* back to top */
 (function(){const b=document.createElement("button");b.type="button";b.className="totop";b.setAttribute("aria-label",EN?"Back to top":"Torna su");
-  b.innerHTML=`<i aria-hidden="true"></i><span>${EN?"Back to top":"Torna su"}</span>`;document.body.appendChild(b);
+  b.innerHTML=`<i aria-hidden="true"></i><span>${EN?"Back to top":"Torna su"}</span>`;b.removeAttribute("aria-label");
+  document.body.appendChild(b);
   const RM=matchMedia("(prefers-reduced-motion: reduce)");
   b.addEventListener("click",()=>{scrollTo({top:0,behavior:RM.matches?"auto":"smooth"});const t=document.querySelector(".search");if(t)setTimeout(()=>t.focus({preventScroll:true}),RM.matches?0:500)});
 })();
